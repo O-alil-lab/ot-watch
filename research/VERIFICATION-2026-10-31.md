@@ -130,3 +130,16 @@ Couverture sécurité : XSS (script/img-onerror/javascript: neutralisés), filtr
 | Statut agents exposé dans `/api/data` (`agents`) | ✅ | curl live : `{'draft': 'draft-2026-11-01', 'factcheck': {'ok': True, ...}}` |
 
 **Boucle ECC v1.6+v1.7** : ruff 0 erreur (scope élargi à `agents/`) · **94/94 tests OK** · collecte v6 terminée en 355,3 s (run #17 : 37 CVE, 27 avis, 13 KEV, EPSS 37/37, validation OK) · serveur live v7 (0.0.0.0:8000) — `/api/data`, `/stix`, `/metrics`, SSE, statut agents vérifiés en curl.
+
+---
+
+# Addendum v1.8 — serveur TAXII 2.1 read-only (P2) (01/11/2026, ~02:10 UTC)
+
+| Élément | Statut | Preuve |
+|---|---|---|
+| `src/taxii.py` + routes `/taxii2/*` : discovery, collections, collection `otwatch-ot-cves`, objects (enveloppe STIX), manifest, versions | ✅ | curl live : `/taxii2/` → `application/taxii+json {"versions":["2.1"]}` ; `/objects` → `application/stix+json`, 66 objets (37 vuln, 27 COA, report, marking TLP:WHITE) |
+| Filtre `added_after` (polling incrémental façon Sentinel/Splunk/MISP/OpenCTI) | ✅ | `?added_after=2026-10-30T00:00:00.000Z` → 46 objets filtrés |
+| Read-only : POST → 405 ; auth Bearer optionnelle via `OTWATCH_TAXII_TOKEN` (401) ; en-têtes sécurité | ✅ | curl POST → 405 ; tests 401/200 ; headers nosniff/DENY/CSP présents |
+| Bouton « 🛰 TAXII 2.1 » dashboard | ✅ | présent dans `/` |
+
+**Boucle ECC v1.8** : ruff 0 erreur · **102/102 tests OK** (`test_taxii.py`) · couverture **82 %** (taxii 81 %) · serveur live v8 (0.0.0.0:8000) — TAXII + STIX + SSE + `/api/data` vérifiés en curl.

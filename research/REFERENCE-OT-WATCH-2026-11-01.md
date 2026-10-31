@@ -133,7 +133,7 @@ Trois familles d'images, trois règles :
 4. **Runbook collecte réseau passive** : Zeek/Suricata+ICSNPP ou Malcolm sur SPAN (Purdue L1–3), baseline 2 semaines, alertes function codes Modbus/DNP3/S7, mapping ATT&CK for ICS, export JSON dans `data/` — **jamais inline**.
 5. **Pipeline agents éditoriaux** (section 4.2) : analyste RAG → rédacteur → fact-checker 3 tiers → illustrateur (données + IA signée C2PA) → éditeur humain ; métriques qualité ; label « assisté par IA, revu par humain » (conforme Art. 50 AI Act).
 6. Envoi e-mail réel (SMTP/SendGrid, dry-run par défaut) ; Docker + runbook ops ; OpenAPI (`/openapi.json`).
-**P2 (trimestre)** : serveur TAXII 2.1 read-only ; connecteur MISP / OT-ISAC ; inventaire d'actifs + import SBOM (CycloneDX) + matching CPE ; dedup/lignage/replay raw + métriques qualité (dup-rate, freshness, complétude) ; backups/DR 30 j ; i18n AR ; RSS/archives publiques.
+**P2 (trimestre)** : ✅ serveur **TAXII 2.1 read-only** livré en v1.8 (`/taxii2/*`) ; restant : connecteur MISP / OT-ISAC ; inventaire d'actifs + import SBOM (CycloneDX) + matching CPE ; dedup/lignage/replay raw + métriques qualité (dup-rate, freshness, complétude) ; backups/DR 30 j ; i18n AR ; RSS/archives publiques.
 
 ---
 

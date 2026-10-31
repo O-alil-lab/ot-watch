@@ -27,6 +27,7 @@ sys.path.insert(0, os.path.join(ROOT, "src"))
 import collect  # noqa: E402  (pipeline de collecte réel)
 import render  # noqa: E402   (parse les articles éditoriaux)
 import store  # noqa: E402    (historique SQLite)
+import taxii  # noqa: E402    (serveur TAXII 2.1 read-only)
 
 DATA = os.path.join(ROOT, "data")
 OUT = os.path.join(ROOT, "out")
@@ -263,6 +264,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
     <a href="/issue" target="_blank"><button class="ghost">📰 Voir la newsletter</button></a>
     <a href="/issue.pdf" target="_blank"><button class="ghost">📄 Télécharger le PDF</button></a>
     <a href="/stix" target="_blank"><button class="ghost">🧬 Export STIX 2.1</button></a>
+    <a href="/taxii2/collections" target="_blank"><button class="ghost">🛰 TAXII 2.1</button></a>
   </div>
 </header>
 <div class="wrap">
@@ -521,6 +523,13 @@ class Handler(BaseHTTPRequestHandler):
                 self._send(200, res[0], "text/html; charset=utf-8")
             else:
                 self._send(404, json.dumps({"error": "aucune édition générée"}))
+        elif path.startswith("/taxii2"):
+            from urllib.parse import parse_qs, urlparse
+            u = urlparse(self.path)
+            q = parse_qs(u.query)
+            p2 = u.path
+            status, body, ctype = taxii.handle(p2, method="GET", query=q, headers=self.headers)
+            self._send(status, body, ctype)
         elif path == "/stix":
             res = latest_issue_stix()
             if res:
@@ -542,6 +551,10 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, json.dumps({"error": "not found"}))
 
     def do_POST(self):
+        if self.path.startswith("/taxii2"):
+            status, body, ctype = taxii.handle(self.path, method="POST", headers=self.headers)
+            self._send(status, body, ctype)
+            return
         path = self.path.split("?", 1)[0]
         if path == "/api/refresh":
             # auth admin (prod) : OTWATCH_ADMIN_TOKEN env -> Authorization: Bearer <token>

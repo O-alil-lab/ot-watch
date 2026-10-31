@@ -150,6 +150,16 @@ Package `agents/` (`python3 -m agents.pipeline draft|status|publish`) :
   revu par un humain » (exemption art. 50(4) grâce à la revue éditoriale humaine).
 - Statut exposé dans `/api/data` (`agents`). 94 tests OK (`test_agents.py`, `test_sources_v2.py`).
 
+## 🛰 v1.8 — serveur TAXII 2.1 read-only (P2 « plateforme de référence ») (01/11/2026)
+- **`src/taxii.py`** + routes `/taxii2/*` dans `server.py` : discovery (`/taxii2/` → `application/taxii+json`),
+  `/taxii2/collections`, collection **`otwatch-ot-cves`** (can_read, **can_write=false**), `/objects`
+  (enveloppe STIX `application/stix+json`, filtre `?added_after=ISO8601` style client Sentinel/Splunk/OpenCTI/MISP),
+  `/manifest`, `/versions`. Sert le dernier bundle STIX 2.1 (TLP:WHITE).
+- **Read-only** : POST/PUT/DELETE → 405. **Auth optionnelle** : si `OTWATCH_TAXII_TOKEN` est défini,
+  `Authorization: Bearer` exigé (401 sinon). En-têtes sécurité sur toutes les réponses.
+- Live : 66 objets servis (37 vulnerabilities, 27 course-of-action, report, marking TLP:WHITE), manifest 66 entrées — vérifié en curl. Bouton « 🛰 TAXII 2.1 » dans le dashboard.
+- 102 tests OK (`test_taxii.py` : discovery, read-only, added_after, manifest, 405, auth Bearer), couverture 82 % (taxii 81 %).
+
 ## Quality gates (boucle de vérification ECC)
 ```bash
 cd /home/user/newsletter-ot
