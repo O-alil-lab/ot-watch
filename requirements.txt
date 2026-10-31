@@ -1,0 +1,2 @@
+# Dépendances runtime OT Watch (le reste est stdlib)
+fpdf2>=2.8  # export PDF de l'édition (src/render_pdf.py)

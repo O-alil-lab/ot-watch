@@ -145,6 +145,18 @@ def latest_issue_html():
     return None
 
 
+def latest_issue_pdf():
+    try:
+        files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".pdf"))
+        if not files:
+            return None
+        with open(os.path.join(OUT, files[-1]), "rb") as fh:
+            return fh.read(), files[-1]
+    except Exception:
+        return None
+    return None
+
+
 DASHBOARD_HTML = r"""<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -213,6 +225,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
     <span id="staleBadge" class="live off" style="display:none">⚠ DONNÉES STALES</span>
     <button id="btnRefresh">🔄 Re-collecter maintenant</button>
     <a href="/issue" target="_blank"><button class="ghost">📰 Voir la newsletter</button></a>
+    <a href="/issue.pdf" target="_blank"><button class="ghost">📄 Télécharger le PDF</button></a>
   </div>
 </header>
 <div class="wrap">
@@ -370,11 +383,13 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):  # logs compacts
         print(f"[http] {self.address_string()} {fmt % args}", flush=True)
 
-    def _send(self, code, body, ctype="application/json; charset=utf-8"):
+    def _send(self, code, body, ctype="application/json; charset=utf-8", extra_headers=None):
         if isinstance(body, str):
             body = body.encode("utf-8")
         self.send_response(code)
         self.send_header("Content-Type", ctype)
+        for k, v in (extra_headers or {}).items():
+            self.send_header(k, v)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
@@ -469,6 +484,15 @@ class Handler(BaseHTTPRequestHandler):
                 self._send(200, res[0], "text/html; charset=utf-8")
             else:
                 self._send(404, json.dumps({"error": "aucune édition générée"}))
+        elif path == "/issue.pdf":
+            res = latest_issue_pdf()
+            if res:
+                fname = res[1].replace(".pdf", "")
+                self._send(200, res[0], "application/pdf", extra_headers={
+                    "Content-Disposition": f'inline; filename="{fname}.pdf"',
+                })
+            else:
+                self._send(404, json.dumps({"error": "aucun PDF généré"}))
         else:
             self._send(404, json.dumps({"error": "not found"}))
 

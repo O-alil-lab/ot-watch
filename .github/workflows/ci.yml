@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install deps (lint + coverage)
-        run: pip install --quiet ruff coverage
+        run: pip install --quiet ruff coverage -r requirements.txt
       - name: Lint (ruff)
         run: python3 -m ruff check server.py src tests --config ruff.toml
       - name: Build (py_compile)

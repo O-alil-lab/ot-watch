@@ -80,3 +80,16 @@ Couverture sécurité : XSS (script/img-onerror/javascript: neutralisés), filtr
 | Correction métriques `/metrics` (`kev_ot`/`advisories` vs clés `counts`) | ✅ | `curl /metrics` → `otwatch_kev_ot_total 13`, `otwatch_advisories_total 5` |
 
 **Boucle ECC v1.3** : ruff 0 erreur · **59/59 tests OK** · couverture **84 %** (store 100 %, render 97 %, collect 90 %, validate 92 %, server 70 %, alerts 62 %) · collecte réelle v3 terminée en 227,6 s (run #9, 22 CVE, EPSS 22/22) · serveur live v4 redémarré sur 0.0.0.0:8000 — `/api/history`, `/api/data` (relevant), `/api/stream` (SSE `connected`), en-têtes sécurité et `/metrics` vérifiés en curl.
+
+---
+
+# Addendum v1.4 — export PDF de l'édition (01/11/2026, ~23:20 UTC)
+
+| Amélioration | Statut | Preuve |
+|---|---|---|
+| `src/render_pdf.py` (fpdf2 + DejaVu TTF) → `out/issue-<date>.pdf` A4, 6 pages, 68 Ko | ✅ | `python3 src/render_pdf.py` OK ; pypdf : 6 pages, « OT Watch », CVE-2026-110936, « Tendances 30 jours », ◆ 4 actifs OT présents |
+| Sparkline 30 j dans le PDF (store.history_daily) + résumé « En bref » + tableau CVE (sévérité colorée, ★KEV, ◆OT) | ✅ | texte extrait vérifié ; glyphes testés via cmap (★ ☠ ⚠ ✓ ◆ ● →) |
+| Route live `GET /issue.pdf` (`application/pdf`, Content-Disposition inline, en-têtes sécurité) + bouton dashboard | ✅ | curl -D- → 200, 68282 o, `filename="issue-2026-10-31.pdf"`, nosniff/DENY ; `issue.pdf` présent dans `/` |
+| Pipeline : `requirements.txt` (fpdf2>=2.8), install idempotent dans `run_all.sh`, étape CI `pip install -r requirements.txt` | ✅ | run_all.sh + ci.yml modifiés ; test_pdf.py |
+
+**Boucle ECC v1.4** : ruff 0 erreur · **63/63 tests OK** · couverture **82 %** (store 100 %, render 97 %, collect 90 %, validate 92 %, render_pdf 78 %, server 68 %, alerts 62 %) · serveur live v5 redémarré (0.0.0.0:8000) — `/issue.pdf`, `/api/history`, `/api/stream` vérifiés en curl.

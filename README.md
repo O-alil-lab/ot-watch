@@ -97,6 +97,19 @@ Filtres : recherche texte, sévérité, ★KEV. Anti-XSS côté client (`esc()` 
 - Collecte réelle v3 : **4/22 CVE** correspondent au profil « Mes actifs OT » (run #9, 227 s).
 - 59 tests OK (`test_exposure.py`, `test_history.py`, +2 tests serveur), couverture 84 % (store 100 %).
 
+## 📄 v1.4 — export PDF de l'édition (01/11/2026)
+- **`src/render_pdf.py`** (fpdf2, A4, police DejaVu embarquée) produit **`out/issue-<date>.pdf`**
+  à chaque `run_all.sh` (même date d'édition que le HTML/MD, dérivée de `meta.generated_at`) :
+  bandeau titre, « En bref » (CVE/CRITICAL/★KEV/◆actifs OT/avis/KEV), **sparkline 30 j** (historique
+  SQLite), articles éditoriaux, **tableau CVE trié par risque** (sévérité colorée, ★ KEV, ◆ ⭐ actifs OT,
+  description), avis CISA ICS, entrées KEV OT (☠ ransomware), pied de page paginé + sources.
+- Glyphes 100 % sûrs (testés via cmap DejaVu : ★ ☠ ⚠ ✓ ◆ ● →) — aucun emoji manquant.
+- **Live** : `GET /issue.pdf` → `application/pdf` + `Content-Disposition: inline` + en-têtes sécurité ;
+  bouton « 📄 Télécharger le PDF » dans le dashboard. `requirements.txt` + install idempotent dans
+  `run_all.sh` + étape CI.
+- Édition 2026-10-31 : **6 pages, 68 Ko** — vérifié (pypdf : CVE-2026-110936, « Tendances 30 jours », etc.).
+- 63 tests OK (`test_pdf.py`), couverture 82 % (render_pdf 78 %).
+
 ## Quality gates (boucle de vérification ECC)
 ```bash
 cd /home/user/newsletter-ot
