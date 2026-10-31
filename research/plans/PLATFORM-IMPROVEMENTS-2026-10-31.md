@@ -101,3 +101,16 @@ Légende : **P0** = à faire cette semaine · **P1** = ce mois-ci · **P2** = ce
 - Pipelines data 2026 : validation schéma, fraîcheur SLO, idempotence/replay, couche raw, métriques (freshness/completeness/dup rate) — [chaindesk.ai](https://www.chaindesk.ai/blog/data-ingestion-best-practices-checklist), [datavidhya](https://datavidhya.com/blog/data-engineering-best-practices/), [improvado](https://improvado.io/blog/data-pipeline-automation)
 - CI/CD & secrets 2026 : vault/OIDC, rotation, gitleaks/trufflehog, SAST/SCA, gates — [Harness](https://www.harness.io/blog/ci-cd-security-best-practices), [Group-IB](https://www.group-ib.com/resources/knowledge-hub/ci-cd-security/), [decryptiondigest](https://www.decryptiondigest.com/blog/ci-cd-pipeline-security-best-practices)
 - Outils ECC exécutés : `harness-audit` 78/80 · `observability-readiness` 21/21 · `doctor` 5/5 · AgentShield 0 critical · tests 28/28, couverture 83 %.
+
+---
+
+# 🔄 Rafraîchissement 01/11/2026 — « plateforme de référence OT » + agents IA éditoriaux
+
+Suite à l'interrogation ECC (harness-audit repo-scoped 16/39 → quick win `AGENTS.md` ajouté) et à une deep-research 2026, voir le rapport complet :
+**`research/REFERENCE-OT-WATCH-2026-11-01.md`**.
+
+Nouvelles priorités ajoutées à la roadmap :
+- **P0** : `AGENTS.md` ✅ (fait), remote GitHub + PR template.
+- **P1 collecte "référence"** : sources vendor CERTs OT + OTX/VulnCheck/abuse.ch/GreyNoise ; export **STIX 2.1** (`/stix`) ; mapping **MITRE ATT&CK for ICS** (v20) ; **SSVC/Vulnrichment** dans le score ; score OT complet (exposition + niveau Purdue + criticité + safety) ; runbook **collecte réseau passive** (Zeek/Suricata+ICSNPP ou Malcolm sur SPAN, jamais inline) ; OpenAPI ; e-mail réel ; Docker.
+- **P1 flagship — agents IA éditoriaux** : analyste RAG hybride (KG faits + corpus primaires) → rédacteur (style FR, citations [n]) → fact-checker 3 tiers anti-hallucination → illustrateur (visuels data-driven + images IA **signées C2PA**, légende visible) → **éditeur humain HITL/HOTL** ; conformité **AI Act Art. 50** (depuis 02/08/2026) : divulgation contenu IA d'intérêt public sauf revue humaine éditoriale ; deepfakes jamais ; C2PA/IPTC `trainedAlgorithmicMedia` préservés.
+- **P2** : serveur TAXII 2.1 read-only, connecteur MISP/OT-ISAC, inventaire d'actifs + SBOM (CycloneDX), lignage/dedup/replay raw + métriques qualité, backups/DR 30 j, i18n AR.

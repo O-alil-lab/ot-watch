@@ -110,6 +110,9 @@ Filtres : recherche texte, sévérité, ★KEV. Anti-XSS côté client (`esc()` 
 - Édition 2026-10-31 : **6 pages, 68 Ko** — vérifié (pypdf : CVE-2026-110936, « Tendances 30 jours », etc.).
 - 63 tests OK (`test_pdf.py`), couverture 82 % (render_pdf 78 %).
 
+## 🎯 Vision « plateforme de référence OT » + agents IA éditoriaux (01/11/2026)
+Rapport ECC + deep-research 2026 : `research/REFERENCE-OT-WATCH-2026-11-01.md` — benchmark vs Claroty/Dragos/Nozomi/Tenable (collecte passive DPI, ATT&CK for ICS v20, SSVC), standards STIX 2.1/TAXII 2.1/MISP/OpenCTI, et architecture multi-agents (analyste RAG → rédacteur → fact-checker → illustrateur C2PA → éditeur humain) conforme AI Act Art. 50. `AGENTS.md` à la racine pour tous les agents IA travaillant sur le dépôt.
+
 ## Quality gates (boucle de vérification ECC)
 ```bash
 cd /home/user/newsletter-ot
