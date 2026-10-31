@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OT Watch — 31 octobre 2026</title>
+<style>
+body{margin:0;background:#eef2f7;font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0f172a;}
+.wrap{max-width:680px;margin:0 auto;background:#ffffff;}
+.header{background:#0b1f3a;color:#fff;padding:28px 32px;}
+.header h1{margin:0;font-size:26px;letter-spacing:.5px;}
+.header .tag{color:#fbbf24;font-size:13px;margin-top:6px;font-weight:600;letter-spacing:.4px;}
+.meta{background:#132a4d;color:#cbd5e1;font-size:12px;padding:8px 32px;display:flex;justify-content:space-between;}
+.section{padding:24px 32px;border-bottom:1px solid #e2e8f0;}
+.section h2{font-size:18px;margin:0 0 4px;color:#0b1f3a;border-left:4px solid #f59e0b;padding-left:10px;}
+.section .sub{font-size:12.5px;color:#64748b;margin:0 0 14px;}
+.article{margin-bottom:22px;}
+.article .kicker{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#b45309;}
+.article h3{font-size:17px;margin:4px 0 8px;color:#0b1f3a;}
+.article p{font-size:14px;line-height:1.65;color:#1e293b;margin:0 0 10px;}
+.article ul{margin:0 0 10px 18px;padding:0;}
+.article li{font-size:14px;line-height:1.6;color:#1e293b;margin-bottom:5px;}
+.article a{color:#1d4ed8;}
+.article code{background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:12.5px;}
+.article blockquote{border-left:3px solid #f59e0b;margin:10px 0;padding:6px 12px;background:#fffbeb;color:#78350f;font-size:13.5px;}
+.article h4{font-size:14.5px;margin:12px 0 6px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:#f1f5f9;text-align:left;padding:7px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#475569;border-bottom:2px solid #e2e8f0;}
+td{padding:9px 10px;border-bottom:1px solid #eef2f7;vertical-align:top;}
+.callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 16px;font-size:13.5px;line-height:1.6;color:#7c2d12;margin-bottom:14px;}
+.footer{background:#0b1f3a;color:#94a3b8;font-size:11.5px;padding:20px 32px;line-height:1.7;}
+.footer a{color:#93c5fd;}
+.footer strong{color:#e2e8f0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>🛡️ OT Watch</h1>
+    <div class="tag">La veille cybersécurité des automatismes — PLC, CVE &amp; technologies OT</div>
+  </div>
+  <div class="meta">
+    <span>Édition du 31 octobre 2026 · fenêtre de 14 jours</span>
+    <span>19 CVE · 5 avis CISA · 13 KEV OT</span>
+  </div>
+
+  <div class="section">
+    <h2>À la une</h2>
+    <p class="sub">L'analyse de la rédaction, réécrite à partir des sources primaires.</p>
+    <div class="article"><div class="kicker">À la une · Avis éditeurs</div><h3>22 octobre 2026 — CISA republication de 17 avis Siemens : vos S7-1500 en première ligne</h3><p>Le 22 octobre, la CISA a republication <strong>17 avis de sécurité Siemens</strong> (ICSA-26-295-01 à -18), dans un lot de 19 avis ICS. Derrière la masse, trois dossiers doivent retenir l&#x27;attention immédiate des exploitants de sites industriels.</p>
+<h4>Ce qui brûle maintenant</h4>
+<p><strong>1. Le serveur web des S7-1500, noté 9.6 — sans correctif disponible.</strong> L&#x27;avis ICSA-26-295-14 regroupe les CVE-2026-63350 à CVE-2026-63357 : les fichiers trace importés (traces, CSV de signaux calculés) ne sont pas correctement nettoyés avant d&#x27;être rendus dans l&#x27;interface web. Résultat : un attaquant peut, par ingénierie sociale, faire importer un fichier piégé à un utilisateur autorisé disposant du droit « Read diagnostics » — et exécuter du JavaScript dans sa session, puis <strong>piloter le PLC dans la limite des droits de cet utilisateur</strong>. Aucune version corrigée n&#x27;est disponible à ce stade.</p>
+<blockquote><strong>Action immédiate</strong> : désactiver le serveur web des S7-1500 lorsqu&#x27;il n&#x27;est pas indispensable, et restreindre les ports 80/443 aux seuls postes d&#x27;ingénierie. C&#x27;est la parade la plus efficace tant qu&#x27;aucun patch n&#x27;existe.</blockquote>
+<p><strong>2. Les S7-1500 « MFP », notées 10.0.</strong> Les CPU 1518(F)-4 PN/DP MFP et les modules TM MFP embarquent un sous-système GNU/Linux additionnel touché par des centaines de CVE de composants tiers. Siemens prépare des correctifs et publie des mesures d&#x27;atténuation : appliquez-les dès leur disponibilité et isolez ces équipements.</p>
+<p><strong>3. Siemens Software Center déjà exploité (KEV).</strong> La CVE-2026-110936 (CWE-427, élément de chemin de recherche incontrôlé) affecte les versions &lt; 4.0.9.8 et figure <strong>au catalogue KEV</strong> : une exploitation active est documentée. Corrigez en priorité.</p>
+<h4>Le reste du lot</h4>
+<p>Le lot couvre aussi un contournement de Secure Boot des SIMATIC IPC via une clé de test (CVE-2026-72895), RUGGEDCOM CROSSBOW, WinCC, Industrial Edge, PSS SINCAL, SENTRON 3NA COM et la bibliothèque cliente .NET de l&#x27;API S7 Webserver. La méthode reste la même : <strong>inventaire des actifs → confrontation aux 17 avis → correctifs planifiés</strong>, la plupart des sites Siemens hébergeant au moins un nœud S7-1500 ou WinCC concerné.</p>
+<p><em>Sources : <a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-14">CISA ICSA-26-295-14</a>, <a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-03">ICSA-26-295-03</a>, <a href="https://www.redtigersecurity.com/advisory/siemens-cisa-ics-advisories-oct-2026">analyse Red Tiger Security</a>, <a href="https://nvd.nist.gov/">NVD</a>.</em></p></div>
+  </div>
+
+  <div class="section">
+    <h2>🔴 CVE critiques de la période — PLC &amp; OT</h2>
+    <p class="sub">Collectées automatiquement via l'API NVD (fenêtre de 14 jours), filtrées éditeurs industriels, triées par score CVSS. ★KEV = exploitation connue (CISA).</p>
+    <table>
+      <tr><th>CVE</th><th>CVSS</th><th>Détail</th></tr>
+      
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://cert-portal.siemens.com/productcert/html/ssa-591731.html" style="color:#1d4ed8;font-weight:600;">CVE-2026-63350</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#b91c1c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">9.4</span></td>
+      <td style="font-size:12.5px;color:#334155;">Affected devices do not properly restrict executable content contained in imported trace files.    This could allow an attacker to social engineer an authorized user who holds the function right “Read diagnostics” int…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-13</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://cert-portal.siemens.com/productcert/html/ssa-591731.html" style="color:#1d4ed8;font-weight:600;">CVE-2026-63353</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#b91c1c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">9.4</span></td>
+      <td style="font-size:12.5px;color:#334155;">Affected devices do not properly sanitize comment fields contained in imported trace files before rendering them on the Trace page.    This could allow an attacker to social engineer an authorized user who holds the f…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-13</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://cert-portal.siemens.com/productcert/html/ssa-591731.html" style="color:#1d4ed8;font-weight:600;">CVE-2026-63354</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#b91c1c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">9.4</span></td>
+      <td style="font-size:12.5px;color:#334155;">Affected devices do not properly validate and sanitize visual marker data contained in imported CSV trace files before rendering it on the Trace page.    This could allow an attacker to social engineer an authorized u…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-13</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-106-02.json" style="color:#1d4ed8;font-weight:600;">CVE-2026-6284</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#b91c1c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">9.3</span></td>
+      <td style="font-size:12.5px;color:#334155;">An attacker with network access to the PLC is able to brute force discover passwords to gain unauthorized access to systems and services. The limited password complexity and no password input limiters makes brute forc…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-04-17</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://github.com/open62541/open62541/blob/v1.5.6/src/ua_types_definition.c#L274" style="color:#1d4ed8;font-weight:600;">CVE-2026-116014</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#b91c1c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">9.2</span></td>
+      <td style="font-size:12.5px;color:#334155;">open62541 1.5.0 before 1.5.7 contains an integer overflow in UA_DataType_fromStructureDescription() that wraps the 16-bit memSize field for large custom structure definitions. A malicious OPC UA server can supply Data…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-24</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-286-01.json" style="color:#1d4ed8;font-weight:600;">CVE-2026-92817</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#ea580c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">8.7</span></td>
+      <td style="font-size:12.5px;color:#334155;">The Ignition Perspective module does not properly validate session privileges when determining Designer-level access. An authenticated user with access to a Vision project could provide their valid Vision session iden…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-14</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://cert-portal.siemens.com/productcert/html/ssa-580366.html" style="color:#1d4ed8;font-weight:600;">CVE-2026-110936</a> <span style="color:#b91c1c;font-weight:700;" title="Ajoutée au catalogue KEV (exploitation connue)">★KEV</span></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#ea580c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">8.4</span></td>
+      <td style="font-size:12.5px;color:#334155;">A vulnerability has been identified in Siemens Software Center (All versions &lt; V4.0.9.8). The affected application loads dynamic-link libraries (DLLs) from an uncontrolled search path. This could allow an authentic…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-15</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://cert-portal.siemens.com/productcert/html/ssa-159454.html" style="color:#1d4ed8;font-weight:600;">CVE-2026-72895</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#ea580c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">8.4</span></td>
+      <td style="font-size:12.5px;color:#334155;">A vulnerability has been identified in SIMATIC IPC BX-21A (All versions &lt; V31.01.13), SIMATIC IPC RW-543A (All versions &lt; V1.1.4), SIMATIC IPC227G / IPC277G / IPC277G PRO / IPC327G / IPC377G (All versions &lt; V…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-13</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://github.com/davenardella/snap7/blob/30f37da3114024a71ba93f7fd855c680b97a406f/src/core/s7_partner.cpp#L1126-L1166" style="color:#1d4ed8;font-weight:600;">CVE-2026-115723</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#ea580c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">8.3</span></td>
+      <td style="font-size:12.5px;color:#334155;">Snap7 through 1.4.3 contains an out-of-bounds write vulnerability in the passive partner that allows a malicious active partner to overflow application buffers by declaring an unvalidated BSend total length. Attackers…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-23</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://github.com/davenardella/snap7" style="color:#1d4ed8;font-weight:600;">CVE-2026-111280</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#ea580c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">8.3</span></td>
+      <td style="font-size:12.5px;color:#334155;">snap7 through 1.4.3 contains an out-of-bounds write vulnerability in TSnap7MicroClient::opReadArea() that allows malicious S7 peers to overflow client buffers via an unchecked DataLength field. Rogue or impersonated P…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-15</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-050-04.json" style="color:#1d4ed8;font-weight:600;">CVE-2026-24790</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#ea580c;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">8.2</span></td>
+      <td style="font-size:12.5px;color:#334155;">The underlying PLC of the device can be remotely influenced, without proper safeguards or authentication.<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-02-20</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-265-09.json" style="color:#1d4ed8;font-weight:600;">CVE-2026-88020</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#ca8a04;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">5.3</span></td>
+      <td style="font-size:12.5px;color:#334155;">Autonomy Logic OpenPLC 3 is susceptible to an improper neutralization of input during web page generation vulnerability when the web interface attempts to route the program based on a query string parameter with no en…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-09-22</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://vuldb.com/cve/CVE-2026-115803" style="color:#1d4ed8;font-weight:600;">CVE-2026-115803</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#65a30d;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">2.1</span></td>
+      <td style="font-size:12.5px;color:#334155;">A flaw has been found in Scada-LTS 2.8.0. Affected by this vulnerability is the function HttpServletRequest.getParameter of the file AmChartValuesAPI.java of the component AmCharts Data API. Executing a manipulation o…<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-10-24</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><a href="https://www.certvde.com/en/advisories/VDE-2026-014/" style="color:#1d4ed8;font-weight:600;">CVE-2026-27565</a></td>
+      <td style="text-align:center;"><span style="display:inline-block;background:#475569;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;white-space:nowrap;">n/a</span></td>
+      <td style="font-size:12.5px;color:#334155;">An unauthenticated remote attacker can upload a malicious IODD file that places and executes a shell script with root privileges. The shell script remains active even after a reboot.<br><span style="color:#94a3b8;font-size:11px;"> · publié le 2026-09-16</span></td>
+    </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>📋 Avis CISA ICS récents</h2>
+    <p class="sub">Flux CISA (ics-advisories / alertes), fenêtre de 14 jours.</p>
+    <table>
+      <tr><th>Code</th><th>Avis</th><th>Publié</th></tr>
+      
+    <tr>
+      <td style="white-space:nowrap;"><span style="font-family:monospace;font-size:11px;background:#e2e8f0;border-radius:4px;padding:1px 6px;">ICSA-26-302-03</span></td>
+      <td><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-03" style="color:#1d4ed8;font-weight:600;">Hitachi Energy CoreTec Product</a>
+          <br><span style="font-size:12px;color:#64748b;">Hitachi Energy CoreTec Product mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Hitachi Energy is aware of OS command injecti…</span></td>
+      <td style="white-space:nowrap;font-size:12px;color:#64748b;">Wed, 28 Oct 2026</td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><span style="font-family:monospace;font-size:11px;background:#e2e8f0;border-radius:4px;padding:1px 6px;">ICSA-26-302-02</span></td>
+      <td><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-02" style="color:#1d4ed8;font-weight:600;">Hitachi Energy TRO600 series products</a>
+          <br><span style="font-size:12px;color:#64748b;">Hitachi Energy TRO600 series products mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Hitachi Energy is aware of multiple vu…</span></td>
+      <td style="white-space:nowrap;font-size:12px;color:#64748b;">Wed, 28 Oct 2026</td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><span style="font-family:monospace;font-size:11px;background:#e2e8f0;border-radius:4px;padding:1px 6px;">ICSA-26-302-01</span></td>
+      <td><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-01" style="color:#1d4ed8;font-weight:600;">Siemens Mendix SAML Module</a>
+          <br><span style="font-size:12px;color:#64748b;">Siemens Mendix SAML Module mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Mendix SAML module contains an authentication byp…</span></td>
+      <td style="white-space:nowrap;font-size:12px;color:#64748b;">Wed, 28 Oct 2026</td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><span style="font-family:monospace;font-size:11px;background:#e2e8f0;border-radius:4px;padding:1px 6px;">ICSA-26-300-02</span></td>
+      <td><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-300-02" style="color:#1d4ed8;font-weight:600;">Mitsubishi Electric and Mitsubishi Electric Iconics Digital Solutions GENESIS, GENESIS64, ICONICS Suite, Hyper Historian, AnalytiX, MobileHMI, IoTWorX, MC Works64, GENESIS32 and BizViz</a>
+          <br><span style="font-size:12px;color:#64748b;">Mitsubishi Electric and Mitsubishi Electric Iconics Digital Solutions GENESIS, GENESIS64, ICONICS Suite, Hyper Historian, AnalytiX, MobileHMI, IoTWorX, MC Works…</span></td>
+      <td style="white-space:nowrap;font-size:12px;color:#64748b;">Mon, 26 Oct 2026</td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><span style="font-family:monospace;font-size:11px;background:#e2e8f0;border-radius:4px;padding:1px 6px;">ICSA-26-300-01</span></td>
+      <td><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-300-01" style="color:#1d4ed8;font-weight:600;">EPICS Base</a>
+          <br><span style="font-size:12px;color:#64748b;">EPICS Base mstradling Oct 26, 2026 Release Date October 27, 2026 Description View CSAF Summary Successful exploitation of these vulnerabilities could allow an a…</span></td>
+      <td style="white-space:nowrap;font-size:12px;color:#64748b;">Mon, 26 Oct 2026</td>
+    </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>⚠️ Catalogue KEV — produits OT/ICS exploités</h2>
+    <p class="sub">Known Exploited Vulnerabilities (CISA) : appliquer les correctifs avant la date d'échéance.</p>
+    <table>
+      <tr><th>CVE</th><th>Produit</th><th>Ajout / échéance</th></tr>
+      
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2026-110936</strong></td>
+      <td style="font-size:12.5px;">Siemens — Software Center<br>
+        <span style="color:#64748b;">Siemens Software Center Uncontrolled Search Path Element Vulnerability</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2026-10-20 → échéance 2026-11-03<br>
+        <span style="color:#64748b;">Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Securit</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2021-22681</strong></td>
+      <td style="font-size:12.5px;">Rockwell — Multiple Products<br>
+        <span style="color:#64748b;">Rockwell Multiple Products Insufficient Protected Credentials Vulnerability</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2026-03-05 → échéance 2026-03-26<br>
+        <span style="color:#64748b;">Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use o</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2021-26828</strong></td>
+      <td style="font-size:12.5px;">OpenPLC — ScadaBR<br>
+        <span style="color:#64748b;">OpenPLC ScadaBR Unrestricted Upload of File with Dangerous Type Vulnerability</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2025-12-03 → échéance 2025-12-24<br>
+        <span style="color:#64748b;">Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use o</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2021-26829</strong></td>
+      <td style="font-size:12.5px;">OpenPLC — ScadaBR<br>
+        <span style="color:#64748b;">OpenPLC ScadaBR Cross-site Scripting Vulnerability</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2025-11-28 → échéance 2025-12-19<br>
+        <span style="color:#64748b;">Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use o</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2025-27915</strong></td>
+      <td style="font-size:12.5px;">Synacor — Zimbra Collaboration Suite (ZCS)<br>
+        <span style="color:#64748b;">Synacor Zimbra Collaboration Suite (ZCS) Cross-site Scripting Vulnerability</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2025-10-07 → échéance 2025-10-28<br>
+        <span style="color:#64748b;">Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use o</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2024-21893</strong></td>
+      <td style="font-size:12.5px;">Ivanti — Connect Secure, Policy Secure, and Neurons<br>
+        <span style="color:#64748b;">Ivanti Connect Secure, Policy Secure, and Neurons Server-Side Request Forgery (SSRF) Vulnerability ⚠ ransomware</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2024-01-31 → échéance 2024-02-02<br>
+        <span style="color:#64748b;">Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2023-46805</strong></td>
+      <td style="font-size:12.5px;">Ivanti — Connect Secure and Policy Secure<br>
+        <span style="color:#64748b;">Ivanti Connect Secure and Policy Secure Authentication Bypass Vulnerability ⚠ ransomware</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2024-01-10 → échéance 2024-01-22<br>
+        <span style="color:#64748b;">Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2024-21887</strong></td>
+      <td style="font-size:12.5px;">Ivanti — Connect Secure and Policy Secure<br>
+        <span style="color:#64748b;">Ivanti Connect Secure and Policy Secure Command Injection Vulnerability ⚠ ransomware</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2024-01-10 → échéance 2024-01-22<br>
+        <span style="color:#64748b;">Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2023-6448</strong></td>
+      <td style="font-size:12.5px;">Unitronics — Vision PLC and HMI<br>
+        <span style="color:#64748b;">Unitronics Vision PLC and HMI Insecure Default Password Vulnerability</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2023-12-11 → échéance 2023-12-18<br>
+        <span style="color:#64748b;">Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.</span></td>
+    </tr>
+
+    <tr>
+      <td style="white-space:nowrap;"><strong>CVE-2021-3129</strong></td>
+      <td style="font-size:12.5px;">Laravel — Ignition<br>
+        <span style="color:#64748b;">Laravel Ignition File Upload Vulnerability ⚠ ransomware</span></td>
+      <td style="white-space:nowrap;font-size:12px;">2023-09-18 → échéance 2023-10-09<br>
+        <span style="color:#64748b;">Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.</span></td>
+    </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>✍️ Analyses &amp; veille technologie</h2>
+    <p class="sub">Articles de fond rédigés à partir des sources citées dans chaque article.</p>
+    <div class="article"><div class="kicker">Menace active · Threat intelligence</div><h3>Menace active confirmée : des scripts générés par IA ciblent les PLC Siemens S7 (AA26-231A)</h3><p>Le 19 août 2026, la NSA, la CISA, le FBI, le DOE et l&#x27;EPA ont publié l&#x27;alerte conjointe <strong>AA26-231A</strong> : des acteurs malveillants utilisent des <strong>scripts Python générés par IA</strong>, appuyés sur la bibliothèque open source <strong>python-snap7</strong>, pour attaquer des PLC Siemens S7 exposés sur Internet via le protocole <strong>S7comm (TCP/102)</strong>.</p>
+<h4>Pourquoi c&#x27;est un tournant</h4>
+<p>Jusqu&#x27;ici, écrire un exploit ICS demandait une expertise rare. L&#x27;IA abaisse radicalement cette barrière : n&#x27;importe quel acteur peut générer un script fonctionnel déguisé en outil de supervision, avec <strong>lecture/écriture de la mémoire du PLC, des données de configuration et de la logique ladder</strong>.</p>
+<p>Aucun CVE n&#x27;est associé à cette campagne — <strong>la vulnérabilité, c&#x27;est l&#x27;exposition elle-même</strong> : PLC accessibles depuis Internet, authentification faible, firmware obsolète. Les familles visées couvrent toute la gamme S7 : S7-200, S7-300, S7-400, S7-1200 et S7-1500, y compris les contrôleurs de sécurité F-series.</p>
+<h4>Un impact réel, pas théorique</h4>
+<p>Fin juillet 2026, une station de traitement d&#x27;eau du <strong>Minnesota</strong> a été perturbée ; environ <strong>30 systèmes d&#x27;eau ont été affectés dans au moins sept États</strong>. Les agences qualifient la menace d&#x27;« active » : ce ne sont plus de la reconnaissance théorique mais du pré-positionnement opérationnel.</p>
+<h4>Checklist pour les exploitants</h4>
+<ul>
+<li><strong>Retirer les PLC S7 de toute exposition Internet directe</strong> — bloquer le TCP/102 au périmètre.</li>
+<li>Activer les <strong>niveaux de protection</strong> Siemens et des <strong>mots de passe forts</strong> sur chaque CPU.</li>
+<li>Restreindre l&#x27;accès aux seuls postes d&#x27;ingénierie autorisés (listes blanches réseau).</li>
+<li><strong>Surveiller le trafic S7comm</strong> (détection d&#x27;IDS dédiée, baselining des requêtes read/write).</li>
+<li>Vérifier l&#x27;intégrité des projets TIA Portal contre des sauvegardes hors ligne connues bonnes.</li>
+</ul>
+<p><em>Sources : <a href="https://threataft.com/articles/siemens-s7-plcs-ai-generated-exploits-cisa-aa26-231a">AA26-231A via ThreatAft</a>, <a href="https://safeguard.sh/resources/blog/siemens-s7-plc-alert-aa26-231a-checklist">checklist Safeguard</a>, <a href="https://www.cisa.gov/">CISA KEV / avis</a>. Note connexe : la librairie snap7 elle-même a une CVE-2026-111280 (écriture hors limites dans <code>opReadArea()</code>) — mettez à jour vos outils qui l&#x27;embarquent.</em></p></div>
+<div class="article"><div class="kicker">Menace active · Threat intelligence</div><h3>AA26-097A — acteurs iraniens : l&#x27;exfiltration de fichiers projet PLC devient le nouveau butin</h3><p>L&#x27;alerte <strong>AA26-097A</strong> de la CISA (mise à jour juillet–août 2026) documente une escalade attributed à des acteurs affiliés à l&#x27;Iran contre des PLC exposés aux États-Unis : initialement <strong>Rockwell Automation MicroLogix 1100/1400</strong>, le ciblage s&#x27;est élargi aux <strong>Schneider Electric BMX P34 / Modicon M340</strong> et aux <strong>Siemens S7-1200</strong>, dans les secteurs eau, énergie et collectivités.</p>
+<h4>La nouveauté inquiétante</h4>
+<p>Les attaquants ne se contentent plus de perturber : ils <strong>exfiltrent les fichiers projet des PLC</strong> (logique ladder, configurations) en utilisant les logiciels d&#x27;ingénierie des éditeurs — <strong>Studio 5000 Logix Designer, EcoStruxure Control Expert, TIA Portal</strong> — exécutés sur des infrastructures louées tierces. Disposer du code de l&#x27;automate, c&#x27;est disposer de la carte exacte du process : cela prépare une manipulation de précision (modifier la logique, désactiver des alarmes) bien plus dangereuse qu&#x27;un arrêt brutal. De nouveaux IOC (IP) couvrent la période septembre 2025 – juillet 2026.</p>
+<h4>Le détail qui fait froid dans le dos</h4>
+<p>L&#x27;avis reste associé à la <strong>CVE-2021-22681</strong>, une faille d&#x27;authentification sur des PLC exposés, <strong>sans correctif possible</strong> (« unpatchable »). Autrement dit : pour cette classe de risque, le seul remède est architectural.</p>
+<h4>Ce que cela change pour la défense OT</h4>
+<ul>
+<li><strong>L&#x27;intégrité du code automate devient un enjeu de sécurité à part entière</strong> : hash des projets, sauvegardes hors ligne immuables, comparaison régulière, détection des modifications dans les blocs de code réutilisables (AOI).</li>
+<li><strong>Segmentez et filtrez les protocoles industriels</strong> : un PLC n&#x27;a jamais besoin d&#x27;être joignable depuis Internet ni depuis le réseau bureautique.</li>
+<li><strong>Verrouillez les postes d&#x27;ingénierie</strong> (les « crown jewels » de l&#x27;OT) : MFA, droits minimaux, journalisation des téléchargements de projet vers les CPU.</li>
+</ul>
+<p><em>Sources : <a href="https://www.tenable.com/blog/coordinated-cyberattack-on-minnesota-water-utilities-what-you-need-to-know">Tenable — coordinated cyberattack on Minnesota water utilities</a>, <a href="https://breached.company/cisa-national-water-sector-warning-plc-exposure-2026/">Breached.company — CISA AA26-097A</a>, <a href="https://otsecuritywire.com/sectors/energy/">OT Security Wire — secteur énergie</a>.</em></p></div>
+<div class="article"><div class="kicker">Vulnerability watch · CVE</div><h3>Le trimestre des CVE PLC : brute force à 9.3, RCE sans authentification et pièges d&#x27;ingénierie</h3><p>Au-delà des avis Siemens d&#x27;octobre, plusieurs CVE publiées en 2026 illustrent les trois grandes familles de risques pesant sur les automates.</p>
+<h4>Authentification : CVE-2026-6284 (Horner Automation, CVSS 9.3)</h4>
+<p>Les PLC Horner (programmation Cscape) n&#x27;imposent <strong>ni complexité de mot de passe, ni verrouillage après échecs</strong> (CWE-521) : un attaquant ayant un accès réseau peut <strong>bruter-forcer le mot de passe à vitesse réseau</strong> et prendre le contrôle du process. Parade : segmentation, ACL limitées aux postes d&#x27;ingénierie, mots de passe au maximum autorisé, et idéalement un point d&#x27;accès unique (jump server) avec MFA.</p>
+<h4>Exécution de code sans authentification</h4>
+<ul>
+<li><strong>CVE-2026-5817 — ABB AC500</strong> : RCE via le <strong>serveur Modbus TCP</strong>, exploitable <strong>sans aucun identifiant</strong> sur l&#x27;une des familles de PLC les plus déployées en Europe (manufacturing, eau, agroalimentaire).</li>
+<li><strong>CVE-2026-27565 / 27546 (Pepperl+Fuchs, CVSS 9.8)</strong> : upload d&#x27;un fichier <strong>IODD</strong> malveillant → script shell exécuté en root, <strong>persistant après redémarrage</strong> ; plus un contournement d&#x27;authentification. Correctif : version 1.7.4.</li>
+<li><strong>CVE-2026-18963 — Siemens Industrial Edge Management (CVSS 9.1)</strong> : contournement du flux de réinitialisation Keycloak (aucune vérification e-mail) → <strong>prise de compte complète</strong> des éditions Cloud/Pro/Virtual.</li>
+<li><strong>CVE-2026-12663 — Rockwell ControlFLASH ≤ V15.07</strong> : le dossier d&#x27;installation est en écriture pour le groupe « Everyone » → exécution de code au niveau de l&#x27;utilisateur connecté.</li>
+</ul>
+<h4>Chaînes d&#x27;attaque IT→OT</h4>
+<p>Deux rappels sur la chaîne IT→OT : <strong>CVE-2026-59310 (VMware vCenter)</strong> — aiguë lorsque vCenter héberge historiens, HMI et SCADA virtualisés — et les <strong>escalades de privilèges locales (LPE) du noyau Linux</strong> (ex. « GhostLock », LPE root en ~5 s à haute fiabilité, signalée par OT Security Wire), qui frappent directement les historiens et passerelles OPC UA sous Linux.</p>
+<blockquote><strong>Règle d&#x27;or</strong> : un PLC ou un poste d&#x27;ingénierie ne doit jamais être joignable depuis Internet. En avril 2026, Forescout recensait encore 91 000 serveurs RDP et 29 000 VNC exposés, dont 670 VNC <strong>sans authentification</strong> donnant directement sur des panneaux ICS/OT.</blockquote>
+<p><em>Sources : <a href="https://www.sentinelone.com/vulnerability-database/cve-2026-6284/">SentinelOne CVE-2026-6284</a>, <a href="https://securityonline.info/industrial-firmware-vulnerabilities/">SecurityOnline — firmware industriel</a>, <a href="https://www.viakoo.com/blog/daily-ot-security-news-september-23-2026/">Viakoo — avis CISA sept. 2026</a>, <a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-246-03">CISA ICSA-26-246-03</a>, <a href="https://otsecuritywire.com/">OT Security Wire</a>, <a href="https://itsecalikhan.substack.com/p/april-2026-otics-cybersecurity-the">Forescout via itsecalikhan</a>.</em></p></div>
+<div class="article"><div class="kicker">Technologies &amp; standards · Veille techno</div><h3>Veille technologies OT 2026 — IEC 62443, NIS2, OPC UA, Modbus : durcir sans casser la production</h3><h4>Standards : la conformité devient le socle</h4>
+<ul>
+<li><strong>IEC 62443</strong> s&#x27;élargit en 2026 : la partie <strong>-1-6</strong> couvre enfin la sécurité des <strong>dispositifs IIoT</strong> (capteurs, actionneurs connectés au cloud/edge), la <strong>-6-2</strong> définit l&#x27;évaluation de conformité des fournisseurs, la <strong>-1-5</strong> des profils de sécurité par application. Le référentiel passe de 4 à 6 catégories.</li>
+<li><strong>NIS2 (UE)</strong> : notification d&#x27;alerte précoce sous <strong>24 h</strong>, notification d&#x27;incident sous <strong>72 h</strong>, rapport final sous un mois — et responsabilité personnelle des dirigeants (art. 20). Pour les entités « importantes », les sanctions atteignent 7 M€ ou 1,4 % du chiffre d&#x27;affaires mondial.</li>
+<li>Le modèle <strong>Purdue</strong> (zones et conduits) reste la colonne vertébrale : séparer IT, DMZ industrielle (IDMZ) et OT, avec des conduits contrôlés entre les couches.</li>
+</ul>
+<h4>Protocoles : le talon d&#x27;Achille historique</h4>
+<p><strong>Modbus, DNP3, BACnet, S7comm et OPC Classic n&#x27;ont ni authentification ni chiffrement natifs</strong> : s&#x27;ils sont atteignables, des commandes d&#x27;écriture passent. Le durcissement passe par la segmentation, des IDS spécialisés ICS, des listes blanches de fonctions Modbus, et le remplacement progressif par des versions sécurisées (OPC UA avec mTLS, MQTT sur TLS).</p>
+<h4>OPC UA : puissant mais exigeant</h4>
+<p>Les failles récentes d&#x27;<strong>Eclipse Milo</strong> (bypass d&#x27;autorisation, fuite de diagnostics, oracle de padding Basic128Rsa15, DoS par quotas d&#x27;éléments surveillés) rappellent la règle : imposer <strong>mTLS, autorisation, quotas et restrictions SSRF</strong> sur chaque serveur OPC UA, notamment les passerelles IIoT (Eclipse Arrowhead/Ditto également visées).</p>
+<h4>Tendances de fond (rapports 2026)</h4>
+<ul>
+<li>Le rapport <strong>Waterfall / ICS STRIVE 2026</strong> note une baisse de 25 % des incidents à impact physique en 2025 (57 contre 76), attribuée au plateau du ransomware — mais anticipe une <strong>reprise en 2026-2027</strong>, notamment avec l arrival d&#x27;attaques « auto-entraînées » par IA côté offensif.</li>
+<li>Côté manufacturing, le ransomware a progressé de <strong>56 % en 2025</strong> (1 466 incidents documentés), avec <strong>25 % provoquant l&#x27;arrêt complet du site</strong>.</li>
+</ul>
+<blockquote><strong>Priorités 2026 pour une usine</strong> : (1) inventaire complet des actifs OT, (2) segmentation zones/conduits, (3) IAM strict + MFA sur les accès distants, (4) supervision passive (les vieux systèmes ne supportent pas d&#x27;agents), (5) playbooks de réponse à incident spécifiques OT, (6) sauvegardes hors ligne et testées des logiques PLC.</blockquote>
+<p><em>Sources : <a href="https://www.iiot-world.com/ics-security/ics-ot-cybersecurity-trends-2026/">IIoT World — tendances ICS/OT 2026</a>, <a href="https://www.iiot-world.com/ics-security/ot-cybersecurity-manufacturing-2026/">IIoT World — guide manufacturing 2026</a>, <a href="https://deltaroot.net/blog/iec62443-2026-ot-security-trends">Deltaroot — IEC 62443 en 2026</a>, <a href="https://go.waterfall-security.com/hubfs/Gated%20content/2026%20OT%20Cyber%20Threat%20Report%20-%20Waterfall%20Security%20Solutions-1.pdf">Waterfall 2026 OT Cyber Threat Report</a>, <a href="https://otsecuritywire.com/articles/">OT Security Wire — Modbus</a>, <a href="https://agentic-ai-daily-reports.netlify.app/cyber">Agentic AI — brief OT/ICS</a>.</em></p></div>
+  </div>
+
+  <div class="footer">
+    <strong>Sources automatiques :</strong>
+    <a href="https://www.cisa.gov/rss.xml">CISA RSS</a> ·
+    <a href="https://www.cisa.gov/news-events/ics-advisories">CISA ICS Advisories</a> ·
+    <a href="https://nvd.nist.gov/">NVD API 2.0</a> ·
+    <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV</a><br>
+    Généré automatiquement le 2026-10-31 22:08:25 UTC · Rédaction OT Watch (collecte automatisée + analyse éditoriale)<br>
+    Veille informative automatiquement collectée (CISA, NVD, KEV) et réécrite par la rédaction. Vérifiez toujours les correctifs auprès des éditeurs avant déploiement en production OT.<br>
+    Se désabonner : répondre à cet e-mail avec « STOP ».
+  </div>
+</div>
+</body>
+</html>

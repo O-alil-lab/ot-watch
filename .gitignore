@@ -1,0 +1,9 @@
+# OT Watch
+__pycache__/
+*.pyc
+data/
+out/*.log
+.env
+.env.local
+*.key
+*.pem

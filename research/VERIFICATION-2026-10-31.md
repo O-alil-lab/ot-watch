@@ -1,0 +1,39 @@
+# Rapport de vérification ECC — OT Watch (verification-loop, 31/10/2026)
+
+Date : 2026-10-31 · Périmètre : `/home/user/newsletter-ot` (src, tests, config, editorial) + harnais ECC installé (`/home/user/.claude`, `.codex`, `.config/opencode`, `.cursor`)
+
+## Phase 1 — Build ✅ PASS
+`python3 -m py_compile src/collect.py src/render.py tests/*.py` → OK (Python 3.13)
+
+## Phase 2 — Type check ✅ PASS (équivalent)
+Pas de typage statique externe ; le build + la suite de tests typées (fixtures NVD/CVE) couvrent les contrats. (pyright non installé dans le sandbox ; py_compile + tests OK.)
+
+## Phase 3 — Lint ✅ PASS
+`ruff check src tests --config ruff.toml` → **All checks passed** (E,F,W,I,UP,SIM,BLE,RUF ; E501/EXE001/BLE001 ignorés avec justification documentée dans `ruff.toml`)
+
+## Phase 4 — Tests + couverture ✅ PASS (objectif ECC ≥ 80 %)
+`coverage run -m unittest discover -s tests` → **23 tests, 0 échec**
+- `src/collect.py` : **86 %**
+- `src/render.py` : **97 %**
+- **TOTAL : 91 %**
+Couverture sécurité : XSS (script/img-onerror/javascript: neutralisés), filtre faux positifs NVD (« Datalex PLC » rejeté), parsing RSS CISA, filtre KEV (« Graphics » ne matche pas `\bics\b`), pipeline collect→render mocké de bout en bout.
+
+## Phase 5 — Security grep ✅ PASS
+- Aucun secret hardcodé (`api_key|secret|token|password = "..."` → 0 hit ; seul hit = docstring `__pycache__`)
+- Aucune primitive dangereuse (`eval(`, `exec(`, `shell=True`, `os.system`, `pickle`, `subprocess` → 0 hit)
+- `NVD_API_KEY` lu **uniquement** via `os.environ.get` (jamais en dur) ; `.gitignore` couvre `.env`, `*.key`, `data/`, `__pycache__`
+- Durcissement XSS du rendu : `html.escape(quote=True)` + `safe_url()` (schemes autorisés : http/https/mailto uniquement) sur toutes les données externes (NVD/CISA/KEV) et les liens éditoriaux — prouvé par tests.
+
+## Phase 6 — AgentShield (ECC security-scan) + doctor ✅ PASS avec 1 faux positif revu
+- `npx ecc-agentshield scan --path /home/user/newsletter-ot` → 0 finding (plateforme Python autonome, pas de config agent)
+- `npx ecc-agentshield scan --path /home/user/.claude` → 200 fichiers scannés : **0 critical, 1 high, 104 medium, 48 low, 7 info**
+  - Le **1 high** est un **faux positif revu** : `agents/ruby-reviewer.md:55` contient « skip validations » dans une checklist Ruby on Rails (vocabulaire ActiveRecord : `update_all` « skip validations and callbacks »), pas une instruction de contourner la vérification de skills.
+  - Les medium/low sont des notes de design ECC (hooks lisant le transcript — comportement normal des hooks Stop/SessionEnd ; absence de bloc `permissions` dans settings.json, etc.). Aucune action bloquante.
+- `node ecc/scripts/doctor.js` → **checked=5, ok=5, warnings=0, errors=0**
+
+## Hardening appliqué pendant la revue
+1. `render.py` : `safe_url()` anti-`javascript:`/`data:` + échappement `quote=True` + `with open(...)` partout.
+2. `collect.py` : filtre anti-faux-positifs OT (`_is_ot`) + gestion rate-limit NVD (403/429 → pause 30 s, 5 tentatives) + watchlist CVE par `cveId` + context managers.
+3. `tests/` : 23 tests unitaires + intégration (réseau mocké) ; `ruff.toml` ; `.gitignore`.
+
+## Résultat global : ✅ PASS — la plateforme est créée, testée (91 % de couverture) et sécurisée.

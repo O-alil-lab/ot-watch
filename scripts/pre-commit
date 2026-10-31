@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Pre-commit OT Watch : scan de secrets (gitleaks si dispo, sinon grep de secours) + lint rapide.
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)"
+
+if command -v gitleaks >/dev/null 2>&1; then
+  echo "[pre-commit] gitleaks scan..."
+  gitleaks protect --staged --config .gitleaks.toml --no-banner
+else
+  echo "[pre-commit] gitleaks absent -> grep de secours..."
+  if git diff --cached --name-only -z | xargs -0 grep -niE "(api[_-]?key|secret|token|password)\s*[:=]\s*[\"'][A-Za-z0-9+/=_.-]{8,}" --exclude-dir=.git 2>/dev/null; then
+    echo "[pre-commit] ERREUR : secret potentiel détecté. Installez gitleaks pour un scan complet."
+    exit 1
+  fi
+fi
+
+if command -v ruff >/dev/null 2>&1 || python3 -m ruff --version >/dev/null 2>&1; then
+  echo "[pre-commit] ruff..."
+  python3 -m ruff check server.py src tests --config ruff.toml
+fi
+echo "[pre-commit] OK"

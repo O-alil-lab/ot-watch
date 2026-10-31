@@ -1,0 +1,71 @@
+{
+  "newsletter": {
+    "name": "OT Watch",
+    "tagline": "La veille cybersécurité des automatismes — PLC, CVE & technologies OT",
+    "language": "fr",
+    "issue_prefix": "Édition",
+    "editor": "Rédaction OT Watch (collecte automatisée + analyse éditoriale)",
+    "contact": "veille@otwatch.example"
+  },
+  "sources": {
+    "cisa_rss": "https://www.cisa.gov/rss.xml",
+    "cisa_ics_page": "https://www.cisa.gov/news-events/ics-advisories",
+    "nvd_api": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "cisa_kev": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+  },
+  "window_days": 14,
+  "max_cves": 14,
+  "max_advisories": 12,
+  "max_kev": 10,
+  "nvd_keywords": [
+    "PLC",
+    "SIMATIC",
+    "SCADA",
+    "OPC UA"
+  ],
+  "nvd_sleep_seconds": 7,
+  "cve_watchlist": [
+    "CVE-2026-63350",
+    "CVE-2026-63353",
+    "CVE-2026-63354",
+    "CVE-2026-110936",
+    "CVE-2026-72895",
+    "CVE-2026-6284",
+    "CVE-2026-27565",
+    "CVE-2026-27546",
+    "CVE-2026-18963",
+    "CVE-2026-12663",
+    "CVE-2026-111280",
+    "CVE-2026-115723",
+    "CVE-2026-59310",
+    "CVE-2026-20182",
+    "CVE-2026-88020",
+    "CVE-2026-92817",
+    "CVE-2026-24790",
+    "CVE-2026-116014"
+  ],
+  "user_agent": "ot-watch-newsletter/1.0 (veille OT; contact: veille@otwatch.example)",
+  "vendor_regex": "\\b(siemens|schneider|rockwell|allen[- ]?bradley|modicon|simatic|plcs?\\b|programmable logic|\\bics\\b|\\bscada\\b|\\bhmi\\b|opc[ -]?ua|ethernet/ip|\\benip\\b|modbus|profinet|s7comm|codesys|beckhoff|twincat|wago|mitsubishi electric|omron|\\babb\\b|honeywell|yokogawa|emerson|phoenix contact|pepperl|ruggedcom|snap7|ignition|aveva|wonderware|unitronics|openplc|controllogix|compactlogix|micrologix|experion|genesis64|iconics|epics)\\b",
+  "ot_kev_regex": "\\b(siemens|schneider|rockwell|allen[- ]?bradley|modicon|simatic|plcs?\\b|programmable logic|\\bscada\\b|\\bics\\b|opc[ -]?ua|ethernet/ip|modbus|profinet|s7comm|codesys|beckhoff|twincat|wago|mitsubishi|omron|\\babb\\b|honeywell|phoenix contact|pepperl|ruggedcom|snap7|ignition|aveva|wonderware|unitronics|openplc|controllogix|micrologix|experion|iconics|genesis)\\b",
+  "disclaimer": "Veille informative automatiquement collectée (CISA, NVD, KEV) et réécrite par la rédaction. Vérifiez toujours les correctifs auprès des éditeurs avant déploiement en production OT.",
+  "nvd_cpe_vendors": [
+    "siemens",
+    "schneider-electric",
+    "rockwell_automation",
+    "abb",
+    "mitsubishi_electric",
+    "omron",
+    "phoenixcontact",
+    "beckhoff",
+    "wago",
+    "honeywell"
+  ],
+  "epss_api": "https://api.first.org/data/v1/epss",
+  "use_epss": true,
+  "stale_after_intervals": 2,
+  "risk_weights": {
+    "cvss": 0.5,
+    "epss": 0.3,
+    "kev": 0.2
+  }
+}

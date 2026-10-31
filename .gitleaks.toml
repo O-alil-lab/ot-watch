@@ -1,0 +1,15 @@
+# Config gitleaks — scan des secrets avant commit (OT Watch)
+title = "OT Watch gitleaks config"
+
+[allowlist]
+description = "Faux positifs acceptés"
+paths = [
+  '''tests/''',          # fixtures de test (pas de vrais secrets)
+  '''research/''',       # documentation
+  '''README.md''',
+]
+regexes = [
+  '''(?i)(api[_-]?key|token|secret|password)\s*[:=]\s*["']?\.{3,}["']?''',  # "..." placeholders
+  '''OTWATCH_ADMIN_TOKEN''',
+  '''NVD_API_KEY''',
+]
