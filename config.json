@@ -132,5 +132,126 @@
       "aveva",
       "ignition"
     ]
+  },
+  "attack_ics": {
+    "T0843": {
+      "label": "Program Download",
+      "keywords": [
+        "program download",
+        "download to plc",
+        "plc program",
+        "logic download",
+        "block download",
+        "firmware download"
+      ]
+    },
+    "T0836": {
+      "label": "Modify Parameter",
+      "keywords": [
+        "modify parameter",
+        "write parameter",
+        "write single coil",
+        "write register",
+        "function code 5",
+        "function code 6",
+        "function code 15",
+        "function code 16"
+      ]
+    },
+    "T0855": {
+      "label": "Unauthorized Command Message",
+      "keywords": [
+        "unauthorized command",
+        "direct operate",
+        "cold restart",
+        "command message",
+        "control command"
+      ]
+    },
+    "T0858": {
+      "label": "Change Operating Mode",
+      "keywords": [
+        "change operating mode",
+        "cpu stop",
+        "stop cpu",
+        "run/stop",
+        "mode change"
+      ]
+    },
+    "T0846": {
+      "label": "Remote System Discovery",
+      "keywords": [
+        "network discovery",
+        "network scan",
+        "reconnaissance",
+        "device enumeration",
+        "enumerat"
+      ]
+    },
+    "T0801": {
+      "label": "Monitor Process State",
+      "keywords": [
+        "monitor process",
+        "process variable",
+        "read holding register",
+        "polling loop"
+      ]
+    },
+    "T0880": {
+      "label": "Loss of Safety",
+      "keywords": [
+        "safety instrumented",
+        "safety system",
+        "emergency shutdown",
+        "esd",
+        "sis "
+      ]
+    },
+    "T0886": {
+      "label": "Remote Services",
+      "keywords": [
+        "remote access",
+        "remote desktop",
+        "vnc",
+        "rdp",
+        "telnet",
+        "ssh",
+        "remote service"
+      ]
+    },
+    "T0885": {
+      "label": "Commonly Used Port",
+      "keywords": [
+        "port 502",
+        "modbus",
+        "port 102",
+        "s7comm",
+        "port 44818",
+        "ethernet/ip",
+        "opc ua",
+        "iec 60870-5-104",
+        "dnp3"
+      ]
+    },
+    "T0832": {
+      "label": "Manipulation of Control",
+      "keywords": [
+        "manipulat",
+        "control logic",
+        "ladder logic",
+        "spoof"
+      ]
+    }
+  },
+  "ssvc": {
+    "epss_poc": 0.1,
+    "automatable_cvss": 9.0,
+    "total_impact_cvss": 9.0,
+    "poc_keywords": [
+      "proof of concept",
+      "public exploit",
+      "exploit code",
+      "poc"
+    ]
   }
 }

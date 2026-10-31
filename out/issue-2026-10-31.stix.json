@@ -1,0 +1,1052 @@
+{
+  "type": "bundle",
+  "id": "bundle--88a47a27-21a5-5254-8153-c1311c6748d4",
+  "objects": [
+    {
+      "type": "marking-definition",
+      "spec_version": "2.1",
+      "id": "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92",
+      "created": "2026-01-01T00:00:00.000Z",
+      "definition_type": "tlp",
+      "name": "TLP:WHITE",
+      "definition": {
+        "tlp": "white"
+      }
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--6d985d4f-12a9-5eb8-b1c9-2f079a4bf4ea",
+      "created": "2026-10-15T15:17:30.000Z",
+      "modified": "2026-10-21T13:10:11.000Z",
+      "name": "CVE-2026-110936",
+      "description": "A vulnerability has been identified in Siemens Software Center (All versions < V4.0.9.8). The affected application loads dynamic-link libraries (DLLs) from an uncontrolled search path. This could allow an authenticated local attacker to place a specially crafted DLL in a directory that the application searches, leading to arbitrary code execution with the privileges of the affected application.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-110936",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-110936"
+        },
+        {
+          "source_name": "CISA KEV",
+          "external_id": "CVE-2026-110936",
+          "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-110936"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://cert-portal.siemens.com/productcert/html/ssa-580366.html"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://productcert.siemens.com/news/2026/10/19/active-exploitation-of-cve-2026-110936-in-siemens-software-center/"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-110936"
+        }
+      ],
+      "x_otwatch_cvss": 8.4,
+      "x_otwatch_severity": "HIGH",
+      "x_otwatch_epss": 0.00967,
+      "x_otwatch_kev": true,
+      "x_otwatch_risk": 6.23,
+      "x_otwatch_relevant": true,
+      "x_otwatch_ssvc": "act",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--b18d42a1-8901-5716-a933-dcb708af537c",
+      "created": "2026-10-24T12:16:57.000Z",
+      "modified": "2026-10-29T17:18:01.000Z",
+      "name": "CVE-2026-116014",
+      "description": "open62541 1.5.0 before 1.5.7 contains an integer overflow in UA_DataType_fromStructureDescription() that wraps the 16-bit memSize field for large custom structure definitions. A malicious OPC UA server can supply DataType definitions via UA_Client_getRemoteDataTypes(), causing decodeBinaryStructure() to overflow the heap, crashing clients or enabling code execution.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-116014",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-116014"
+        },
+        {
+          "source_name": "mitre-attack",
+          "external_id": "T0885",
+          "url": "https://attack.mitre.org/techniques/T0885/",
+          "description": "MITRE ATT&CK for ICS"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/open62541/open62541/blob/v1.5.6/src/ua_types_definition.c#L274"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/open62541/open62541/commit/0cf4806768c493bc6ccffcd4419da24153b970ec"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/open62541/open62541/pull/8298"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/open62541/open62541/pull/8302"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/open62541/open62541/releases/tag/v1.5.7"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.vulncheck.com/advisories/open62541-1.5.0-before-1.5.7-integer-overflow-heap-buffer-overflow-via-custom-datatype"
+        }
+      ],
+      "x_otwatch_cvss": 9.2,
+      "x_otwatch_severity": "CRITICAL",
+      "x_otwatch_epss": 0.00432,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 4.61,
+      "x_otwatch_relevant": true,
+      "x_otwatch_ssvc": "act",
+      "x_otwatch_attack_ics": [
+        "T0885"
+      ]
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--1b447998-e6bf-508d-b932-37aaf9cf0446",
+      "created": "2026-10-14T00:17:13.000Z",
+      "modified": "2026-10-14T18:19:35.000Z",
+      "name": "CVE-2026-92817",
+      "description": "The Ignition Perspective module does not properly validate session privileges when determining Designer-level access. An authenticated user with access to a Vision project could provide their valid Vision session identifier and gain Designer-level privileges. An attacker could exploit these elevated privileges to execute arbitrary code in the context of the Ignition Gateway process.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-92817",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-92817"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-286-01.json"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://security.inductiveautomation.com/?tcuUid=34477620-731d-4b70-b22b-9450f9a659a3"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-286-01"
+        }
+      ],
+      "x_otwatch_cvss": 8.7,
+      "x_otwatch_severity": "HIGH",
+      "x_otwatch_epss": 0.00485,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 4.36,
+      "x_otwatch_relevant": true,
+      "x_otwatch_ssvc": "track*",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--a738bcc7-8bc3-5e42-ad4b-71f80a3ac7ad",
+      "created": "2026-10-13T10:17:20.000Z",
+      "modified": "2026-10-15T16:03:48.000Z",
+      "name": "CVE-2026-72895",
+      "description": "A vulnerability has been identified in SIMATIC IPC BX-21A (All versions < V31.01.13), SIMATIC IPC RW-543A (All versions < V1.1.4), SIMATIC IPC227G / IPC277G / IPC277G PRO / IPC327G / IPC377G (All versions < V28.01.15). A BIOS vendor test key is present in the UEFI Secure Boot key database. This could allow a local attacker with physical or administrative access to the device to boot an operating system or UEFI application signed with that test key, bypassing UEFI Secure Boot protections even when Secure Boot is enabled, potentially leading to a full loss of confidentiality, integrity, and availability of the device.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-72895",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-72895"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://cert-portal.siemens.com/productcert/html/ssa-159454.html"
+        }
+      ],
+      "x_otwatch_cvss": 8.4,
+      "x_otwatch_severity": "HIGH",
+      "x_otwatch_epss": 0.00107,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 4.2,
+      "x_otwatch_relevant": true,
+      "x_otwatch_ssvc": "track*",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--9c5664ce-0e87-54af-88b1-fc35f4a7dfde",
+      "created": "2026-10-15T22:19:29.000Z",
+      "modified": "2026-10-23T20:17:19.000Z",
+      "name": "CVE-2026-111280",
+      "description": "snap7 through 1.4.3 contains an out-of-bounds write vulnerability in TSnap7MicroClient::opReadArea() that allows malicious S7 peers to overflow client buffers via an unchecked DataLength field. Rogue or impersonated PLCs can return crafted ReadVar responses causing memcpy of up to 65535 bytes into caller buffers, crashing SCADA, HMI, or gateway processes and corrupting memory.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-111280",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-111280"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/davenardella/snap7"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/davenardella/snap7/blob/30f37da3114024a71ba93f7fd855c680b97a406f/src/core/s7_micro_client.cpp#L136-L150"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/davenardella/snap7/issues/31"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.vulncheck.com/advisories/snap7-through-1.4.3-out-of-bounds-write-via-tsnap7microclient-opreadarea"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/davenardella/snap7/issues/31"
+        }
+      ],
+      "x_otwatch_cvss": 8.3,
+      "x_otwatch_severity": "HIGH",
+      "x_otwatch_epss": 0.0051,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 4.17,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--7a333908-5706-5142-a6fc-4dce1bb96665",
+      "created": "2026-10-23T12:18:12.000Z",
+      "modified": "2026-10-23T15:17:30.000Z",
+      "name": "CVE-2026-115723",
+      "description": "Snap7 through 1.4.3 contains an out-of-bounds write vulnerability in the passive partner that allows a malicious active partner to overflow application buffers by declaring an unvalidated BSend total length. Attackers connecting from the configured peer address can declare up to 65535 bytes and send a short fragment, causing BRecv to memcpy past the buffer and crash or corrupt SCADA, HMI or gateway processes.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-115723",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-115723"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/davenardella/snap7/blob/30f37da3114024a71ba93f7fd855c680b97a406f/src/core/s7_partner.cpp#L1126-L1166"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/davenardella/snap7/blob/30f37da3114024a71ba93f7fd855c680b97a406f/src/core/s7_partner.cpp#L850-L867"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/davenardella/snap7/pull/41"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.vulncheck.com/advisories/snap7-through-1.4.3-out-of-bounds-write-via-brecv-and-checkasbrecvcompletion"
+        }
+      ],
+      "x_otwatch_cvss": 8.3,
+      "x_otwatch_severity": "HIGH",
+      "x_otwatch_epss": 0.00418,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 4.16,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--49faa114-67bf-5d4d-8a9e-8c6e30c9a7bc",
+      "created": "2026-10-21T14:17:09.000Z",
+      "modified": "2026-10-30T19:18:07.000Z",
+      "name": "CVE-2026-109618",
+      "description": "PHP uses longjmp() for out-of-memory (OOM) errors to exit the current context and abort handling of the request. Some contexts may not properly account for this scenario and leave request memory in an uninitialized state before performing an allocation. The subsequent request cleanup procedure may read or branch on this memory. Multiple OOM strategies can consistently trigger this condition and lead to remote code execution (RCE).",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-109618",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-109618"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://seclists.org/fulldisclosure/2026/Oct/51"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/21/6"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/23/5"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://arcticwolf.com/resources/blog/php2shell-critical-php-vulnerabilities-enable-unauthenticated-remote-code-execution/"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://cert-portal.siemens.com/productcert/html/ssa-166980.html"
+        }
+      ],
+      "x_otwatch_epss": 0.99999,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 3.0,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "attend",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--7862256f-8cfa-5390-8ef3-6bfa8c6edf16",
+      "created": "2026-10-21T14:17:09.000Z",
+      "modified": "2026-10-30T19:18:07.000Z",
+      "name": "CVE-2026-109619",
+      "description": "PHP has various global state that temporarily points into request memory. In some scenarios, global state may not be correctly reset, or may be repopulated after being reset. The global state may then refer to request memory even after it has been freed. Subsequent requests may read or branch on this stale state before it is fully initialized. Multiple strategies can trigger this condition and produce remote code execution (RCE).",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-109619",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-109619"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/21/16"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/21/17"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/21/23"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/21/7"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/22/14"
+        }
+      ],
+      "x_otwatch_epss": 0.99999,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 3.0,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "attend",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--c717e90d-7cc2-5a86-95e2-f1e1f7f096cd",
+      "created": "2026-05-14T17:16:19.000Z",
+      "modified": "2026-10-26T14:10:00.000Z",
+      "name": "CVE-2026-20182",
+      "description": "May 2026: This security advisory provides the details and fix information for a vulnerability that was discovered and fixed after the  was disclosed in February 2026. This new advisory is for a new vulnerability in the control connection handshaking. The  section of this advisory includes Show Control Connections guidance to help with system checks.&nbsp;\r\n\r\nA vulnerability in the peering authentication in Cisco Catalyst SD-WAN Controller, formerly SD-WAN vSmart, Cisco Catalyst SD-WAN Manager, formerly SD-WAN vManage, and Cisco Catalyst SD-WAN Validator, formerly SD-WAN vBond, could allow an unauthenticated, remote attacker to bypass authentication and obtain administrative privileges on an ",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-20182",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-20182"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-sdwan-rpa-EHchtZk"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-sdwan-rpa2-v69WY2SW"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-20182"
+        }
+      ],
+      "x_otwatch_epss": 0.91817,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 2.75,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "attend",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--869f99b1-b47a-5021-992f-d045b131d170",
+      "created": "2026-09-22T21:17:33.000Z",
+      "modified": "2026-09-23T19:42:48.000Z",
+      "name": "CVE-2026-88020",
+      "description": "Autonomy Logic OpenPLC 3 is susceptible to an improper neutralization of input during web page generation vulnerability when the web interface attempts to route the program based on a query string parameter with no encoding.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-88020",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-88020"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-265-09.json"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-265-09"
+        }
+      ],
+      "x_otwatch_cvss": 5.3,
+      "x_otwatch_severity": "MEDIUM",
+      "x_otwatch_epss": 0.00275,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 2.66,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--db5e2f90-50f8-57b8-a7cb-d2017a6ad6ca",
+      "created": "2026-10-22T14:17:37.000Z",
+      "modified": "2026-10-30T20:30:11.000Z",
+      "name": "CVE-2026-111497",
+      "description": "A buffer overflow vulnerability in the Brotli decoder (c/dec/decode.c) in Google Brotli versions 1.0.3 through 1.2.0 on all platforms allows a remote unauthenticated attacker to corrupt adjacent decoder state memory, disclose sensitive memory contents, cause a denial of service, or potentially execute arbitrary code using a crafted Brotli-compressed stream.\n\n\n\n\n\nUsers need to update any Brotli libraries or binaries between 1.0.3 through 1.2.0 to the latest available version: 1.0.10 or 1.1.1 or 1.2.1.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-111497",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-111497"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/andybalholm/brotli/releases/tag/v1.2.7"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases#nodejs-brotli-decoder-out-of-bounds-write-permits-remote-code-execution-cve-2026-111497---high"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/23/25"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/24/6"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/26/12"
+        },
+        {
+          "source_name": "reference",
+          "url": "http://www.openwall.com/lists/oss-security/2026/10/26/13"
+        }
+      ],
+      "x_otwatch_epss": 0.82641,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 2.48,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "attend",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--ece9dc19-7c58-5bf6-b309-c2f31c8eb2eb",
+      "created": "2026-10-24T07:16:46.000Z",
+      "modified": "2026-10-26T18:17:37.000Z",
+      "name": "CVE-2026-115803",
+      "description": "A flaw has been found in Scada-LTS 2.8.0. Affected by this vulnerability is the function HttpServletRequest.getParameter of the file AmChartValuesAPI.java of the component AmCharts Data API. Executing a manipulation of the argument ids can lead to authorization bypass. The attack can be executed remotely. The exploit has been published and may be used. The vendor announces: \"At this moment we are working on new release with security enhancements which will be introduced to the community soon.\"",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-115803",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-115803"
+        },
+        {
+          "source_name": "mitre-attack",
+          "external_id": "T0832",
+          "url": "https://attack.mitre.org/techniques/T0832/",
+          "description": "MITRE ATT&CK for ICS"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://vuldb.com/cve/CVE-2026-115803"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://vuldb.com/submit/916011"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://vuldb.com/vuln/425987"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://vuldb.com/vuln/425987/cti"
+        }
+      ],
+      "x_otwatch_cvss": 2.1,
+      "x_otwatch_severity": "LOW",
+      "x_otwatch_epss": 0.00223,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 1.06,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": [
+        "T0832"
+      ]
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--e3f8a68b-5b68-5561-b25c-8f22b3427b7f",
+      "created": "2026-08-18T17:16:57.000Z",
+      "modified": "2026-10-23T17:17:21.000Z",
+      "name": "CVE-2026-18963",
+      "description": "A flaw was found in the reset-credentials flow of the keycloak-services component, which is the core engine for identity and access management in Red Hat Build of Keycloak. The issue allows an unauthenticated attacker to force the password reset process for any user without needing to click the required email verification link. This can result in the attacker gaining full control over target user accounts by directly setting new credentials.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-18963",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-18963"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://access.redhat.com/errata/RHSA-2026:56519"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://access.redhat.com/errata/RHSA-2026:56520"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://access.redhat.com/errata/RHSA-2026:56523"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://access.redhat.com/errata/RHSA-2026:56524"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-18963"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2511595"
+        }
+      ],
+      "x_otwatch_epss": 0.04682,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.14,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--dbea969a-c788-57ff-b123-dfd9c98fe7e9",
+      "created": "2026-07-30T13:16:53.000Z",
+      "modified": "2026-08-19T04:17:24.000Z",
+      "name": "CVE-2026-59310",
+      "description": "VMware vCenter contains a directory traversal vulnerability in the Syslog server. A malicious actor with network access to vCenter may exploit this issue to execute arbitrary code.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-59310",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-59310"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/38017"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://medium.com/@quirso_de/active-exploitation-of-cve-2026-59310-361-victim-ips-across-47-countries-9783187cc6ff"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://medium.com/@quirso_de/global-exploitation-of-cve-2026-59310-by-suspected-chinese-nexus-apt-related-cve-2026-59309-443a79e1466d"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-59310"
+        }
+      ],
+      "x_otwatch_epss": 0.02565,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.08,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--c3e25bd7-4583-5dec-b127-8d29987920dc",
+      "created": "2026-09-16T08:16:39.000Z",
+      "modified": "2026-09-16T19:17:14.000Z",
+      "name": "CVE-2026-27565",
+      "description": "An unauthenticated remote attacker can upload a malicious IODD file that places and executes a shell script with root privileges. The shell script remains active even after a reboot.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-27565",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-27565"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.certvde.com/en/advisories/VDE-2026-014/"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.certvde.com/en/advisories/VDE-2026-027/"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.certvde.com/en/advisories/VDE-2026-028/"
+        }
+      ],
+      "x_otwatch_epss": 0.00969,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.03,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--b7b983ee-ce17-51d3-8ba9-9b53c73a00b0",
+      "created": "2026-09-16T08:16:36.000Z",
+      "modified": "2026-09-16T19:17:10.000Z",
+      "name": "CVE-2026-27546",
+      "description": "An unauthenticated remote attacker can exploit an authentication bypass in the _account_log function to log in as an admin, even when accounts are properly configured.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-27546",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-27546"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.certvde.com/en/advisories/VDE-2026-014/"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.certvde.com/en/advisories/VDE-2026-027/"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.certvde.com/en/advisories/VDE-2026-028/"
+        }
+      ],
+      "x_otwatch_epss": 0.01017,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.03,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--4f7ccafd-0e09-5924-a43c-7873b2aedef2",
+      "created": "2026-02-20T17:25:51.000Z",
+      "modified": "2026-06-17T10:23:35.000Z",
+      "name": "CVE-2026-24790",
+      "description": "The underlying PLC of the device can be remotely influenced, without proper safeguards or authentication.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-24790",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-24790"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-050-04.json"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-050-04"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.welker.com/contact-us/welker-team"
+        }
+      ],
+      "x_otwatch_epss": 0.00511,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.02,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--b3d1fab1-67c3-5945-be26-04df435848a5",
+      "created": "2026-10-13T10:17:16.000Z",
+      "modified": "2026-10-15T20:38:04.000Z",
+      "name": "CVE-2026-63350",
+      "description": "Affected devices do not properly restrict executable content contained in imported trace files.\r\n\r\nThis could allow an attacker to social engineer an authorized user who holds the function right “Read diagnostics” into importing a specially crafted trace file. Successful exploitation could allow attacker-controlled JavaScript to execute in the user’s browser session and perform PLC operations through the web server within the scope of the user’s authorization.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-63350",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-63350"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://cert-portal.siemens.com/productcert/html/ssa-591731.html"
+        }
+      ],
+      "x_otwatch_epss": 0.00335,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--14b90662-5271-5304-ae9d-5e54687f3d4e",
+      "created": "2026-10-13T10:17:18.000Z",
+      "modified": "2026-10-15T20:38:04.000Z",
+      "name": "CVE-2026-63353",
+      "description": "Affected devices do not properly sanitize comment fields contained in imported trace files before rendering them on the Trace page.\r\n\r\nThis could allow an attacker to social engineer an authorized user who holds the function right “Read diagnostics” into importing a specially crafted trace file. Successful exploitation could allow attacker-controlled JavaScript to execute in the user’s browser session and perform PLC operations through the web server within the scope of the user’s authorization.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-63353",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-63353"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://cert-portal.siemens.com/productcert/html/ssa-591731.html"
+        }
+      ],
+      "x_otwatch_epss": 0.00314,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--86447279-a71a-590c-a107-25883bd16e47",
+      "created": "2026-10-13T10:17:18.000Z",
+      "modified": "2026-10-16T18:17:59.000Z",
+      "name": "CVE-2026-63354",
+      "description": "Affected devices do not properly validate and sanitize visual marker data contained in imported CSV trace files before rendering it on the Trace page.\r\n\r\nThis could allow an attacker to social engineer an authorized user who holds the function right “Read diagnostics” into importing a specially crafted trace file. Successful exploitation could allow attacker-controlled JavaScript to execute in the user’s browser session and perform PLC operations through the web server within the scope of the user’s authorization.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-63354",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-63354"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://cert-portal.siemens.com/productcert/html/ssa-591731.html"
+        }
+      ],
+      "x_otwatch_epss": 0.00314,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--13d97b53-d3db-5a91-a869-88ac5c85e395",
+      "created": "2026-04-17T16:17:07.000Z",
+      "modified": "2026-10-25T23:10:00.000Z",
+      "name": "CVE-2026-6284",
+      "description": "An attacker with network access to the PLC is able to brute force discover passwords to gain unauthorized access to systems and services. The limited password complexity and no password input limiters makes brute force password enumeration possible.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-6284",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-6284"
+        },
+        {
+          "source_name": "mitre-attack",
+          "external_id": "T0846",
+          "url": "https://attack.mitre.org/techniques/T0846/",
+          "description": "MITRE ATT&CK for ICS"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-106-02.json"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://hornerautomation.com/cscape-software-free/cscape-software/"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-106-02"
+        }
+      ],
+      "x_otwatch_epss": 0.00449,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": [
+        "T0846"
+      ]
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--cdd29823-d41c-57d5-a7ae-660eca829aa9",
+      "created": "2026-09-01T14:17:24.000Z",
+      "modified": "2026-09-01T20:50:01.000Z",
+      "name": "CVE-2026-12663",
+      "description": "A security issue exists within ControlFLASH™, where the installer grants write permissions to the \"Everyone\" group on a product installation directory. This could allow arbitrary code execution, resulting in an attacker being given the ability to run any commands or code of the attacker's choice on a target machine at the logged-in user's permission level.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-12663",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-12663"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://www.rockwellautomation.com/en-us/trust-center/security-advisories/advisory.SD1793.html"
+        }
+      ],
+      "x_otwatch_epss": 0.00151,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.0,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--31bafe81-cc5f-566c-8551-642e630b807f",
+      "created": "2026-10-31T23:36:16.000Z",
+      "modified": "2026-10-31T23:36:16.000Z",
+      "name": "ICSA-26-302-03 — Hitachi Energy CoreTec Product",
+      "description": "Hitachi Energy CoreTec Product mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Hitachi Energy is aware of OS command injection and Dirty Frag vulnerabilities that affect CoreTec product versions listed in this document. Successful exploitation of these vulnerabilities could result in impact on confidentiality, integrity and availability of the product. Please refer to the Recommended Immediate Actions for information about the mitigation/remediation. The follo",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-03"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--ebfd9b7c-3b5c-51e1-93f6-7c5fc67e9a19",
+      "created": "2026-10-31T23:36:16.000Z",
+      "modified": "2026-10-31T23:36:16.000Z",
+      "name": "ICSA-26-302-02 — Hitachi Energy TRO600 series products",
+      "description": "Hitachi Energy TRO600 series products mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Hitachi Energy is aware of multiple vulnerabilities that affect the TRO600 series product versions listed in this document. These vulnerabilities can be exploited for remote code execution (RCE) to carry out further attacks and disclosure of sensitive information. Please refer to the Recommended Immediate Actions section for information about the mitigation/remediation. The f",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-02"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--25b5350f-b332-5ce2-ba4d-a505d115cdaa",
+      "created": "2026-10-31T23:36:16.000Z",
+      "modified": "2026-10-31T23:36:16.000Z",
+      "name": "ICSA-26-302-01 — Siemens Mendix SAML Module",
+      "description": "Siemens Mendix SAML Module mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Mendix SAML module contains an authentication bypass vulnerability that could allow an unauthenticated remote attacker to gain unauthorized access by replaying a valid SAML assertion in IdP-initiated authentication flows. Siemens has released new versions for the affected products and recommends to update to the latest versions. The following versions of Siemens Mendix SAML Module are a",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-01"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--2893fb7d-d3d1-515e-addf-e9e4ceb599bb",
+      "created": "2026-10-31T23:36:16.000Z",
+      "modified": "2026-10-31T23:36:16.000Z",
+      "name": "ICSA-26-300-02 — Mitsubishi Electric and Mitsubishi Electric Iconics Digital Solutions GENESIS, GENESIS64, ICONICS Suite, Hyper Historian, AnalytiX, MobileHMI, IoTWorX, MC Works64, GENESIS32 and BizViz",
+      "description": "Mitsubishi Electric and Mitsubishi Electric Iconics Digital Solutions GENESIS, GENESIS64, ICONICS Suite, Hyper Historian, AnalytiX, MobileHMI, IoTWorX, MC Works64, GENESIS32 and BizViz mstradling Oct 26, 2026 Release Date October 27, 2026 Last Revised October 29, 2026 Description View CSAF Summary Successful exploitation of these vulnerabilities could allow an attacker to execute arbitrary code (CVE-2023-4863), bypass authentication (CVE-2026-16436 and CVE-2026-16437), or perform arbitrary opera",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-300-02"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--b0b0542d-a6da-5409-8992-638bad82195e",
+      "created": "2026-10-31T23:36:16.000Z",
+      "modified": "2026-10-31T23:36:16.000Z",
+      "name": "ICSA-26-300-01 — EPICS Base",
+      "description": "EPICS Base mstradling Oct 26, 2026 Release Date October 27, 2026 Description View CSAF Summary Successful exploitation of these vulnerabilities could allow an attacker to cause a denial-of-service condition, corrupt memory, disclose sensitive information, or potentially execute arbitrary code. The following versions of EPICS Base are affected: EPICS Base release &lt;=7.0.10 (CVE-2026-114595, CVE-2026-114596, CVE-2026-114597, CVE-2026-114598) CVSS Vendor Equipment v3 9.8 The EPICS Community EPICS",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-300-01"
+        }
+      ]
+    },
+    {
+      "type": "report",
+      "spec_version": "2.1",
+      "id": "report--5641f68e-886c-582a-9688-91c0d93290be",
+      "created": "2026-10-31T23:32:31.000Z",
+      "modified": "2026-10-31T23:32:31.000Z",
+      "name": "OT Watch — veille OT/ICS — édition du 2026-10-31",
+      "description": "22 CVE OT, 5 avis CISA ICS, fenêtre 14 j. Généré automatiquement depuis CISA/NVD/KEV/FIRST EPSS.",
+      "report_types": [
+        "threat-report"
+      ],
+      "labels": [
+        "ot",
+        "ics",
+        "ransomware-KEV"
+      ],
+      "published": "2026-10-31T23:32:31.000Z",
+      "object_refs": [
+        "vulnerability--6d985d4f-12a9-5eb8-b1c9-2f079a4bf4ea",
+        "vulnerability--b18d42a1-8901-5716-a933-dcb708af537c",
+        "vulnerability--1b447998-e6bf-508d-b932-37aaf9cf0446",
+        "vulnerability--a738bcc7-8bc3-5e42-ad4b-71f80a3ac7ad",
+        "vulnerability--9c5664ce-0e87-54af-88b1-fc35f4a7dfde",
+        "vulnerability--7a333908-5706-5142-a6fc-4dce1bb96665",
+        "vulnerability--49faa114-67bf-5d4d-8a9e-8c6e30c9a7bc",
+        "vulnerability--7862256f-8cfa-5390-8ef3-6bfa8c6edf16",
+        "vulnerability--c717e90d-7cc2-5a86-95e2-f1e1f7f096cd",
+        "vulnerability--869f99b1-b47a-5021-992f-d045b131d170",
+        "vulnerability--db5e2f90-50f8-57b8-a7cb-d2017a6ad6ca",
+        "vulnerability--ece9dc19-7c58-5bf6-b309-c2f31c8eb2eb",
+        "vulnerability--e3f8a68b-5b68-5561-b25c-8f22b3427b7f",
+        "vulnerability--dbea969a-c788-57ff-b123-dfd9c98fe7e9",
+        "vulnerability--c3e25bd7-4583-5dec-b127-8d29987920dc",
+        "vulnerability--b7b983ee-ce17-51d3-8ba9-9b53c73a00b0",
+        "vulnerability--4f7ccafd-0e09-5924-a43c-7873b2aedef2",
+        "vulnerability--b3d1fab1-67c3-5945-be26-04df435848a5",
+        "vulnerability--14b90662-5271-5304-ae9d-5e54687f3d4e",
+        "vulnerability--86447279-a71a-590c-a107-25883bd16e47",
+        "vulnerability--13d97b53-d3db-5a91-a869-88ac5c85e395",
+        "vulnerability--cdd29823-d41c-57d5-a7ae-660eca829aa9",
+        "course-of-action--31bafe81-cc5f-566c-8551-642e630b807f",
+        "course-of-action--ebfd9b7c-3b5c-51e1-93f6-7c5fc67e9a19",
+        "course-of-action--25b5350f-b332-5ce2-ba4d-a505d115cdaa",
+        "course-of-action--2893fb7d-d3d1-515e-addf-e9e4ceb599bb",
+        "course-of-action--b0b0542d-a6da-5409-8992-638bad82195e"
+      ],
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ]
+    }
+  ]
+}

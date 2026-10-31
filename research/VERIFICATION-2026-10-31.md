@@ -93,3 +93,16 @@ Couverture sécurité : XSS (script/img-onerror/javascript: neutralisés), filtr
 | Pipeline : `requirements.txt` (fpdf2>=2.8), install idempotent dans `run_all.sh`, étape CI `pip install -r requirements.txt` | ✅ | run_all.sh + ci.yml modifiés ; test_pdf.py |
 
 **Boucle ECC v1.4** : ruff 0 erreur · **63/63 tests OK** · couverture **82 %** (store 100 %, render 97 %, collect 90 %, validate 92 %, render_pdf 78 %, server 68 %, alerts 62 %) · serveur live v5 redémarré (0.0.0.0:8000) — `/issue.pdf`, `/api/history`, `/api/stream` vérifiés en curl.
+
+---
+
+# Addendum v1.5 — standards 2026 : STIX 2.1 + ATT&CK for ICS + SSVC (01/11/2026, ~01:00 UTC)
+
+| Amélioration P1 « plateforme de référence » | Statut | Preuve |
+|---|---|---|
+| Export **STIX 2.1** (`src/stix.py` → `out/issue-<date>.stix.json`, route live **`GET /stix`** `application/stix+json`) : vulnerability/CVE + course-of-action/avis + report + marking TLP:WHITE, IDs uuid5 déterministes, refs NVD/KEV/**mitre-attack** + `x_otwatch_*` | ✅ | curl `/stix` → 200, 47 180 o ; bundle : 22 vulnerabilities, 5 COA, 1 report, 1 marking ; ex. CVE-2026-116014 → ssvc act, T0885, ref mitre-attack ; tests test_stix.py (structure, uuid5, déterminisme, TLP) |
+| Mapping **MITRE ATT&CK for ICS** (config `attack_ics`, 10 techniques) sur descriptions CVE | ✅ | collecte v5 : « ATT&CK for ICS: 3 techniques mappées » ; liens T0885/T0832 dans la newsletter HTML ; `attack_ics` en SQLite + `/api/data` |
+| Décision **SSVC** simplifiée CISA (exploitation/KEV/EPSS/Poc, automatable, impact, mission=profil exposition → Track/Track*/Attend/Act) | ✅ | collecte v5 : « SSVC act: 2/22 » ; badge SSVC newsletter (14 occurrences) + dashboard + PDF ; tests test_enrich_ot.py (6 décisions) |
+| Migration SQLite `attack_ics`/`ssvc` (ALTER auto) + upsert idempotent | ✅ | PRAGMA après migration : 14 colonnes ; re-run store_run → 0 nouvelle (idempotent) |
+
+**Boucle ECC v1.5** : ruff 0 erreur · **78/78 tests OK** · couverture **81 %** (enrich_ot 100 %, store 100 %, collect 90 %, stix 74 %) · collecte réelle v5 terminée en 223,8 s (run #13, 22 CVE, EPSS 22/22, validation OK) · serveur live v6 (0.0.0.0:8000) — `/stix`, `/api/data` (ssvc/attack_ics), `/`, SSE et en-têtes sécurité vérifiés en curl.

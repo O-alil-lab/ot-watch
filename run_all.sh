@@ -14,7 +14,9 @@ python3 src/render.py
 # deps runtime (fpdf2 pour le PDF) — install idempotent si absent
 python3 -c "import fpdf" 2>/dev/null || pip install --quiet -r requirements.txt
 python3 src/render_pdf.py
+python3 src/stix.py
 
 echo "[run_all] dernière édition :"
 ls -t out/issue-*.html | head -1
 ls -t out/issue-*.pdf | head -1
+ls -t out/issue-*.stix.json | head -1

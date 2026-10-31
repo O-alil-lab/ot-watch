@@ -113,6 +113,19 @@ Filtres : recherche texte, sévérité, ★KEV. Anti-XSS côté client (`esc()` 
 ## 🎯 Vision « plateforme de référence OT » + agents IA éditoriaux (01/11/2026)
 Rapport ECC + deep-research 2026 : `research/REFERENCE-OT-WATCH-2026-11-01.md` — benchmark vs Claroty/Dragos/Nozomi/Tenable (collecte passive DPI, ATT&CK for ICS v20, SSVC), standards STIX 2.1/TAXII 2.1/MISP/OpenCTI, et architecture multi-agents (analyste RAG → rédacteur → fact-checker → illustrateur C2PA → éditeur humain) conforme AI Act Art. 50. `AGENTS.md` à la racine pour tous les agents IA travaillant sur le dépôt.
 
+## 🧬 v1.5 — standards 2026 : export STIX 2.1 + ATT&CK for ICS + SSVC (01/11/2026)
+- **`src/stix.py`** : bundle **STIX 2.1** (`out/issue-<date>.stix.json`, servi sur **`GET /stix`**,
+  `application/stix+json`) — `vulnerability` par CVE (refs NVD + CISA KEV + **MITRE ATT&CK for ICS**
+  + `x_otwatch_*` : cvss/epss/kev/risk/relevant/ssvc), `course-of-action` par avis CISA,
+  `report` de l'édition, marking **TLP:WHITE** ; IDs **uuid5 déterministes** → dédup idempotente
+  (compatible TAXII 2.1 / MISP / OpenCTI / CISA AIS). Bouton « 🧬 Export STIX 2.1 » dans le dashboard.
+- **`src/enrich_ot.py`** : mapping **ATT&CK for ICS** (config `attack_ics`, 10 techniques T0xxx) +
+  décision **SSVC** simplifiée CISA (exploitation KEV/EPSS/Poc, automatable, impact, mission via le
+  profil d'exposition → **Track / Track* / Attend / Act**) ; stocké en SQLite (`attack_ics`, `ssvc`)
+  et affiché dans newsletter (badge SSVC + liens techniques), PDF, dashboard.
+- Collecte v5 : techniques mappées + SSVC `act` comptés dans les logs ; 78 tests OK
+  (`test_enrich_ot.py`, `test_stix.py`), couverture 81 %.
+
 ## Quality gates (boucle de vérification ECC)
 ```bash
 cd /home/user/newsletter-ot

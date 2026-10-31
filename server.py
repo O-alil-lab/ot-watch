@@ -145,6 +145,18 @@ def latest_issue_html():
     return None
 
 
+def latest_issue_stix():
+    try:
+        files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".stix.json"))
+        if not files:
+            return None
+        with open(os.path.join(OUT, files[-1]), "rb") as fh:
+            return fh.read(), files[-1]
+    except Exception:
+        return None
+    return None
+
+
 def latest_issue_pdf():
     try:
         files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".pdf"))
@@ -226,6 +238,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
     <button id="btnRefresh">🔄 Re-collecter maintenant</button>
     <a href="/issue" target="_blank"><button class="ghost">📰 Voir la newsletter</button></a>
     <a href="/issue.pdf" target="_blank"><button class="ghost">📄 Télécharger le PDF</button></a>
+    <a href="/stix" target="_blank"><button class="ghost">🧬 Export STIX 2.1</button></a>
   </div>
 </header>
 <div class="wrap">
@@ -322,7 +335,7 @@ function renderCves(cves){
     <td class="mono" style="white-space:nowrap"><a href="${safeHref((c.refs&&c.refs[0])||('https://nvd.nist.gov/vuln/detail/'+c.id))}">${esc(c.id)}</a>${c.kev?' <span class="kev">★KEV</span>':''}${c.relevant?' <span style="color:#f59e0b" title="correspond à votre profil">⭐</span>':''}</td>
     <td>${riskBadge(c.risk)}</td>
     <td>${badge(c.cvss,c.severity)}</td>
-    <td style="color:#cbd5e1">${esc((c.description||'').replace(/\s+/g,' ').slice(0,220))}<br><span style="color:#64748b;font-size:11px">${esc((c.cwes||[]).join(', '))}</span></td>
+    <td style="color:#cbd5e1">${esc((c.description||'').replace(/\s+/g,' ').slice(0,220))}<br><span style="color:#64748b;font-size:11px">${esc((c.cwes||[]).join(', '))}${(c.ssvc||c.attack_ics)?'<br><span style="font-size:10px;color:#a78bfa">'+esc((c.ssvc?('SSVC '+c.ssvc.toUpperCase()):'')+((c.attack_ics&&c.attack_ics.length)?(' · '+c.attack_ics.join(',')):'')+'')+'</span>':''}</span></td>
     <td class="mono" style="white-space:nowrap;color:#8ea0c2">${esc((c.published||'').slice(0,10))}</td></tr>`).join('')||'<tr><td colspan="5" style="color:#8ea0c2">Aucune CVE ne correspond au filtre.</td></tr>';
 }
 function renderAdv(adv){$('tAdv').innerHTML=adv.map(a=>`<tr>
@@ -484,6 +497,14 @@ class Handler(BaseHTTPRequestHandler):
                 self._send(200, res[0], "text/html; charset=utf-8")
             else:
                 self._send(404, json.dumps({"error": "aucune édition générée"}))
+        elif path == "/stix":
+            res = latest_issue_stix()
+            if res:
+                self._send(200, res[0], "application/stix+json", extra_headers={
+                    "Content-Disposition": f'inline; filename="{res[1]}"',
+                })
+            else:
+                self._send(404, json.dumps({"error": "aucun export STIX généré"}))
         elif path == "/issue.pdf":
             res = latest_issue_pdf()
             if res:

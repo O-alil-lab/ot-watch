@@ -141,6 +141,14 @@ def cve_block(c):
     extra = f" · risque {c['risk']}/10" if c.get("risk") is not None else ""
     if c.get("epss") is not None:
         extra += f" · EPSS {c['epss']:.3f}"
+    ssvc = (c.get("ssvc") or "").upper()
+    if ssvc:
+        sc = {"ACT": "#b91c1c", "ATTEND": "#ea580c", "TRACK*": "#ca8a04", "TRACK": "#64748b"}.get(ssvc, "#64748b")
+        extra += f' · <span style="background:{sc};color:#fff;border-radius:4px;padding:0 5px;font-size:10px;font-weight:700;" title="SSVC (CISA) : {ssvc}">SSVC {ssvc}</span>'
+    techs = c.get("attack_ics") or []
+    if techs:
+        extra += " · ATT&CK ICS " + " ".join(
+            f'<a href="https://attack.mitre.org/techniques/{t}/" style="color:#7c3aed;font-size:10px;font-weight:600;">{t}</a>' for t in techs)
     return f"""
     <tr>
       <td style="white-space:nowrap;"><a href="{ref}" style="color:#1d4ed8;font-weight:600;">{c['id']}</a>{kev}{rel}</td>

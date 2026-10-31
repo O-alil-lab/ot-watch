@@ -216,7 +216,14 @@ def _cve_table(pdf, cves):
         pdf.set_xy(15, y + 6)
         pdf.set_font("DejaVu", "", 7)
         pdf.set_text_color(*GRAY)
-        desc = re.sub(r"\s+", " ", (c.get("description") or ""))[:170]
+        desc = re.sub(r"\s+", " ", (c.get("description") or ""))[:150]
+        tags = []
+        if c.get("ssvc"):
+            tags.append(f"SSVC {c['ssvc'].upper()}")
+        if c.get("attack_ics"):
+            tags.append("ATT&CK ICS " + ",".join(c["attack_ics"]))
+        if tags:
+            desc += "  [" + " · ".join(tags) + "]"
         pdf.multi_cell(0, 3.6, desc, new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("DejaVu", "", 8)
         pdf.set_text_color(30, 30, 30)

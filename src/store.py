@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS cves (
   cve_id TEXT PRIMARY KEY,
   first_seen_run INTEGER, last_seen_run INTEGER,
   cvss REAL, severity TEXT, kev INTEGER, epss REAL, risk REAL, relevant INTEGER DEFAULT 0,
+  attack_ics TEXT, ssvc TEXT,
   published TEXT, description TEXT, refs TEXT
 );
 CREATE TABLE IF NOT EXISTS advisories (
@@ -44,6 +45,10 @@ def _migrate(conn):
     cols = [r[1] for r in conn.execute("PRAGMA table_info(cves)").fetchall()]
     if "relevant" not in cols:
         conn.execute("ALTER TABLE cves ADD COLUMN relevant INTEGER DEFAULT 0")
+    if "attack_ics" not in cols:
+        conn.execute("ALTER TABLE cves ADD COLUMN attack_ics TEXT")
+    if "ssvc" not in cols:
+        conn.execute("ALTER TABLE cves ADD COLUMN ssvc TEXT")
 
 
 def _connect(db_path=None):
@@ -74,13 +79,13 @@ def store_run(payload, validation=None, db_path=None):
             if not exists:
                 new_cves.append(c["id"])
             cur.execute(
-                """INSERT INTO cves (cve_id, first_seen_run, last_seen_run, cvss, severity, kev, epss, risk, relevant, published, description, refs)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+                """INSERT INTO cves (cve_id, first_seen_run, last_seen_run, cvss, severity, kev, epss, risk, relevant, attack_ics, ssvc, published, description, refs)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                    ON CONFLICT(cve_id) DO UPDATE SET last_seen_run=excluded.last_seen_run, cvss=excluded.cvss,
                      severity=excluded.severity, kev=excluded.kev, epss=excluded.epss, risk=excluded.risk,
-                     relevant=excluded.relevant, published=excluded.published, description=excluded.description, refs=excluded.refs""",
+                     relevant=excluded.relevant, attack_ics=excluded.attack_ics, ssvc=excluded.ssvc, published=excluded.published, description=excluded.description, refs=excluded.refs""",
                 (c["id"], run_id, run_id, c.get("cvss"), c.get("severity"), 1 if c.get("kev") else 0,
-                 c.get("epss"), c.get("risk"), 1 if c.get("relevant") else 0, c.get("published"),
+                 c.get("epss"), c.get("risk"), 1 if c.get("relevant") else 0, json.dumps(c.get("attack_ics") or []), c.get("ssvc"), c.get("published"),
                  (c.get("description") or "")[:700], json.dumps(c.get("refs", []))),
             )
 

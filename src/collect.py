@@ -26,6 +26,7 @@ DATA = os.path.join(ROOT, "data")
 os.makedirs(DATA, exist_ok=True)
 
 import alerts
+import enrich_ot
 import store
 import validate
 
@@ -314,7 +315,9 @@ def main():
     for c in cves:
         c["kev"] = c["id"] in kev_ids
 
-    cves = sort_by_priority(apply_exposure(enrich_epss(cves)))
+    cves, n_tech, n_act = enrich_ot.enrich(apply_exposure(enrich_epss(cves)), CFG)
+    cves = sort_by_priority(cves)
+    log(f"ATT&CK for ICS: {n_tech} techniques mappées · SSVC act: {n_act}/{len(cves)}")
 
     # validation qualité (schéma + volume vs collecte précédente)
     prev_meta = {}
