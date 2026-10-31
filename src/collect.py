@@ -53,9 +53,8 @@ def _dump_json(obj, name):
 
 
 # ---------------------------------------------------------------- CISA RSS
-def collect_cisa(window_days):
-    """Avis ICS récents depuis le RSS global de CISA."""
-    raw = fetch(CFG["sources"]["cisa_rss"], timeout=60)
+def parse_rss_items(raw, window_days):
+    """Parse un flux RSS/Atom CISA -> liste d'avis {code,title,link,published,summary} filtrés fenêtre."""
     root = ET.fromstring(raw)
     cutoff = datetime.now(UTC) - timedelta(days=window_days)
     items = []
@@ -89,6 +88,73 @@ def collect_cisa(window_days):
         items.append({"code": code, "title": title, "link": link, "published": pub, "summary": desc[:500]})
     items.sort(key=lambda x: x["published"], reverse=True)
     return items
+
+
+def collect_cisa(window_days):
+    """Avis ICS récents : flux global CISA + flux dédié ICS Advisories, dédupliqués par code/lien."""
+    seen, out = set(), []
+    for key in ("cisa_rss", "cisa_ics_rss"):
+        url = CFG["sources"].get(key)
+        if not url:
+            continue
+        try:
+            items = parse_rss_items(fetch(url, timeout=60), window_days)
+        except Exception as exc:
+            log(f"CISA {key}: échec ({exc})")
+            continue
+        for it in items:
+            k = (it.get("code") or it.get("link") or it.get("title")).lower()
+            if k in seen:
+                continue
+            seen.add(k)
+            out.append(it)
+    out.sort(key=lambda x: x["published"], reverse=True)
+    return out
+
+
+# ------------------------------------------------------- sources additionnelles 2026
+def collect_ghsa_cves():
+    """CVE OT découvertes via l'API publique GitHub GHSA (sans clé, rate-limit 60/h)."""
+    api = CFG["sources"].get("ghsa_api")
+    queries = CFG["sources"].get("ghsa_queries", [])
+    per_page = int(CFG["sources"].get("ghsa_per_page", 15))
+    sleep_s = float(CFG["sources"].get("ghsa_sleep_seconds", 2))
+    ids = set()
+    for q in queries:
+        url = f"{api}?type=reviewed&per_page={per_page}&query={urllib.parse.quote(q)}"
+        try:
+            data = json.loads(fetch(url, timeout=40, headers={"Accept": "application/vnd.github+json"}))
+        except Exception as exc:
+            log(f"GHSA '{q}': échec ({exc})")
+            continue
+        if not isinstance(data, list):
+            continue
+        for adv in data:
+            cid = adv.get("cve_id")
+            if cid:
+                ids.add(cid)
+        time.sleep(sleep_s)
+    return sorted(ids)
+
+
+def collect_otx_cves():
+    """CVE OT via AlienVault OTX (clé API optionnelle via env OTWATCH_OTX_API_KEY ; sinon ignoré)."""
+    key = os.environ.get(CFG["sources"].get("otx_env_key", "OTWATCH_OTX_API_KEY"), "")
+    if not key:
+        return []
+    api = CFG["sources"].get("otx_api")
+    ids = set()
+    for q in CFG["sources"].get("otx_queries", []):
+        url = f"{api}?q={urllib.parse.quote(q)}&limit=20"
+        try:
+            data = json.loads(fetch(url, timeout=40, headers={"X-OTX-API-KEY": key}))
+        except Exception as exc:
+            log(f"OTX '{q}': échec ({exc})")
+            continue
+        blob = json.dumps(data)
+        ids.update(re.findall(r"CVE-\d{4}-\d{4,7}", blob, re.IGNORECASE))
+        time.sleep(1)
+    return sorted(ids)
 
 
 # ---------------------------------------------------------------- NVD
@@ -186,8 +252,8 @@ def _nvd_get(url, label, vendor_re, api_key, cves, allow_any=False):
     return False
 
 
-def nvd_collect(window_days):
-    """CVE via mots-clés + CPE éditeurs (précision) + watchlist par cveId."""
+def nvd_collect(window_days, extra_ids=None):
+    """CVE via mots-clés + CPE éditeurs (précision) + watchlist par cveId (+ ids GHSA/OTX)."""
     end = datetime.now(UTC)
     start = end - timedelta(days=window_days)
     fmt = "%Y-%m-%dT%H:%M:%S.000"
@@ -217,7 +283,7 @@ def nvd_collect(window_days):
         time.sleep(sleep_s)
 
     # 3) watchlist par cveId (fiable même si rate-limité)
-    for cid in CFG.get("cve_watchlist", []):
+    for cid in list(CFG.get("cve_watchlist", [])) + list(extra_ids or []):
         if cid in cves:
             continue
         url = f"{CFG['sources']['nvd_api']}?cveId={cid}"
@@ -305,7 +371,15 @@ def main():
     cisa = collect_cisa(window_days)
     log(f"CISA: {len(cisa)} avis ICS dans la fenêtre")
 
-    cves = nvd_collect(window_days)
+    ghsa_ids = collect_ghsa_cves()
+    log(f"GHSA: {len(ghsa_ids)} CVE OT détectées via GitHub advisories")
+    otx_ids = collect_otx_cves()
+    if otx_ids:
+        log(f"OTX: {len(otx_ids)} CVE supplémentaires (clé API fournie)")
+    else:
+        log("OTX: ignoré (pas de clé OTWATCH_OTX_API_KEY)")
+
+    cves = nvd_collect(window_days, extra_ids=sorted(set(ghsa_ids) | set(otx_ids)))
     log(f"NVD: {len(cves)} CVE OT au total")
 
     kev = collect_kev()

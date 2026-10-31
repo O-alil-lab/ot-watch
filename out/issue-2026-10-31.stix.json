@@ -882,6 +882,621 @@
     {
       "type": "vulnerability",
       "spec_version": "2.1",
+      "id": "vulnerability--9ff95456-d3ab-5a93-91b5-6fab26c37213",
+      "created": "2026-10-27T17:16:59.000Z",
+      "modified": "2026-10-30T21:16:50.000Z",
+      "name": "CVE-2026-116672",
+      "description": "Authlib is a Python library which builds OAuth and OpenID Connect servers. From 0.15 until 1.9.1, the documented ClientConfigurationEndpoint.authenticate_client and ClientConfigurationEndpoint.check_permission reference implementations look up a target client from request-controlled client_id data and check only whether that target is editable, without verifying that request.credential belongs to the target client. Deployments following both examples can allow a client holding any valid registration access token to read, modify, or delete another client's registration. Changing redirect_uris can enable authorization code or token interception, while deleting registrations can deny service to",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-116672",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-116672"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/authlib/authlib/commit/1bd2a313492ce0a4d0571c150730907aa3fc91ff"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/authlib/authlib/releases/tag/v1.9.1"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/authlib/authlib/security/advisories/GHSA-c73q-w75p-j82v"
+        }
+      ],
+      "x_otwatch_epss": 0.00274,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--27819fb4-83c2-528f-8503-972900378f21",
+      "created": "2026-10-29T17:18:06.000Z",
+      "modified": "2026-10-30T18:17:24.000Z",
+      "name": "CVE-2026-118759",
+      "description": "Kubeflow Pipelines enables users to build and deploy portable, scalable machine learning workflows. Prior to 2.18.0, the API server's GET /apis/v1alpha1/runs/{run_id}/nodes/{node_id}/log handler retrieved logs without authorizing the caller against the selected run. A caller who can reach the backend and knows a victim run ID and suitable pod or node identifier can read live or archived logs with the API server's permissions. For live logs, the caller-controlled node ID was also accepted as a pod name without verifying that the pod belonged to the requested run, allowing a known run ID to select the namespace of an unrelated pod and read its main container logs. The handler does not authenti",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-118759",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-118759"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/commit/be4723e33727c6dad71a95cba61e8f61562ab20f"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/pull/13684"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/releases/tag/2.18.0"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/security/advisories/GHSA-wg5q-x4j9-qm54"
+        }
+      ],
+      "x_otwatch_epss": 0.00336,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--69b604ea-31b8-5d9c-ab05-2946dd51ee30",
+      "created": "2026-10-29T17:18:06.000Z",
+      "modified": "2026-10-30T17:18:03.000Z",
+      "name": "CVE-2026-118761",
+      "description": "Kubeflow Pipelines enables users to build and deploy portable, scalable machine learning workflows. Prior to 2.18.0, the API server decompressed uploaded pipeline archives without adequately bounding expanded data while locating or reading the pipeline file. A small ZIP or gzip-compressed tar archive can consume disproportionately large memory and exhaust API-server resources. Multipart pipeline and pipeline-version upload processing performs decompression before namespace authorization, so a reachable caller does not need a successful pipeline-create authorization decision. URL-import handlers authorize before fetching and decompressing a remote archive. The amount of expansion required to ",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-118761",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-118761"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/commit/1121d9a081fdf9e2107c39abb2cd8947727c6953"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/commit/ba9ae72cc860e3afbea232185e4132fc2896cac5"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/pull/14171"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/pull/14186"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/releases/tag/2.18.0"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/kubeflow/pipelines/security/advisories/GHSA-8fmv-6rg5-5924"
+        }
+      ],
+      "x_otwatch_epss": 0.00495,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--c55e9123-454b-5817-8ec3-6e88099e72a2",
+      "created": "2026-10-29T17:18:07.000Z",
+      "modified": "2026-10-30T23:17:09.000Z",
+      "name": "CVE-2026-118764",
+      "description": "minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Prior to 11.0.1, src/index.ts implements firstPhasePreProcess() so that, at optimizationLevel 2 or higher, it repeatedly expands attacker-controlled **/.. pattern segments inside a fixpoint loop, allowing generated globParts entries to be processed and expanded again. secondPhasePreProcess() then compares the expanded entries pairwise, so a short malicious glob can cause excessive CPU and memory consumption during pattern compilation. This issue is fixed in version 11.0.1.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-118764",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-118764"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/isaacs/minimatch/commit/77a0f5c4b80bdc641c3c930a1d9edf5ad2db57f8"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/isaacs/minimatch/releases/tag/v11.0.1"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/isaacs/minimatch/security/advisories/GHSA-g3hv-75wg-m249"
+        }
+      ],
+      "x_otwatch_epss": 0.00291,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--69c16d5e-a13e-5a25-8352-582929e8e6bc",
+      "created": "2026-10-29T19:17:19.000Z",
+      "modified": "2026-10-30T19:37:07.000Z",
+      "name": "CVE-2026-118772",
+      "description": "joi is a schema description language and data validator for JavaScript. From 17.1.1 until 17.13.9 and 18.3.1, the Joi.string().email({ multiple: true }) rule uses a separator regular expression whose leading whitespace quantifier is retried at every position in a long whitespace run that contains no separator, causing quadratic work during String.prototype.split. The behavior applies to the default separator and every custom separator. Applications that validate attacker-controlled values with the multiple option and no effective prior length limit can have the Node.js event loop blocked for seconds by one request, preventing other work. A .max() rule is not sufficient when abortEarly: false",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-118772",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-118772"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/hapijs/joi/commit/03dc1d909818503b06240dadc81e9227ed2649cf"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/hapijs/joi/commit/807858d7480f5075b0610817e3e44230890fb18e"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/hapijs/joi/pull/3162"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/hapijs/joi/pull/3163"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/hapijs/joi/releases/tag/v17.13.9"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/hapijs/joi/releases/tag/v18.3.1"
+        }
+      ],
+      "x_otwatch_epss": 0.00467,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--851561bb-a952-5d89-91b7-fcc9753b37e7",
+      "created": "2026-10-29T19:17:19.000Z",
+      "modified": "2026-10-30T19:37:07.000Z",
+      "name": "CVE-2026-118773",
+      "description": "Glob matches files using patterns the shell uses. From 9.0.0 until 14.0.2, abort branches in src/walker.ts, including GlobUtil.walkCB(), GlobUtil.walkCB2(), GlobUtil.walkCBSync(), and GlobUtil.walkCB2Sync(), invoke the callbacks without returning. After AbortSignal or AbortSignal.timeout() rejects or emits an error, execution can continue into processor.processPatterns(), readdirCB(), and recursive traversal. The issue affects glob() and globStream() when applications expose attacker-influenced patterns or directory trees and rely on cancellation as a traversal budget. Repeated timed-out requests can stack background filesystem operations and CPU work, degrading worker throughput or service ",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-118773",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-118773"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/isaacs/node-glob/commit/4682e8c9babee1b385202ede36389634e12076d7"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/isaacs/node-glob/releases/tag/v14.0.2"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/isaacs/node-glob/security/advisories/GHSA-3g3m-2fjr-6pw4"
+        }
+      ],
+      "x_otwatch_epss": 0.0035,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--35a23cd9-adee-5d2f-8da1-c8f842965e25",
+      "created": "2026-10-29T20:17:30.000Z",
+      "modified": "2026-10-30T17:18:03.000Z",
+      "name": "CVE-2026-119196",
+      "description": "pyasn1 is a generic ASN.1 library for Python. Prior to 0.6.5, constructed BIT STRING decoding repeatedly shifts and copies the complete bit value accumulated from earlier fragments. Attacker-controlled BER or CER input contains many constructed BIT STRING fragments; schema-driven DER also accepts a definite-length constructed BIT STRING. BitStringPayloadDecoder repeatedly calls BitString.fromOctetString with the prior bitString as prepend, shifting an ever-growing SizedInteger for each fragment and causing quadratic work. Large fragmented values can exhaust CPU during decode() without requiring later conversion or formatting. This issue is fixed in version 0.6.5.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-119196",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-119196"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/pyasn1/pyasn1/commit/73ba7b043cc7e92cb37f16f2c955bff93b0e6f6c"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/pyasn1/pyasn1/pull/132"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/pyasn1/pyasn1/releases/tag/v0.6.5"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/pyasn1/pyasn1/security/advisories/GHSA-2qm8-x737-gmw5"
+        }
+      ],
+      "x_otwatch_epss": 0.00425,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--52885062-04b1-5fac-96bb-b1bc5b303c5c",
+      "created": "2026-10-29T21:17:19.000Z",
+      "modified": "2026-10-30T19:39:14.000Z",
+      "name": "CVE-2026-119202",
+      "description": "@hapi/content provides HTTP Content-* header parsing. From 3.0.6 until 6.0.3, Content.disposition() uses an unanchored parameter-name expression in a global regular-expression scan, causing repeated failed matching over the remaining input when a Content-Disposition parameter contains a long token without an equals sign. The resulting quadratic processing can block the Node.js event loop before route handlers or validation when @hapi/pez parses multipart/form-data headers, including unauthenticated hapi routes with payload.multipart enabled, and also affects applications that pass untrusted headers directly to Content.disposition(). This issue is fixed in @hapi/content version 6.0.3.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-119202",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-119202"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/hapijs/content/commit/0993851dc7234976a3fce3a7c31662b213c940fd"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/hapijs/content/releases/tag/v6.0.3"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/hapijs/content/security/advisories/GHSA-8494-f6mr-cjpv"
+        }
+      ],
+      "x_otwatch_epss": 0.00411,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--4fcf2c58-0a13-50e5-890f-94b3dc7cb86c",
+      "created": "2026-10-29T21:17:19.000Z",
+      "modified": "2026-10-30T17:18:03.000Z",
+      "name": "CVE-2026-119203",
+      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.4, pypdf can enter an infinite loop while opening a crafted incomplete PDF whose standard cross-reference table reaches the end of the file without a trailer. The trailer search can repeatedly rewind to the same stream position instead of terminating when parsing makes no progress, blocking the processing thread. This issue is fixed in version 6.21.4.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-119203",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-119203"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/commit/06593f993789a4b573dd955730c1a7051128bb2a"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/pull/4289"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.21.4"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-5849-834g-hvw5"
+        }
+      ],
+      "x_otwatch_epss": 0.00304,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--444e064b-f746-5e94-8c4e-a1dfd8ac5fd3",
+      "created": "2026-10-29T21:17:19.000Z",
+      "modified": "2026-10-30T17:18:03.000Z",
+      "name": "CVE-2026-119204",
+      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.4, pypdf can consume excessive memory while parsing a crafted PDF page tree containing many shared resources. Page-tree flattening copies page dictionary and inherited resource entries without a document-wide entry budget, allowing the crafted resource structure to cause disproportionate allocations. This issue is fixed in version 6.21.4.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-119204",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-119204"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/commit/ea4ac663133f1b3de1d7a8f2e6fa239802fde79e"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/pull/4290"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.21.4"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-cggf-277g-3q54"
+        }
+      ],
+      "x_otwatch_epss": 0.00304,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--12f357be-f979-52b0-a137-6c85355be2fa",
+      "created": "2026-10-29T21:17:19.000Z",
+      "modified": "2026-10-30T17:18:03.000Z",
+      "name": "CVE-2026-119205",
+      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.4, pypdf can enter an infinite loop when cloning or duplicating a crafted cyclic DictionaryObject. Clone traversal checked generated destination references rather than the original source references, allowing some source cycles to evade the visited-object check. This issue is fixed in version 6.21.4.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-119205",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-119205"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/commit/f176db1a1f7f9af3e472e69a843ef1175653b044"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/pull/4288"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.21.4"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-mfr5-77xh-9j7h"
+        }
+      ],
+      "x_otwatch_epss": 0.00304,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--8d6cabf4-26dd-56bb-8c37-e7806d79178f",
+      "created": "2026-10-29T21:17:19.000Z",
+      "modified": "2026-10-30T17:18:03.000Z",
+      "name": "CVE-2026-119206",
+      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.3, pypdf can take excessive time to retrieve page labels from a crafted PDF containing a flat page-label number tree with many ranges. The page_labels property resolves each page independently and repeatedly scans the same /Nums array from the beginning, causing work to grow with both the page count and the number of label ranges. This issue is fixed in version 6.21.3.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-119206",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-119206"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/commit/b891fef37000cd86baa6e9848a3387d080b3b03e"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/pull/4251"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.21.3"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-42gh-23hr-vphw"
+        }
+      ],
+      "x_otwatch_epss": 0.00304,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--dfca1c1a-c51b-5c89-9f57-94bd68f8ae62",
+      "created": "2026-10-29T21:17:19.000Z",
+      "modified": "2026-10-30T17:18:03.000Z",
+      "name": "CVE-2026-119207",
+      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.3, pypdf can consume excessive memory when strict mode loads a crafted invalid PDF dictionary. Nested parsing failures add repeated exception text to newly raised errors, allowing a small malformed dictionary to amplify into very large error messages. This issue is fixed in version 6.21.3.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-119207",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-119207"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/commit/64270258c0eced720f7960aecf8cef31afd39f8d"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/pull/4265"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.21.3"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-4vqv-7265-gm2w"
+        }
+      ],
+      "x_otwatch_epss": 0.00304,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--6df6c5d7-c001-5528-ab56-8328c5e5e05a",
+      "created": "2026-10-29T21:17:20.000Z",
+      "modified": "2026-10-30T17:18:03.000Z",
+      "name": "CVE-2026-119208",
+      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.3, pypdf can consume excessive time and memory when an application accesses the page count of a crafted encrypted PDF whose page tree declares a forged /Count value. Even after successful decryption, page-count retrieval trusts the unvalidated declared count instead of walking the page tree, allowing the attacker-controlled value to drive excessive work and memory use. This issue is fixed in version 6.21.3.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-119208",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-119208"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/commit/82b91951dc74496bb3efe6465434f041bb6a5e6b"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/pull/4270"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.21.3"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-62m5-6wh8-28x7"
+        }
+      ],
+      "x_otwatch_epss": 0.00304,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
+      "id": "vulnerability--e9837084-0eac-585d-9c58-b2eec59f4e19",
+      "created": "2026-10-29T21:17:20.000Z",
+      "modified": "2026-10-31T00:39:43.000Z",
+      "name": "CVE-2026-119209",
+      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.3, pypdf can consume excessive memory while opening a crafted PDF containing cross-reference streams that declare very large entry counts. Highly compressible streams and /Prev chains can multiply the number of parsed entries across a document, while negative /Index counts can bypass the existing per-stream clamp. This issue is fixed in version 6.21.3.",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "NVD",
+          "external_id": "CVE-2026-119209",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-119209"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/commit/a93fe3a901fd00af38f0a105c3ba7175fa72dcb4"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/pull/4269"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.21.3"
+        },
+        {
+          "source_name": "reference",
+          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-x3rh-gjgm-fmqc"
+        }
+      ],
+      "x_otwatch_epss": 0.00268,
+      "x_otwatch_kev": false,
+      "x_otwatch_risk": 0.01,
+      "x_otwatch_relevant": false,
+      "x_otwatch_ssvc": "track",
+      "x_otwatch_attack_ics": []
+    },
+    {
+      "type": "vulnerability",
+      "spec_version": "2.1",
       "id": "vulnerability--cdd29823-d41c-57d5-a7ae-660eca829aa9",
       "created": "2026-09-01T14:17:24.000Z",
       "modified": "2026-09-01T20:50:01.000Z",
@@ -912,8 +1527,8 @@
       "type": "course-of-action",
       "spec_version": "2.1",
       "id": "course-of-action--31bafe81-cc5f-566c-8551-642e630b807f",
-      "created": "2026-10-31T23:36:16.000Z",
-      "modified": "2026-10-31T23:36:16.000Z",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
       "name": "ICSA-26-302-03 — Hitachi Energy CoreTec Product",
       "description": "Hitachi Energy CoreTec Product mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Hitachi Energy is aware of OS command injection and Dirty Frag vulnerabilities that affect CoreTec product versions listed in this document. Successful exploitation of these vulnerabilities could result in impact on confidentiality, integrity and availability of the product. Please refer to the Recommended Immediate Actions for information about the mitigation/remediation. The follo",
       "object_marking_refs": [
@@ -930,8 +1545,8 @@
       "type": "course-of-action",
       "spec_version": "2.1",
       "id": "course-of-action--ebfd9b7c-3b5c-51e1-93f6-7c5fc67e9a19",
-      "created": "2026-10-31T23:36:16.000Z",
-      "modified": "2026-10-31T23:36:16.000Z",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
       "name": "ICSA-26-302-02 — Hitachi Energy TRO600 series products",
       "description": "Hitachi Energy TRO600 series products mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Hitachi Energy is aware of multiple vulnerabilities that affect the TRO600 series product versions listed in this document. These vulnerabilities can be exploited for remote code execution (RCE) to carry out further attacks and disclosure of sensitive information. Please refer to the Recommended Immediate Actions section for information about the mitigation/remediation. The f",
       "object_marking_refs": [
@@ -948,8 +1563,8 @@
       "type": "course-of-action",
       "spec_version": "2.1",
       "id": "course-of-action--25b5350f-b332-5ce2-ba4d-a505d115cdaa",
-      "created": "2026-10-31T23:36:16.000Z",
-      "modified": "2026-10-31T23:36:16.000Z",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
       "name": "ICSA-26-302-01 — Siemens Mendix SAML Module",
       "description": "Siemens Mendix SAML Module mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Mendix SAML module contains an authentication bypass vulnerability that could allow an unauthenticated remote attacker to gain unauthorized access by replaying a valid SAML assertion in IdP-initiated authentication flows. Siemens has released new versions for the affected products and recommends to update to the latest versions. The following versions of Siemens Mendix SAML Module are a",
       "object_marking_refs": [
@@ -965,9 +1580,405 @@
     {
       "type": "course-of-action",
       "spec_version": "2.1",
+      "id": "course-of-action--eee0f7e9-e1f1-5f66-9973-3743099e9d24",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-293-05 — Hitachi Energy RTU500 Product",
+      "description": "View CSAF Summary Hitachi Energy is aware of vulnerabilities that affect RTU500 product versions listed in this document. These vulnerabilities if exploited can have impact on confidentiality, integrity and availability of the product. Please refer to the Recommended Immediate Actions for information about the mitigation/remediation. The following versions of Hitachi Energy RTU500 Product are affected: RTU500 series CMU Firmware vers:RTU500_series_CMU_Firmware/&gt;=13.5.1|&lt;=13.5.4, vers:RTU50",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-293-05"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--08e8aba1-06c5-5cd3-b6fb-ab58ec4b4a5a",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-293-01 — HMS Networks PEAK-System PCAN Windows drivers",
+      "description": "View CSAF Summary Successful exploitation of these vulnerabilities could crash the Windows kernel. The following versions of HMS Networks PEAK-System PCAN Windows drivers are affected: PEAK-System Device Driver Setup &lt;=5.1.2.1151 (CVE-2026-109576, CVE-2026-101103, CVE-2026-94188, CVE-2026-103672, CVE-2026-110322, CVE-2026-105960) PCAN Windows CAN device drivers &lt;=5.1.2 (CVE-2026-109576, CVE-2026-101103, CVE-2026-94188, CVE-2026-103672, CVE-2026-110322, CVE-2026-105960) CVSS Vendor Equipmen",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-293-01"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--74d6060c-8ff3-5687-9f0f-706f911c59a1",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-293-03 — Moxa AIG-302 ThingsPro Edge",
+      "description": "View CSAF Summary Successful exploitation of these vulnerabilities could allow an attacker to obtain and disclose sensitive information. The following versions of Moxa AIG-302 ThingsPro Edge are affected: Moxa AIG-302 ThingsPro Edge firmware &lt;=1.4.0 (CVE-2026-109812, CVE-2026-109813) CVSS Vendor Equipment v3 8.1 Moxa Moxa AIG-302 ThingsPro Edge firmware 2 Vulnerabilities Missing Authorization, Use of Hard-coded Cryptographic Key Background Critical Infrastructure Sectors: Critical Manufacturi",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-293-03"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--1603347b-d7e5-5439-9a41-af247316e529",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-293-04 — Hitachi Energy MicroSCADA X SYS600 Product",
+      "description": "View CSAF Summary Hitachi Energy is aware of multiple vulnerabilities that affect MicroSCADA X SYS600 product versions listed in this document. These vulnerabilities can be exploited to carry out various attacks on the product. Please refer to the Recommended Immediate Actions for information about the mitigation/remediation. The following versions of Hitachi Energy MicroSCADA X SYS600 Product are affected: MicroSCADA X SYS600 vers:MicroSCADA_X_SYS600/&lt;=10.7, 10.8 (CVE-2026-9852, CVE-2026-985",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-293-04"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--2ec08584-598d-55b2-9a16-5990eb02ade3",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-07 — Siemens SIMATIC IPCs",
+      "description": "View CSAF Summary The products listed below contain a vulnerability that could allow an attacker to boot an operating system or UEFI application signed with that test key, bypassing UEFI Secure Boot protections even when Secure Boot is enabled. Siemens has released new versions for the affected products and recommends to update to the latest versions. The following versions of Siemens SIMATIC IPCs are affected: SIMATIC IPC BX-21A vers:intdot/&lt;31.01.13 (CVE-2026-72895) SIMATIC IPC RW-543A vers",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-07"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--713c6c13-7232-5c03-8339-126b9ecb56a9",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-01 — Kiloview E3 NDI Encoder",
+      "description": "View CSAF Summary Successful exploitation of this these vulnerabilities could allow an attacker to fully compromise the device. The following versions of Kiloview E3 NDI Encoder are affected: E3 Firmware &lt;1.30 (CVE-2026-109122, CVE-2026-111100, CVE-2026-96616, CVE-2026-105265, CVE-2026-110491, CVE-2026-107861, CVE-2026-110243, CVE-2026-92450, CVE-2026-110825) CVSS Vendor Equipment v3 9.9 Kiloview E3 Firmware 6 Vulnerabilities Improper Neutralization of Special Elements used in an OS Command (",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-01"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--175d75ba-fa8f-571c-9008-d0612af1d434",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-02 — Siemens Industrial Edge App Publisher",
+      "description": "View CSAF Summary The Industrial Edge App Publisher contains a vulnerability chain involving improper certificate validation and the rendering of unescaped data from backend responses. These issues can be combined to allow an attacker on the network to impersonate the management server and execute arbitrary code (RCE) on the local machine through Node.js integration. Siemens has released an update for the Industrial Edge App Publisher and recommends to update to the latest version. The following",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-02"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--ff2bcfad-cd72-5eff-8fd9-454abb803b2e",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-03 — Siemens Software Center",
+      "description": "View CSAF Summary The affected application loads dynamic-link libraries (DLLs) from an uncontrolled search path. This could allow an authenticated local attacker to place a specially crafted DLL in a directory that the application searches, leading to arbitrary code execution with the privileges of the affected application. Siemens has released a new version for Siemens Software Center and recommends to update to the latest version. Please refer to our blog post for additional information about ",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-03"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--198be8b0-1574-59bb-bde6-8fcec5cd2a7a",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-04 — Siemens Capital Embedded AR Classic",
+      "description": "View CSAF Summary The products listed below contain an out-of-bounds read vulnerability that could allow an attacker to cause abnormal product behavior, instability, or denial of service. Siemens has released a new version for Capital Embedded AR Classic R20-11 and recommends updating to the latest version. Siemens is preparing further fix versions and recommends specific countermeasures for products where fixes are not, or not yet available. The following versions of Siemens Capital Embedded AR",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-04"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--8d007b5b-3308-5f80-a374-ac9e08510e4c",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-05 — Siemens SENTRON 3NA COM Fuse",
+      "description": "View CSAF Summary SENTRON 3NA COM Fuse contains a Denial-of-Service vulnerability. Improper handling of a network management message could allow an attacker to trigger a denial-of-service (DoS) condition. Successful exploitation may require the affected network to be re-established to restore normal operation. The following versions of Siemens SENTRON 3NA COM Fuse are affected: SENTRON 3NA COM Fuse vers:intdot/&lt;5.2 (CVE-2024-7322) CVSS Vendor Equipment v3 5.8 Siemens SENTRON 3NA COM Fuse 1 Vu",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-05"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--e5915795-1484-5da0-9a32-bbb0ce73fd3d",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-06 — Siemens PSS(R)SINCAL",
+      "description": "View CSAF Summary PSS(R)SINCAL uses WibuKey third-party product that contains an out-of-bounds write vulnerability. An attacker could exploit this vulnerability to cause a system crash, resulting in a denial-of-service condition. This affects PSS SINCAL only when configured to use the legacy WibuKey dongle license type. Siemens is actively preparing updates and recommends applicable mitigations for products where patches are currently unavailable. The following versions of Siemens PSS(R)SINCAL a",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-06"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--cc69b189-ec9f-5ddc-a9ee-fa08c7e6500b",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-08 — Siemens APOGEE, TALON and Desigo PXC/PXM Products",
+      "description": "View CSAF Summary The products listed below contain multiple vulnerabilities that could allow an attacker to cause a denial of service and potentially impact the availability of the affected device. Siemens has released new versions for several affected products and recommends to update to the latest versions. Siemens recommends specific mitigations for products where fixes are not or not yet available. The following versions of Siemens APOGEE, TALON and Desigo PXC/PXM Products are affected: APO",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-08"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--56819840-8045-5d7c-881e-804dddad6f1b",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-09 — Siemens Industrial Edge Device Kit",
+      "description": "View CSAF Summary Users of Industrial Edge Devices are advised to consult the respective Security Advisories for their devices (for Siemens Industrial Edge devices see Additional Information). Industrial Edge Device Kit contains multiple path traversal vulnerabilities that could facilitate an authenticated remote attacker to access sensitive internal information. Siemens has released new versions for several affected products and recommends to update to the latest versions. Siemens recommends sp",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-09"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--2a8eff94-f95e-59ea-a94b-0c4fd7505efd",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-12 — Siemens RUGGEDCOM CROSSBOW",
+      "description": "View CSAF Summary RUGGEDCOM CROSSBOW contains multiple vulnerabilities that could allow an attacker to execute arbitrary SQL commands on the underlying database, retrieve sensitive administrative credentials, escalate privileges, and perform unauthorized operations such as modifying system configurations or causing a denial of service. Siemens has released a new version for RUGGEDCOM CROSSBOW and recommends to update to the latest version. The following versions of Siemens RUGGEDCOM CROSSBOW are",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-12"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--f19a8ddb-c620-5060-b669-6eb261890c9d",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-13 — Siemens WinCC",
+      "description": "View CSAF Summary Multiple SIMATIC WinCC versions are affected by a database privilege escalation vulnerability that could allow an authenticated user with access to the database to execute commands on the underlying host system. Siemens has released new versions for several affected products and recommends to update to the latest versions. Siemens is preparing further fixes and recommends mitigations for products where fixes are not or not yet available. The following versions of Siemens WinCC ",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-13"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--dae51ff8-025e-51d8-9c7d-228a2370daec",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-14 — Siemens SIMATIC S7 PLCs Web Server",
+      "description": "View CSAF Summary SIMATIC S7-1500 devices contain multiple vulnerabilities in the web server that could allow an attacker to execute malicious code in an authorized user’s browser session and perform PLC operations within the scope of that user’s authorization. Siemens is preparing fixes and recommends specific mitigations for products where fixes are not or not yet available. The following versions of Siemens SIMATIC S7 PLCs Web Server are affected: SIMATIC Drive Controller CPU 1504D TF (6ES761",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-14"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--80c240f2-b9ff-5a50-b74d-7f74715e63df",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-15 — Siemens RUGGEDCOM CROSSBOW Station Access Controller",
+      "description": "View CSAF Summary RUGGEDCOM CROSSBOW Station Access Controller (SAC) contains multiple vulnerabilities in the integrated SQLite component that could allow an attacker to execute arbitrary code, cause a denial of service, or obtain sensitive information. Siemens has released a new version for RUGGEDCOM CROSSBOW Station Access Controller (SAC) and recommends to update to the latest version. The following versions of Siemens RUGGEDCOM CROSSBOW Station Access Controller are affected: RUGGEDCOM CROSS",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-15"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--231c90cb-c186-53b3-9403-06ed4e4cff9d",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-17 — Siemens Industrial Edge Devices",
+      "description": "View CSAF Summary Siemens Industrial Edge Devices contain multiple path traversal vulnerabilities that could facilitate an authenticated remote attacker to access sensitive internal information. Siemens has released new versions for several affected products and recommends to update to the latest versions. Siemens is preparing further fixes and recommends specific mitigations for products where fixes are not or not yet available. The following versions of Siemens Industrial Edge Devices are affe",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-17"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--3fbd495e-bb25-51a3-b9b1-03083981e8cd",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-18 — Siemens RUGGEDCOM APE1808 Devices",
+      "description": "View CSAF Summary Nozomi Networks has published information on vulnerabilities in Nozomi Guardian/CMC. This advisory lists the related Siemens Industrial products affected by these vulnerabilities. Siemens recommends to contact customer support to receive patch and update information. The following versions of Siemens RUGGEDCOM APE1808 Devices are affected: RUGGEDCOM APE1808 vers:all/* (CVE-2026-33387, CVE-2026-33388, CVE-2026-33389, CVE-2026-33391, CVE-2026-33920) CVSS Vendor Equipment v3 7.5 S",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-18"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--4b9235f9-9aa8-549b-b4e2-cc5e950a59ef",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-16 — Siemens SIMATIC S7-1500 TM MFP",
+      "description": "View CSAF Summary Multiple vulnerabilities have been identified in the additional GNU/Linux subsystem of the SIMATIC S7-1500 TM MFP V1.1.1. Siemens is preparing fixes and recommends specific mitigations for products where fixes are not or not yet available. The following versions of Siemens SIMATIC S7-1500 TM MFP are affected: SIMATIC S7-1500 TM MFP - GNU/Linux subsystem vers:all/*&nbsp; CVSS Vendor Equipment v3 10 Siemens SIMATIC S7-1500 TM MFP - GNU/Linux subsystem 377 Vulnerabilities Access o",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-16"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--ee29b43c-fcdf-59cf-b223-e06bebcfb74d",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-11 — Siemens SIMATIC S7-1500 CPU 1518(F)-4 PN/DP MFP",
+      "description": "View CSAF Summary Multiple vulnerabilities have been identified in the additional GNU/Linux subsystem of the firmware version V3.1.7 for the SIMATIC S7-1500 CPU 1518(F)-4 PN/DP MFP (incl. SIPLUS variant). Siemens is preparing fixes and recommends specific mitigations for products where fixes are not or not yet available. The following versions of Siemens SIMATIC S7-1500 CPU 1518(F)-4 PN/DP MFP are affected: SIMATIC S7-1500 CPU 1518-4 PN/DP MFP (6ES7518-4AX00-1AB0) vers:intdot/&gt;=3.1.7 SIMATIC ",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-11"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
+      "id": "course-of-action--0bbb74a6-2e5b-59bd-bf2c-e453800a987d",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
+      "name": "ICSA-26-295-10 — Siemens SIMATIC S7 Webserver API",
+      "description": "View CSAF Summary .NET Client Library for SIMATIC S7 Webserver API contains multiple vulnerabilities that could allow an attacker to obtain sensitive information or write arbitrary files outside the intended download directory. Siemens has released a new version for .NET Client Library for SIMATIC S7 Webserver API and recommends to update to the latest version. The following versions of Siemens SIMATIC S7 Webserver API are affected: .NET Client Library for SIMATIC S7 Webserver API vers:intdot/&l",
+      "object_marking_refs": [
+        "marking-definition--667a0c54-70df-59cd-885b-e6f7ad492b92"
+      ],
+      "external_references": [
+        {
+          "source_name": "CISA",
+          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-10"
+        }
+      ]
+    },
+    {
+      "type": "course-of-action",
+      "spec_version": "2.1",
       "id": "course-of-action--2893fb7d-d3d1-515e-addf-e9e4ceb599bb",
-      "created": "2026-10-31T23:36:16.000Z",
-      "modified": "2026-10-31T23:36:16.000Z",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
       "name": "ICSA-26-300-02 — Mitsubishi Electric and Mitsubishi Electric Iconics Digital Solutions GENESIS, GENESIS64, ICONICS Suite, Hyper Historian, AnalytiX, MobileHMI, IoTWorX, MC Works64, GENESIS32 and BizViz",
       "description": "Mitsubishi Electric and Mitsubishi Electric Iconics Digital Solutions GENESIS, GENESIS64, ICONICS Suite, Hyper Historian, AnalytiX, MobileHMI, IoTWorX, MC Works64, GENESIS32 and BizViz mstradling Oct 26, 2026 Release Date October 27, 2026 Last Revised October 29, 2026 Description View CSAF Summary Successful exploitation of these vulnerabilities could allow an attacker to execute arbitrary code (CVE-2023-4863), bypass authentication (CVE-2026-16436 and CVE-2026-16437), or perform arbitrary opera",
       "object_marking_refs": [
@@ -984,8 +1995,8 @@
       "type": "course-of-action",
       "spec_version": "2.1",
       "id": "course-of-action--b0b0542d-a6da-5409-8992-638bad82195e",
-      "created": "2026-10-31T23:36:16.000Z",
-      "modified": "2026-10-31T23:36:16.000Z",
+      "created": "2026-10-31T23:50:12.000Z",
+      "modified": "2026-10-31T23:50:12.000Z",
       "name": "ICSA-26-300-01 — EPICS Base",
       "description": "EPICS Base mstradling Oct 26, 2026 Release Date October 27, 2026 Description View CSAF Summary Successful exploitation of these vulnerabilities could allow an attacker to cause a denial-of-service condition, corrupt memory, disclose sensitive information, or potentially execute arbitrary code. The following versions of EPICS Base are affected: EPICS Base release &lt;=7.0.10 (CVE-2026-114595, CVE-2026-114596, CVE-2026-114597, CVE-2026-114598) CVSS Vendor Equipment v3 9.8 The EPICS Community EPICS",
       "object_marking_refs": [
@@ -1002,10 +2013,10 @@
       "type": "report",
       "spec_version": "2.1",
       "id": "report--5641f68e-886c-582a-9688-91c0d93290be",
-      "created": "2026-10-31T23:32:31.000Z",
-      "modified": "2026-10-31T23:32:31.000Z",
+      "created": "2026-10-31T23:44:16.000Z",
+      "modified": "2026-10-31T23:44:16.000Z",
       "name": "OT Watch — veille OT/ICS — édition du 2026-10-31",
-      "description": "22 CVE OT, 5 avis CISA ICS, fenêtre 14 j. Généré automatiquement depuis CISA/NVD/KEV/FIRST EPSS.",
+      "description": "37 CVE OT, 27 avis CISA ICS, fenêtre 14 j. Généré automatiquement depuis CISA/NVD/KEV/FIRST EPSS.",
       "report_types": [
         "threat-report"
       ],
@@ -1014,7 +2025,7 @@
         "ics",
         "ransomware-KEV"
       ],
-      "published": "2026-10-31T23:32:31.000Z",
+      "published": "2026-10-31T23:44:16.000Z",
       "object_refs": [
         "vulnerability--6d985d4f-12a9-5eb8-b1c9-2f079a4bf4ea",
         "vulnerability--b18d42a1-8901-5716-a933-dcb708af537c",
@@ -1037,10 +2048,47 @@
         "vulnerability--14b90662-5271-5304-ae9d-5e54687f3d4e",
         "vulnerability--86447279-a71a-590c-a107-25883bd16e47",
         "vulnerability--13d97b53-d3db-5a91-a869-88ac5c85e395",
+        "vulnerability--9ff95456-d3ab-5a93-91b5-6fab26c37213",
+        "vulnerability--27819fb4-83c2-528f-8503-972900378f21",
+        "vulnerability--69b604ea-31b8-5d9c-ab05-2946dd51ee30",
+        "vulnerability--c55e9123-454b-5817-8ec3-6e88099e72a2",
+        "vulnerability--69c16d5e-a13e-5a25-8352-582929e8e6bc",
+        "vulnerability--851561bb-a952-5d89-91b7-fcc9753b37e7",
+        "vulnerability--35a23cd9-adee-5d2f-8da1-c8f842965e25",
+        "vulnerability--52885062-04b1-5fac-96bb-b1bc5b303c5c",
+        "vulnerability--4fcf2c58-0a13-50e5-890f-94b3dc7cb86c",
+        "vulnerability--444e064b-f746-5e94-8c4e-a1dfd8ac5fd3",
+        "vulnerability--12f357be-f979-52b0-a137-6c85355be2fa",
+        "vulnerability--8d6cabf4-26dd-56bb-8c37-e7806d79178f",
+        "vulnerability--dfca1c1a-c51b-5c89-9f57-94bd68f8ae62",
+        "vulnerability--6df6c5d7-c001-5528-ab56-8328c5e5e05a",
+        "vulnerability--e9837084-0eac-585d-9c58-b2eec59f4e19",
         "vulnerability--cdd29823-d41c-57d5-a7ae-660eca829aa9",
         "course-of-action--31bafe81-cc5f-566c-8551-642e630b807f",
         "course-of-action--ebfd9b7c-3b5c-51e1-93f6-7c5fc67e9a19",
         "course-of-action--25b5350f-b332-5ce2-ba4d-a505d115cdaa",
+        "course-of-action--eee0f7e9-e1f1-5f66-9973-3743099e9d24",
+        "course-of-action--08e8aba1-06c5-5cd3-b6fb-ab58ec4b4a5a",
+        "course-of-action--74d6060c-8ff3-5687-9f0f-706f911c59a1",
+        "course-of-action--1603347b-d7e5-5439-9a41-af247316e529",
+        "course-of-action--2ec08584-598d-55b2-9a16-5990eb02ade3",
+        "course-of-action--713c6c13-7232-5c03-8339-126b9ecb56a9",
+        "course-of-action--175d75ba-fa8f-571c-9008-d0612af1d434",
+        "course-of-action--ff2bcfad-cd72-5eff-8fd9-454abb803b2e",
+        "course-of-action--198be8b0-1574-59bb-bde6-8fcec5cd2a7a",
+        "course-of-action--8d007b5b-3308-5f80-a374-ac9e08510e4c",
+        "course-of-action--e5915795-1484-5da0-9a32-bbb0ce73fd3d",
+        "course-of-action--cc69b189-ec9f-5ddc-a9ee-fa08c7e6500b",
+        "course-of-action--56819840-8045-5d7c-881e-804dddad6f1b",
+        "course-of-action--2a8eff94-f95e-59ea-a94b-0c4fd7505efd",
+        "course-of-action--f19a8ddb-c620-5060-b669-6eb261890c9d",
+        "course-of-action--dae51ff8-025e-51d8-9c7d-228a2370daec",
+        "course-of-action--80c240f2-b9ff-5a50-b74d-7f74715e63df",
+        "course-of-action--231c90cb-c186-53b3-9403-06ed4e4cff9d",
+        "course-of-action--3fbd495e-bb25-51a3-b9b1-03083981e8cd",
+        "course-of-action--4b9235f9-9aa8-549b-b4e2-cc5e950a59ef",
+        "course-of-action--ee29b43c-fcdf-59cf-b223-e06bebcfb74d",
+        "course-of-action--0bbb74a6-2e5b-59bd-bf2c-e453800a987d",
         "course-of-action--2893fb7d-d3d1-515e-addf-e9e4ceb599bb",
         "course-of-action--b0b0542d-a6da-5409-8992-638bad82195e"
       ],

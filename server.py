@@ -130,6 +130,7 @@ def api_payload():
         "advisories": load_json("cisa_advisories.json", []),
         "kev": load_json("kev.json", []),
         "articles": render.parse_editorial(),
+        "agents": agents_status(),
     }
 
 
@@ -143,6 +144,29 @@ def latest_issue_html():
     except Exception:
         return None
     return None
+
+
+def agents_status():
+    """Dernier brouillon du pipeline agents IA éditoriaux (fact-check + approbation HITL)."""
+    drafts = os.path.join(OUT, "drafts")
+    try:
+        if not os.path.isdir(drafts):
+            return None
+        names = sorted(d for d in os.listdir(drafts) if d.startswith("draft-"))
+        if not names:
+            return None
+        last = names[-1]
+        fc = None
+        p = os.path.join(drafts, last, "factcheck.json")
+        if os.path.exists(p):
+            with open(p, encoding="utf-8") as fh:
+                r = json.load(fh)
+            fc = {"ok": r.get("ok"), "checked": r.get("checked"), "failed": len(r.get("failed", []))}
+        return {"draft": last, "factcheck": fc,
+                "approved": os.path.exists(os.path.join(drafts, last + ".approved")),
+                "published": os.path.exists(os.path.join(ROOT, "editorial", f"auto-{last[6:]}.md"))}
+    except Exception:
+        return None
 
 
 def latest_issue_stix():

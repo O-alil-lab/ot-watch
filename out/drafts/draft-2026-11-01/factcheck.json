@@ -1,0 +1,12 @@
+{
+  "checked": 27,
+  "passed": 27,
+  "failed": [],
+  "human_review": [
+    {
+      "claim": "ARTICLE ENTIER",
+      "reason": "revue éditoriale humaine obligatoire (AI Act art. 50 + HITL)"
+    }
+  ],
+  "ok": true
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="220" viewBox="0 0 360 220" role="img" aria-label="Répartition des CVE par sévérité (données OT Watch)">
+<title>Répartition des CVE par sévérité (données OT Watch)</title>
+<!-- provenance: généré depuis data/*.json + data/otwatch.db le 2026-10-31T23:49:53.222763+00:00 — reproductible -->
+<rect width="360" height="220" fill="#ffffff"/>
+<path d="M 90.0 40.0 A 70 70 0 1 1 37.1 155.8 L 59.8 136.2 A 40 40 0 1 0 90.0 70.0 Z" fill="#64748b"/>
+<text x="175" y="60" font-size="12" fill="#334155" font-family="sans-serif">None : 14</text>
+<path d="M 37.1 155.8 A 70 70 0 0 1 37.1 64.2 L 59.8 83.8 A 40 40 0 0 0 59.8 136.2 Z" fill="#ea580c"/>
+<text x="175" y="82" font-size="12" fill="#334155" font-family="sans-serif">HIGH : 5</text>
+<path d="M 37.1 64.2 A 70 70 0 0 1 52.2 51.1 L 68.4 76.3 A 40 40 0 0 0 59.8 83.8 Z" fill="#c0392b"/>
+<text x="175" y="104" font-size="12" fill="#334155" font-family="sans-serif">CRITICAL : 1</text>
+<path d="M 52.2 51.1 A 70 70 0 0 1 70.3 42.8 L 78.7 71.6 A 40 40 0 0 0 68.4 76.3 Z" fill="#ca8a04"/>
+<text x="175" y="126" font-size="12" fill="#334155" font-family="sans-serif">MEDIUM : 1</text>
+<path d="M 70.3 42.8 A 70 70 0 0 1 90.0 40.0 L 90.0 70.0 A 40 40 0 0 0 78.7 71.6 Z" fill="#65a30d"/>
+<text x="175" y="148" font-size="12" fill="#334155" font-family="sans-serif">LOW : 1</text>
+<text x="90" y="115" text-anchor="middle" font-size="20" font-weight="bold" fill="#334155" font-family="sans-serif">22</text>
+</svg>

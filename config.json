@@ -11,7 +11,30 @@
     "cisa_rss": "https://www.cisa.gov/rss.xml",
     "cisa_ics_page": "https://www.cisa.gov/news-events/ics-advisories",
     "nvd_api": "https://services.nvd.nist.gov/rest/json/cves/2.0",
-    "cisa_kev": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+    "cisa_kev": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+    "cisa_ics_rss": "https://www.cisa.gov/cybersecurity-advisories/ics-advisories.xml",
+    "ghsa_api": "https://api.github.com/advisories",
+    "ghsa_queries": [
+      "SCADA",
+      "ICS industrial control",
+      "Modbus",
+      "PLC controller",
+      "SIMATIC",
+      "Modicon",
+      "OPC UA",
+      "EtherNet/IP",
+      "ControlLogix",
+      "S7-1200"
+    ],
+    "ghsa_per_page": 15,
+    "ghsa_sleep_seconds": 2,
+    "otx_api": "https://otx.alienvault.com/api/v1/search/pulses",
+    "otx_queries": [
+      "ICS",
+      "SCADA",
+      "PLC"
+    ],
+    "otx_env_key": "OTWATCH_OTX_API_KEY"
   },
   "window_days": 14,
   "max_cves": 14,

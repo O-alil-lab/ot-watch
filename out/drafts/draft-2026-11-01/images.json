@@ -1,0 +1,20 @@
+[
+  {
+    "file": "sparkline-30j.svg",
+    "caption": "Tendances 30 j (CVE publiées, nouveaux KEV)",
+    "provenance": "données OT Watch (data/*.json + otwatch.db) — reproductible",
+    "ai_generated": false
+  },
+  {
+    "file": "severity-donut.svg",
+    "caption": "Sévérité des CVE de la fenêtre",
+    "provenance": "données OT Watch (data/*.json + otwatch.db) — reproductible",
+    "ai_generated": false
+  },
+  {
+    "file": "risk-hist.svg",
+    "caption": "Distribution des scores de risque",
+    "provenance": "données OT Watch (data/*.json + otwatch.db) — reproductible",
+    "ai_generated": false
+  }
+]

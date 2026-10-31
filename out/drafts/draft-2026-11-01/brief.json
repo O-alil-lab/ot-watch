@@ -1,0 +1,503 @@
+{
+  "generated_at": "2026-10-31T23:49:53.220125+00:00",
+  "window_days": 14,
+  "counts": {
+    "cves": 22,
+    "advisories": 5,
+    "kev": 13
+  },
+  "new_cves": [],
+  "new_kev": [],
+  "top_cves": [
+    {
+      "id": "CVE-2026-110936",
+      "cvss": 8.4,
+      "severity": "HIGH",
+      "epss": 0.00967,
+      "risk": 6.23,
+      "kev": true,
+      "ssvc": "act",
+      "attack_ics": [],
+      "relevant": true,
+      "published": "2026-10-15",
+      "description": "A vulnerability has been identified in Siemens Software Center (All versions < V4.0.9.8). The affected application loads dynamic-link libraries (DLLs) from an uncontrolled search path. This could allow an authenticated local attacker to place a specially crafted DLL in a directory that the applicati",
+      "citations": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-110936",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-110936",
+        "https://api.first.org/data/v1/epss?cve=CVE-2026-110936",
+        "https://cert-portal.siemens.com/productcert/html/ssa-580366.html",
+        "https://productcert.siemens.com/news/2026/10/19/active-exploitation-of-cve-2026-110936-in-siemens-software-center/",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-110936"
+      ]
+    },
+    {
+      "id": "CVE-2026-116014",
+      "cvss": 9.2,
+      "severity": "CRITICAL",
+      "epss": 0.00432,
+      "risk": 4.61,
+      "kev": false,
+      "ssvc": "act",
+      "attack_ics": [
+        "T0885"
+      ],
+      "relevant": true,
+      "published": "2026-10-24",
+      "description": "open62541 1.5.0 before 1.5.7 contains an integer overflow in UA_DataType_fromStructureDescription() that wraps the 16-bit memSize field for large custom structure definitions. A malicious OPC UA server can supply DataType definitions via UA_Client_getRemoteDataTypes(), causing decodeBinaryStructure(",
+      "citations": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-116014",
+        "https://api.first.org/data/v1/epss?cve=CVE-2026-116014",
+        "https://attack.mitre.org/techniques/T0885/",
+        "https://github.com/open62541/open62541/blob/v1.5.6/src/ua_types_definition.c#L274",
+        "https://github.com/open62541/open62541/commit/0cf4806768c493bc6ccffcd4419da24153b970ec",
+        "https://github.com/open62541/open62541/pull/8298",
+        "https://github.com/open62541/open62541/pull/8302",
+        "https://github.com/open62541/open62541/releases/tag/v1.5.7",
+        "https://www.vulncheck.com/advisories/open62541-1.5.0-before-1.5.7-integer-overflow-heap-buffer-overflow-via-custom-datatype"
+      ]
+    },
+    {
+      "id": "CVE-2026-92817",
+      "cvss": 8.7,
+      "severity": "HIGH",
+      "epss": 0.00485,
+      "risk": 4.36,
+      "kev": false,
+      "ssvc": "track*",
+      "attack_ics": [],
+      "relevant": true,
+      "published": "2026-10-14",
+      "description": "The Ignition Perspective module does not properly validate session privileges when determining Designer-level access. An authenticated user with access to a Vision project could provide their valid Vision session identifier and gain Designer-level privileges. An attacker could exploit these elevated",
+      "citations": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-92817",
+        "https://api.first.org/data/v1/epss?cve=CVE-2026-92817",
+        "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-286-01.json",
+        "https://security.inductiveautomation.com/?tcuUid=34477620-731d-4b70-b22b-9450f9a659a3",
+        "https://www.cisa.gov/news-events/ics-advisories/icsa-26-286-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-72895",
+      "cvss": 8.4,
+      "severity": "HIGH",
+      "epss": 0.00107,
+      "risk": 4.2,
+      "kev": false,
+      "ssvc": "track*",
+      "attack_ics": [],
+      "relevant": true,
+      "published": "2026-10-13",
+      "description": "A vulnerability has been identified in SIMATIC IPC BX-21A (All versions < V31.01.13), SIMATIC IPC RW-543A (All versions < V1.1.4), SIMATIC IPC227G / IPC277G / IPC277G PRO / IPC327G / IPC377G (All versions < V28.01.15). A BIOS vendor test key is present in the UEFI Secure Boot key database. This coul",
+      "citations": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-72895",
+        "https://api.first.org/data/v1/epss?cve=CVE-2026-72895",
+        "https://cert-portal.siemens.com/productcert/html/ssa-159454.html"
+      ]
+    },
+    {
+      "id": "CVE-2026-111280",
+      "cvss": 8.3,
+      "severity": "HIGH",
+      "epss": 0.0051,
+      "risk": 4.17,
+      "kev": false,
+      "ssvc": "track",
+      "attack_ics": [],
+      "relevant": false,
+      "published": "2026-10-15",
+      "description": "snap7 through 1.4.3 contains an out-of-bounds write vulnerability in TSnap7MicroClient::opReadArea() that allows malicious S7 peers to overflow client buffers via an unchecked DataLength field. Rogue or impersonated PLCs can return crafted ReadVar responses causing memcpy of up to 65535 bytes into c",
+      "citations": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-111280",
+        "https://api.first.org/data/v1/epss?cve=CVE-2026-111280",
+        "https://github.com/davenardella/snap7",
+        "https://github.com/davenardella/snap7/blob/30f37da3114024a71ba93f7fd855c680b97a406f/src/core/s7_micro_client.cpp#L136-L150",
+        "https://github.com/davenardella/snap7/issues/31",
+        "https://www.vulncheck.com/advisories/snap7-through-1.4.3-out-of-bounds-write-via-tsnap7microclient-opreadarea",
+        "https://github.com/davenardella/snap7/issues/31"
+      ]
+    }
+  ],
+  "relevant_cves": [
+    {
+      "id": "CVE-2026-110936",
+      "cvss": 8.4,
+      "severity": "HIGH",
+      "epss": 0.00967,
+      "risk": 6.23,
+      "kev": true,
+      "ssvc": "act",
+      "attack_ics": [],
+      "relevant": true,
+      "published": "2026-10-15",
+      "description": "A vulnerability has been identified in Siemens Software Center (All versions < V4.0.9.8). The affected application loads dynamic-link libraries (DLLs) from an uncontrolled search path. This could allow an authenticated local attacker to place a specially crafted DLL in a directory that the applicati",
+      "citations": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-110936",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-110936",
+        "https://api.first.org/data/v1/epss?cve=CVE-2026-110936",
+        "https://cert-portal.siemens.com/productcert/html/ssa-580366.html",
+        "https://productcert.siemens.com/news/2026/10/19/active-exploitation-of-cve-2026-110936-in-siemens-software-center/",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-110936"
+      ]
+    },
+    {
+      "id": "CVE-2026-116014",
+      "cvss": 9.2,
+      "severity": "CRITICAL",
+      "epss": 0.00432,
+      "risk": 4.61,
+      "kev": false,
+      "ssvc": "act",
+      "attack_ics": [
+        "T0885"
+      ],
+      "relevant": true,
+      "published": "2026-10-24",
+      "description": "open62541 1.5.0 before 1.5.7 contains an integer overflow in UA_DataType_fromStructureDescription() that wraps the 16-bit memSize field for large custom structure definitions. A malicious OPC UA server can supply DataType definitions via UA_Client_getRemoteDataTypes(), causing decodeBinaryStructure(",
+      "citations": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-116014",
+        "https://api.first.org/data/v1/epss?cve=CVE-2026-116014",
+        "https://attack.mitre.org/techniques/T0885/",
+        "https://github.com/open62541/open62541/blob/v1.5.6/src/ua_types_definition.c#L274",
+        "https://github.com/open62541/open62541/commit/0cf4806768c493bc6ccffcd4419da24153b970ec",
+        "https://github.com/open62541/open62541/pull/8298",
+        "https://github.com/open62541/open62541/pull/8302",
+        "https://github.com/open62541/open62541/releases/tag/v1.5.7",
+        "https://www.vulncheck.com/advisories/open62541-1.5.0-before-1.5.7-integer-overflow-heap-buffer-overflow-via-custom-datatype"
+      ]
+    },
+    {
+      "id": "CVE-2026-92817",
+      "cvss": 8.7,
+      "severity": "HIGH",
+      "epss": 0.00485,
+      "risk": 4.36,
+      "kev": false,
+      "ssvc": "track*",
+      "attack_ics": [],
+      "relevant": true,
+      "published": "2026-10-14",
+      "description": "The Ignition Perspective module does not properly validate session privileges when determining Designer-level access. An authenticated user with access to a Vision project could provide their valid Vision session identifier and gain Designer-level privileges. An attacker could exploit these elevated",
+      "citations": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-92817",
+        "https://api.first.org/data/v1/epss?cve=CVE-2026-92817",
+        "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-286-01.json",
+        "https://security.inductiveautomation.com/?tcuUid=34477620-731d-4b70-b22b-9450f9a659a3",
+        "https://www.cisa.gov/news-events/ics-advisories/icsa-26-286-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-72895",
+      "cvss": 8.4,
+      "severity": "HIGH",
+      "epss": 0.00107,
+      "risk": 4.2,
+      "kev": false,
+      "ssvc": "track*",
+      "attack_ics": [],
+      "relevant": true,
+      "published": "2026-10-13",
+      "description": "A vulnerability has been identified in SIMATIC IPC BX-21A (All versions < V31.01.13), SIMATIC IPC RW-543A (All versions < V1.1.4), SIMATIC IPC227G / IPC277G / IPC277G PRO / IPC327G / IPC377G (All versions < V28.01.15). A BIOS vendor test key is present in the UEFI Secure Boot key database. This coul",
+      "citations": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-72895",
+        "https://api.first.org/data/v1/epss?cve=CVE-2026-72895",
+        "https://cert-portal.siemens.com/productcert/html/ssa-159454.html"
+      ]
+    }
+  ],
+  "advisories": [
+    {
+      "code": "ICSA-26-302-03",
+      "title": "Hitachi Energy CoreTec Product",
+      "link": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-03",
+      "published": "Wed, 28 Oc",
+      "summary": "Hitachi Energy CoreTec Product mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Hitachi Energy is aware of OS command injection and Dirty Frag vulnerabilities that affect CoreTec product versions listed in",
+      "citations": [
+        "https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-03"
+      ]
+    },
+    {
+      "code": "ICSA-26-302-02",
+      "title": "Hitachi Energy TRO600 series products",
+      "link": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-02",
+      "published": "Wed, 28 Oc",
+      "summary": "Hitachi Energy TRO600 series products mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Hitachi Energy is aware of multiple vulnerabilities that affect the TRO600 series product versions listed in this docu",
+      "citations": [
+        "https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-02"
+      ]
+    },
+    {
+      "code": "ICSA-26-302-01",
+      "title": "Siemens Mendix SAML Module",
+      "link": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-01",
+      "published": "Wed, 28 Oc",
+      "summary": "Siemens Mendix SAML Module mstradling Oct 28, 2026 Release Date October 29, 2026 Description View CSAF Summary Mendix SAML module contains an authentication bypass vulnerability that could allow an unauthenticated remote attacker to gain un",
+      "citations": [
+        "https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-01"
+      ]
+    },
+    {
+      "code": "ICSA-26-300-02",
+      "title": "Mitsubishi Electric and Mitsubishi Electric Iconics Digital Solutions GENESIS, GENESIS64, ICONICS Suite, Hyper Historian, AnalytiX, MobileHMI, IoTWorX, MC Works64, GENESIS32 and BizViz",
+      "link": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-300-02",
+      "published": "Mon, 26 Oc",
+      "summary": "Mitsubishi Electric and Mitsubishi Electric Iconics Digital Solutions GENESIS, GENESIS64, ICONICS Suite, Hyper Historian, AnalytiX, MobileHMI, IoTWorX, MC Works64, GENESIS32 and BizViz mstradling Oct 26, 2026 Release Date October 27, 2026 L",
+      "citations": [
+        "https://www.cisa.gov/news-events/ics-advisories/icsa-26-300-02"
+      ]
+    },
+    {
+      "code": "ICSA-26-300-01",
+      "title": "EPICS Base",
+      "link": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-300-01",
+      "published": "Mon, 26 Oc",
+      "summary": "EPICS Base mstradling Oct 26, 2026 Release Date October 27, 2026 Description View CSAF Summary Successful exploitation of these vulnerabilities could allow an attacker to cause a denial-of-service condition, corrupt memory, disclose sensiti",
+      "citations": [
+        "https://www.cisa.gov/news-events/ics-advisories/icsa-26-300-01"
+      ]
+    }
+  ],
+  "kev_total": 13,
+  "trends": {
+    "history": [
+      {
+        "date": "2026-10-02",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-03",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-04",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-05",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-06",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-07",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-08",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-09",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-10",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-11",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-12",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-13",
+        "total": 4,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-14",
+        "total": 1,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-15",
+        "total": 2,
+        "critical": 0,
+        "kev": 1,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-16",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-17",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-18",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-19",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 1
+      },
+      {
+        "date": "2026-10-20",
+        "total": 1,
+        "critical": 1,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-21",
+        "total": 2,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-22",
+        "total": 1,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-23",
+        "total": 1,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-24",
+        "total": 2,
+        "critical": 1,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-25",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-26",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-27",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-28",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-29",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-30",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      },
+      {
+        "date": "2026-10-31",
+        "total": 0,
+        "critical": 0,
+        "kev": 0,
+        "kev_added": 0
+      }
+    ],
+    "last7_total": 0,
+    "prev7_total": 7,
+    "delta_pct": -100.0
+  },
+  "exposure_label": "Mes actifs OT",
+  "sources": [
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-109618",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-109619",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-110936",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-111280",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-111497",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-115723",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-115803",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-116014",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-12663",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-18963",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-20182",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-24790",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-27546",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-27565",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-59310",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-6284",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-63350",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-63353",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-63354",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-72895",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-88020",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-92817",
+    "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-110936"
+  ]
+}

@@ -106,3 +106,27 @@ Couverture sécurité : XSS (script/img-onerror/javascript: neutralisés), filtr
 | Migration SQLite `attack_ics`/`ssvc` (ALTER auto) + upsert idempotent | ✅ | PRAGMA après migration : 14 colonnes ; re-run store_run → 0 nouvelle (idempotent) |
 
 **Boucle ECC v1.5** : ruff 0 erreur · **78/78 tests OK** · couverture **81 %** (enrich_ot 100 %, store 100 %, collect 90 %, stix 74 %) · collecte réelle v5 terminée en 223,8 s (run #13, 22 CVE, EPSS 22/22, validation OK) · serveur live v6 (0.0.0.0:8000) — `/stix`, `/api/data` (ssvc/attack_ics), `/`, SSE et en-têtes sécurité vérifiés en curl.
+
+---
+
+# Addendum v1.6 — collecte élargie : CISA ICS Advisories + GitHub GHSA + OTX optionnel (01/11/2026, ~01:30 UTC)
+
+| Amélioration | Statut | Preuve |
+|---|---|---|
+| Flux CISA ICS Advisories dédié (`ics-advisories.xml`) + dédup avec RSS global (`parse_rss_items`, filtre fenêtre, codes ICSA/AA extraits) | ✅ | collecte v6 : « CISA: 27 avis ICS » (vs 5) ; test parse (fenêtre, codes, HTML strip) |
+| GitHub GHSA API (10 requêtes OT, sans clé, sleep anti rate-limit) → CVE réinjectées en NVD `cveId` | ✅ | live : 15 CVE GHSA ; collecte v6 : « NVD: 37 CVE OT » (vs 22), run #17, +15 nouvelles CVE détectées par le diff |
+| OTX AlienVault si `OTWATCH_OTX_API_KEY` (env), sinon ignoré proprement | ✅ | test sans clé → [] ; test avec clé mockée → extraction CVE du JSON |
+| Propagation auto : diff/alertes/dashboard/PDF/STIX | ✅ | `/stix` live : 37 vulnerabilities + 27 course-of-action ; `/api/data` : 37 CVE, 27 avis, 13 KEV ; metrics `cves_total 37`, `advisories_total 27` |
+
+# Addendum v1.7 — pipeline agents IA éditoriaux (HITL + conformité AI Act art. 50) (01/11/2026, ~01:45 UTC)
+
+| Composant | Statut | Preuve |
+|---|---|---|
+| Analyste RAG (`agents/rag.py`) : brief structuré + citations primaires (NVD/KEV/FIRST/ATT&CK) depuis data/*.json + SQLite | ✅ | tests : top CVE + citations, history 30 j |
+| Rédacteur (`agents/writer.py`) : article FR citant chaque fait `[n]`, divulgation AI Act art. 50 ; LLM optionnel via `OTWATCH_LLM_CMD` | ✅ | brouillon live `out/drafts/draft-2026-11-01/article.md` ; tests structure + disclosure |
+| Fact-checker 3 niveaux (`agents/factcheck.py`) : CVE vs données, KEV, hôtes de citation autorisés, human_review | ✅ | brouillon live : **27/27 vérifiés, 0 échec** ; tests : CVE fabriquée / faux KEV / hôte interdit → KO |
+| Illustrateur (`agents/images.py`) : 3 SVG data-driven avec commentaire de provenance | ✅ | `img/sparkline-30j.svg`, `severity-donut.svg`, `risk-hist.svg` |
+| Gate HITL (`agents/pipeline.py`) : publish exige fact-check OK + `<draft>.approved` → `editorial/auto-<date>.md` + audit `logs/agents.jsonl` | ✅ | tests : publish refusé sans .approved / avec fact-check KO ; accepté avec .approved |
+| Statut agents exposé dans `/api/data` (`agents`) | ✅ | curl live : `{'draft': 'draft-2026-11-01', 'factcheck': {'ok': True, ...}}` |
+
+**Boucle ECC v1.6+v1.7** : ruff 0 erreur (scope élargi à `agents/`) · **94/94 tests OK** · collecte v6 terminée en 355,3 s (run #17 : 37 CVE, 27 avis, 13 KEV, EPSS 37/37, validation OK) · serveur live v7 (0.0.0.0:8000) — `/api/data`, `/stix`, `/metrics`, SSE, statut agents vérifiés en curl.

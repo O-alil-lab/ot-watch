@@ -126,11 +126,35 @@ Rapport ECC + deep-research 2026 : `research/REFERENCE-OT-WATCH-2026-11-01.md` �
 - Collecte v5 : techniques mappées + SSVC `act` comptés dans les logs ; 78 tests OK
   (`test_enrich_ot.py`, `test_stix.py`), couverture 81 %.
 
+## 🌐 v1.6 — collecte élargie « référence » : CISA ICS Advisories + GitHub GHSA + OTX (01/11/2026)
+- **Nouvelles sources** (config `sources`) : flux dédié **CISA ICS Advisories** (`ics-advisories.xml`, dédupliqué
+  avec le RSS global), **API GitHub GHSA** (10 requêtes OT : SCADA/Modbus/SIMATIC/Modicon/OPC UA…, sans clé,
+  rate-limit respecté), **OTX AlienVault** si `OTWATCH_OTX_API_KEY` (env) fournie — les CVE trouvées sont
+  réinjectées dans la collecte NVD par `cveId`. Résultat collecte v6 : **37 CVE** (+15 GHSA), **27 avis ICS** (+21).
+- Les avis/CVE alimentent automatiquement le diff SQLite, les alertes, le dashboard, le PDF et le STIX.
+
+## 🤖 v1.7 — pipeline d'agents IA éditoriaux (HITL + AI Act art. 50) (01/11/2026)
+Package `agents/` (`python3 -m agents.pipeline draft|status|publish`) :
+- **Analyste RAG** (`rag.py`) : brief structuré depuis `data/*.json` + SQLite (top CVE, KEV nouveaux,
+  tendances 30 j) — chaque fait avec sa **citation primaire** (NVD/KEV/FIRST/ATT&CK).
+- **Rédacteur** (`writer.py`) : article FR, chaque fait cité `[n]` ; moteur déterministe à partir de données
+  vérifiées (quasi zéro hallucination) + LLM optionnel via `OTWATCH_LLM_CMD` (sa sortie est re-vérifiée).
+- **Fact-checker 3 niveaux** (`factcheck.py`) : auto (CVE/KEV/URLs vs données + hôtes autorisés),
+  web-vérification à faire, **revue humaine obligatoire** ; bloque la publication si échec.
+- **Illustrateur** (`images.py`) : SVG 100 % data-driven (`out/drafts/<draft>/img/`) = visuels factuels
+  reproductibles ; images IA possibles mais **C2PA + légende « générée par IA » obligatoires**, jamais de
+  deepfake ni de « fausse photo ».
+- **Gate HITL** (`pipeline.py`) : `publish` exige fact-check OK **et** fichier `<draft>.approved` (relecteur) ;
+  publie dans `editorial/auto-<date>.md` (pris par render.py) + audit `logs/agents.jsonl`.
+- Divulgation **AI Act art. 50** (en vigueur depuis 02/08/2026) intégrée au brouillon : « assisté par IA,
+  revu par un humain » (exemption art. 50(4) grâce à la revue éditoriale humaine).
+- Statut exposé dans `/api/data` (`agents`). 94 tests OK (`test_agents.py`, `test_sources_v2.py`).
+
 ## Quality gates (boucle de vérification ECC)
 ```bash
 cd /home/user/newsletter-ot
-python3 -m py_compile src/*.py tests/*.py      # phase 1 : build
-python3 -m ruff check src tests --config ruff.toml   # phase 3 : lint
+python3 -m py_compile server.py src/*.py agents/*.py tests/*.py      # phase 1 : build
+python3 -m ruff check server.py src agents tests --config ruff.toml   # phase 3 : lint
 python3 -m coverage run -m unittest discover -s tests # phase 4 : tests
 python3 -m coverage report --include="*/src/*"        # couverture (objectif ECC >= 80 %)
 # phase 5 : security grep (secrets / eval / shell=True)
