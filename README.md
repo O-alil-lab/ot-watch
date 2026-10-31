@@ -64,6 +64,14 @@ avis CISA ICS, KEV OT, articles), se rafraîchit toutes les 15 s, re-collecte to
 `AUTO_REFRESH_SECONDS` (30 min par défaut) et via le bouton « 🔄 Re-collecter maintenant ».
 Filtres : recherche texte, sévérité, ★KEV. Anti-XSS côté client (`esc()` + `safeHref()`).
 
+## 🆕 v1.1 — quick wins P0 (31/10/2026)
+- NVD par **CPE éditeurs** (`virtualMatchString`) + EPSS (FIRST) + **score de risque** CVSS/KEV/EPSS → tri par risque
+- **Validation qualité** à chaque collecte (`src/validate.py`) + alerte si chute de volume
+- **SQLite** (`data/otwatch.db`) + diff « nouvelles CVE/avis/KEV depuis la dernière collecte » (`meta.diff`)
+- Serveur : en-têtes sécurité (CSP/nosniff/DENY), **token admin** `OTWATCH_ADMIN_TOKEN` sur `POST /api/refresh`, **rate-limit 1/60 s**, endpoint **`/metrics` (Prometheus)**, badge **STALE** si fraîcheur > 2× intervalle
+- **CI GitHub Actions** (`.github/workflows/ci.yml`) + **gitleaks pre-commit** (`scripts/pre-commit`) + `SECURITY.md`
+- 45 tests OK, couverture 87 % — voir `research/VERIFICATION-2026-10-31.md` (addendum v1.1)
+
 ## Quality gates (boucle de vérification ECC)
 ```bash
 cd /home/user/newsletter-ot

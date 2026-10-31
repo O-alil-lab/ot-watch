@@ -37,3 +37,20 @@ Couverture sécurité : XSS (script/img-onerror/javascript: neutralisés), filtr
 3. `tests/` : 23 tests unitaires + intégration (réseau mocké) ; `ruff.toml` ; `.gitignore`.
 
 ## Résultat global : ✅ PASS — la plateforme est créée, testée (91 % de couverture) et sécurisée.
+
+---
+
+# Addendum v1.1 — quick wins P0 implémentés (31/10/2026, ~23:00 UTC)
+
+| # | Quick win | Statut | Preuve |
+|---|---|---|---|
+| 1 | Filtre NVD par CPE éditeurs (`virtualMatchString=cpe:2.3:*:<vendor>:*`) | ✅ | collecte v2 : 22 CVE (vs 19), CPE `siemens`, `schneider-electric`, `rockwell_automation`, `abb`… |
+| 2 | Validation qualité (schéma CVE/CVSS/liens + alerte chute de volume >30 %) | ✅ | `src/validate.py`, 92 % couvert, `meta.validation.ok=true` sur la collecte v2 |
+| 3 | SQLite + détection nouveautés (`data/otwatch.db`, diff par run) | ✅ | `src/store.py` 100 % couvert, run #4 : 22 nouvelles CVE détectées |
+| 4 | Score de risque composite CVSS+KEV+**EPSS (FIRST)** | ✅ | EPSS enrichi 22/22 ; tri par risque ; CVE-2026-110936 ★KEV classée #1 |
+| 5 | Token admin (`OTWATCH_ADMIN_TOKEN`) sur `POST /api/refresh` + en-têtes sécurité (CSP, nosniff, DENY, no-referrer) + rate-limit 1/60 s | ✅ | tests 401/429 OK ; headers vérifiés en live (curl) |
+| 6 | `/metrics` Prometheus + indicateur STALE (SLO fraîcheur = 2×intervalle) | ✅ | `curl /metrics` → `otwatch_up 1`, `otwatch_stale 0`, `otwatch_data_freshness_seconds 256`… |
+| 7 | CI GitHub Actions (ruff + py_compile + 45 tests + gate couverture ≥80 % + grep secrets) | ✅ | `.github/workflows/ci.yml` |
+| 8 | gitleaks pre-commit + `SECURITY.md` | ✅ | `.gitleaks.toml`, `scripts/pre-commit` installé dans `.git/hooks`, `SECURITY.md` |
+
+**Résultat boucle ECC après v1.1** : ruff 0 erreur · **45/45 tests OK** · couverture **87 %** (store 100 %, validate 92 %, render 96 %, collect 89 %, server 68 %) · collecte réelle v2 terminée en 222 s · serveur live redémarré (port 8000) avec toutes les nouvelles routes vérifiées en curl.
