@@ -11,5 +11,5 @@ ignore = [
 
 [lint.per-file-ignores]
 "tests/**" = ["E402", "RUF100", "SIM115", "RUF015", "I001", "RUF059"]  # fixtures de test : style allégé
-"server.py" = ["RUF001", "RUF100"]
+"server.py" = ["RUF001", "RUF100", "SIM105"]
 "src/collect.py" = ["E402"]  # sys.path.insert nécessaire avant import store/validate  # HTML/JS embarqué (texte FR, tirets)

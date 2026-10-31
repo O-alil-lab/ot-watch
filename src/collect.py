@@ -25,6 +25,7 @@ with open(os.path.join(ROOT, "config.json"), encoding="utf-8") as _fh:
 DATA = os.path.join(ROOT, "data")
 os.makedirs(DATA, exist_ok=True)
 
+import alerts
 import store
 import validate
 
@@ -328,6 +329,7 @@ def main():
     _dump_json(cves, "cves.json")
     _dump_json(kev, "kev.json")
     _dump_json(meta, "meta.json")
+    alerts.dispatch(meta, cves)  # webhook/Slack/e-mail si configuré, sinon log JSONL
     log(f"terminé en {(datetime.now(UTC) - t0).total_seconds():.1f}s -> {DATA}")
 
 

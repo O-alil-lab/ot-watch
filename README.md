@@ -72,6 +72,17 @@ Filtres : recherche texte, sévérité, ★KEV. Anti-XSS côté client (`esc()` 
 - **CI GitHub Actions** (`.github/workflows/ci.yml`) + **gitleaks pre-commit** (`scripts/pre-commit`) + `SECURITY.md`
 - 45 tests OK, couverture 87 % — voir `research/VERIFICATION-2026-10-31.md` (addendum v1.1)
 
+## 🔔 v1.2 — push temps réel (SSE) + alerting
+- **SSE** : `GET /api/stream` (Server-Sent Events) — le dashboard reçoit un push **instantané**
+  à chaque fin de collecte (`{"type":"collected", diff, counts}`), avec keepalive `: ping` / 25 s
+  et fallback polling 15 s. Testé en live et en test unitaire (socket réel + broadcast).
+- **Alerting** (`src/alerts.py`, appelé à chaque collecte, cron OU bouton) : alerte si
+  **nouvelle CVE CRITICAL / ★KEV / risque ≥ 7** ou nouvelle entrée KEV.
+  Destinations via env (jamais en dur) : `OTWATCH_WEBHOOK_URL` (POST JSON),
+  `OTWATCH_SLACK_WEBHOOK` (format Slack), SMTP (`OTWATCH_SMTP_HOST/PORT/USER/PASS/FROM/TO`, `OTWATCH_SMTP_SSL=1`).
+  Sans destination configurée → **dry-run** : log JSONL dans `logs/alerts.jsonl`.
+- 52 tests OK, couverture 83 %.
+
 ## Quality gates (boucle de vérification ECC)
 ```bash
 cd /home/user/newsletter-ot

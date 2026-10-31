@@ -67,5 +67,26 @@
     "cvss": 0.5,
     "epss": 0.3,
     "kev": 0.2
+  },
+  "alerts": {
+    "rules": {
+      "new_critical": true,
+      "new_kev": true,
+      "min_risk": 7.0
+    },
+    "destinations_env": {
+      "webhook": "OTWATCH_WEBHOOK_URL",
+      "slack": "OTWATCH_SLACK_WEBHOOK",
+      "smtp": [
+        "OTWATCH_SMTP_HOST",
+        "OTWATCH_SMTP_PORT",
+        "OTWATCH_SMTP_USER",
+        "OTWATCH_SMTP_PASS",
+        "OTWATCH_SMTP_FROM",
+        "OTWATCH_SMTP_TO",
+        "OTWATCH_SMTP_SSL"
+      ]
+    },
+    "note": "Sans destination configurée, les alertes sont loguées uniquement (logs/alerts.jsonl, dry-run)."
   }
 }

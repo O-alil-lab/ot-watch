@@ -54,3 +54,16 @@ Couverture sécurité : XSS (script/img-onerror/javascript: neutralisés), filtr
 | 8 | gitleaks pre-commit + `SECURITY.md` | ✅ | `.gitleaks.toml`, `scripts/pre-commit` installé dans `.git/hooks`, `SECURITY.md` |
 
 **Résultat boucle ECC après v1.1** : ruff 0 erreur · **45/45 tests OK** · couverture **87 %** (store 100 %, validate 92 %, render 96 %, collect 89 %, server 68 %) · collecte réelle v2 terminée en 222 s · serveur live redémarré (port 8000) avec toutes les nouvelles routes vérifiées en curl.
+
+---
+
+# Addendum v1.2 — SSE push + alerting (31/10/2026, ~23:10 UTC)
+
+| Amélioration P1 | Statut | Preuve |
+|---|---|---|
+| SSE `/api/stream` (push instantané, keepalive 25 s, fallback polling) | ✅ | test socket réel (test_sse.py) + `curl -N /api/stream` → `data: {"type":"connected"}` en live |
+| Broadcast après chaque collecte (`run_collect` → `broadcast`) | ✅ | événement `collected` avec diff/counts reçu par les clients connectés |
+| Alerting nouvelles CVE CRITICAL/KEV/risque≥7 + nouveau KEV | ✅ | `src/alerts.py` : webhook JSON / Slack / SMTP (env uniquement), dry-run JSONL par défaut ; tests mockés (webhook appelé, payload OK) |
+| Dashboard : EventSource + toast « 🆕 +N CVE » | ✅ | `EventSource('/api/stream')` présent dans la page servie |
+
+**Boucle ECC v1.2** : ruff 0 erreur · **52/52 tests OK** · couverture **83 %** · serveur live v3 redémarré (port 8000), SSE vérifié en curl.

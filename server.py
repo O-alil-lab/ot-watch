@@ -14,6 +14,7 @@ Auto-refresh : variable d'env AUTO_REFRESH_SECONDS (défaut 1800 s = 30 min).
 import argparse
 import json
 import os
+import queue
 import sys
 import threading
 import time
@@ -33,6 +34,19 @@ with open(os.path.join(ROOT, "config.json"), encoding="utf-8") as _cfgfh:
     CFG_STALE_N = float(json.load(_cfgfh).get("stale_after_intervals", 2))
 
 _lock = threading.Lock()
+_sse_clients = []
+_sse_lock = threading.Lock()
+
+
+def broadcast(event):
+    """Pousse un événement JSON à tous les clients SSE connectés."""
+    with _sse_lock:
+        clients = list(_sse_clients)
+    for q in clients:
+        try:
+            q.put_nowait(event)
+        except Exception:  # noqa: BLE001 - client parti entre-temps
+            pass
 _state = {"collecting": False, "last_run": None, "last_error": None, "runs": 0,
           "last_refresh_start": 0.0, "last_collect_duration": 0.0}
 REFRESH_MIN_INTERVAL_S = 60  # rate-limit anti-abus
@@ -58,6 +72,10 @@ def run_collect():
         _state["last_run"] = datetime.now(UTC).isoformat()
         _state["last_error"] = None
         _state["runs"] += 1
+        meta = load_json("meta.json", {})
+        broadcast({"type": "collected", "generated_at": meta.get("generated_at"),
+                   "diff": meta.get("diff", {}), "counts": meta.get("counts", {}),
+                   "validation_ok": (meta.get("validation") or {}).get("ok", True)})
         return True
     except Exception as exc:  # noqa: BLE001 - journalisé et exposé via /api/meta
         _state["last_error"] = str(exc)
@@ -289,8 +307,21 @@ document.querySelectorAll('[data-sev]').forEach(b=>b.addEventListener('click',()
 $('bKev').addEventListener('click',()=>{state.kev=!state.kev;$('bKev').classList.toggle('on',state.kev);loadData();});
 $('btnRefresh').addEventListener('click',async()=>{try{await fetch('/api/refresh',{method:'POST'});toast('🔄 Collecte lancée (CISA/NVD/KEV)…');}catch(e){toast('Erreur: '+e);}loadData();});
 setInterval(()=>{$('mAgo').textContent='il y a '+ago(lastGen);$('clock').textContent=new Date().toLocaleString('fr-FR');},1000);
-setInterval(loadData,15000);
+setInterval(loadData,15000);  // fallback polling
 loadData();
+if (window.EventSource) {
+  const es = new EventSource('/api/stream');
+  es.onmessage = (e) => {
+    try {
+      const ev = JSON.parse(e.data);
+      if (ev.type === 'collected') {
+        const n = (ev.diff && ev.diff.new_cves) ? ev.diff.new_cves.length : 0;
+        toast('🆕 Collecte terminée : +' + n + ' CVE' + (ev.counts ? ' (' + ev.counts.cves + ' au total)' : ''));
+        loadData();
+      }
+    } catch (_) {}
+  };
+}
 </script>
 </body>
 </html>"""
@@ -316,6 +347,35 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _sse(self):
+        """Flux Server-Sent Events : push instantané à chaque fin de collecte."""
+        self.send_response(200)
+        self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Content-Security-Policy", "default-src 'self'; connect-src 'self'")
+        self.end_headers()
+        q = queue.Queue()
+        with _sse_lock:
+            _sse_clients.append(q)
+        try:
+            self.wfile.write(b'data: {"type":"connected"}\n\n')
+            self.wfile.flush()
+            while True:
+                try:
+                    ev = q.get(timeout=25)
+                    self.wfile.write(f"data: {json.dumps(ev, ensure_ascii=False)}\n\n".encode())
+                    self.wfile.flush()
+                except queue.Empty:
+                    self.wfile.write(b": ping\n\n")  # keepalive
+                    self.wfile.flush()
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+        finally:
+            with _sse_lock:
+                if q in _sse_clients:
+                    _sse_clients.remove(q)
+
     def do_GET(self):
         path = self.path.split("?", 1)[0]
         if path == "/" or path == "/index.html":
@@ -329,6 +389,9 @@ class Handler(BaseHTTPRequestHandler):
                 "collect_runs", "auto_interval_seconds", "stale", "freshness_seconds")}, ensure_ascii=False))
         elif path == "/api/refresh":
             self._send(200, json.dumps({"hint": "utiliser POST"}), )
+        elif path == "/api/stream":
+            self._sse()
+            return
         elif path == "/metrics":
             p = api_payload()
             m = p["meta"]
