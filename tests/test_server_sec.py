@@ -67,6 +67,20 @@ class TestServerSecurity(unittest.TestCase):
             self.assertIn("rate_limited", body.decode())
         server._state["last_refresh_start"] = 0.0
 
+    def test_api_history(self):
+        code, _, body = self.req("GET", "/api/history")
+        self.assertEqual(code, 200)
+        h = json.loads(body)["history"]
+        self.assertEqual(len(h), 30)
+        self.assertIn("total", h[0])
+        self.assertIn("critical", h[0])
+        self.assertIn("kev_added", h[0])
+
+    def test_api_data_a_relevant(self):
+        code, _, body = self.req("GET", "/api/data")
+        d = json.loads(body)
+        self.assertTrue(all("relevant" in c for c in d["cves"]) or d["cves"] == [])
+
     def test_api_meta_contient_stale(self):
         code, _, body = self.req("GET", "/api/meta")
         d = json.loads(body)

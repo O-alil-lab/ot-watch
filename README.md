@@ -83,6 +83,20 @@ Filtres : recherche texte, sévérité, ★KEV. Anti-XSS côté client (`esc()` 
   Sans destination configurée → **dry-run** : log JSONL dans `logs/alerts.jsonl`.
 - 52 tests OK, couverture 83 %.
 
+## ⭐ v1.3 — profil d'exposition « Mes actifs OT » + historique visuel (01/11/2026)
+- **Profil d'exposition** (`config.json` → `exposure.keywords`, ~40 mots-clés OT : Siemens/S7/SIMATIC,
+  Schneider/Modicon, Rockwell/ControlLogix, Modbus, OPC UA, SCADA, PLC…) : chaque CVE dont la
+  description correspond est marquée `relevant: true` (⭐), **triée en premier** (puis par risque)
+  dans la newsletter, le dashboard et `/api/data`.
+- **Filtre dashboard** « ⭐ Mes actifs OT » (`#bRel`) + badges ⭐ dans les lignes ; tri client
+  (relevant, puis risque).
+- **Historique 30 j** : `src/store.py` → `history_daily(days=30)` (SQLite, jours vides = 0) exposé via
+  `GET /api/history` → graphique **SVG inline** « 📈 Tendances » dans le dashboard (3 séries :
+  total CVE publiées, CRITICAL, nouvelles entrées KEV en pointillés) — aucune librairie externe.
+- Colonne `cves.relevant` migrée automatiquement (`ALTER TABLE` au démarrage si besoin).
+- Collecte réelle v3 : **4/22 CVE** correspondent au profil « Mes actifs OT » (run #9, 227 s).
+- 59 tests OK (`test_exposure.py`, `test_history.py`, +2 tests serveur), couverture 84 % (store 100 %).
+
 ## Quality gates (boucle de vérification ECC)
 ```bash
 cd /home/user/newsletter-ot

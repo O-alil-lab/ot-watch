@@ -15,6 +15,7 @@ import argparse
 import json
 import os
 import queue
+import re
 import sys
 import threading
 import time
@@ -25,13 +26,15 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 import collect  # noqa: E402  (pipeline de collecte réel)
 import render  # noqa: E402   (parse les articles éditoriaux)
+import store  # noqa: E402    (historique SQLite)
 
 DATA = os.path.join(ROOT, "data")
 OUT = os.path.join(ROOT, "out")
 
 AUTO_REFRESH_SECONDS = int(os.environ.get("AUTO_REFRESH_SECONDS", "1800"))
 with open(os.path.join(ROOT, "config.json"), encoding="utf-8") as _cfgfh:
-    CFG_STALE_N = float(json.load(_cfgfh).get("stale_after_intervals", 2))
+    CFG = json.load(_cfgfh)
+CFG_STALE_N = float(CFG.get("stale_after_intervals", 2))
 
 _lock = threading.Lock()
 _sse_clients = []
@@ -91,7 +94,18 @@ def auto_refresh_loop():
         run_collect()
 
 
+def _exposure_re():
+    kws = CFG.get("exposure", {}).get("keywords", [])
+    return re.compile("|".join(re.escape(k) for k in kws), re.IGNORECASE) if kws else None
+
+
 def api_payload():
+    cves_raw = load_json("cves.json", [])
+    exp_re = _exposure_re()
+    if exp_re:
+        for c in cves_raw:
+            if "relevant" not in c:  # données collectées avant le profil d'exposition
+                c["relevant"] = bool(exp_re.search(c.get("description") or ""))
     meta = load_json("meta.json", {
         "generated_at": None, "window_days": 14,
         "counts": {"cves": 0, "cisa_advisories": 0, "kev_ot": 0},
@@ -112,7 +126,7 @@ def api_payload():
         "last_error": _state["last_error"],
         "collect_runs": _state["runs"],
         "auto_interval_seconds": AUTO_REFRESH_SECONDS,
-        "cves": load_json("cves.json", []),
+        "cves": cves_raw,
         "advisories": load_json("cisa_advisories.json", []),
         "kev": load_json("kev.json", []),
         "articles": render.parse_editorial(),
@@ -219,6 +233,12 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
   </div>
 
   <section>
+    <h2>📈 Tendances — publications CVE (30 derniers jours, historique SQLite)</h2>
+    <p class="sub">Orange = CVE publiées/jour · Rouge = dont CRITICAL · Bleu = entrées KEV ajoutées/jour.</p>
+    <div id="cvChart"></div>
+  </section>
+
+  <section>
     <h2>🔴 CVE — PLC &amp; OT (live NVD)</h2>
     <p class="sub">Triées par CVSS. ★KEV = exploitation connue (CISA). Mise à jour automatiquement à chaque collecte.</p>
     <div class="filters">
@@ -228,6 +248,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
       <button data-sev="HIGH">HIGH</button>
       <button data-sev="MEDIUM">MEDIUM</button>
       <button id="bKev">★ KEV seulement</button>
+      <button id="bRel">⭐ Mes actifs OT</button>
     </div>
     <table><thead><tr><th>CVE</th><th>Risque</th><th>CVSS</th><th>Détail</th><th>Publié</th></tr></thead><tbody id="tCve"></tbody></table>
   </section>
@@ -259,7 +280,7 @@ function safeHref(u){try{const x=new URL(u);return (x.protocol==='http:'||x.prot
 function ago(iso){if(!iso)return'–';const s=(Date.now()-new Date(iso).getTime())/1000;if(s<60)return Math.floor(s)+' s';if(s<3600)return Math.floor(s/60)+' min';if(s<86400)return Math.floor(s/3600)+' h';return Math.floor(s/86400)+' j';}
 function riskBadge(r){if(r==null)return'<span class="badge b-DEFAULT">–</span>';const cls=r>=8?'b-CRITICAL':r>=6?'b-HIGH':r>=4?'b-MEDIUM':'b-LOW';return `<span class="badge ${cls}">${Number(r).toFixed(1)}</span>`;}
 function badge(score,sev){const s=(sev||'').toUpperCase();const cls='b-'+(['CRITICAL','HIGH','MEDIUM','LOW'].includes(s)?s:'DEFAULT');const lab=(typeof score==='number')?score.toFixed(1):(sev||'n/a');return `<span class="badge ${cls}">${esc(lab)}</span>`;}
-let state={sev:'',kev:false,q:''},lastGen=null;
+let state={sev:'',kev:false,q:'',rel:false},lastGen=null;
 async function loadData(){
   const r=await fetch('/api/data');const d=await r.json();
   if(d.meta.generated_at!==lastGen){lastGen=d.meta.generated_at;if($('tCve').children.length)toast('✅ Données mises à jour');}
@@ -282,10 +303,10 @@ async function loadData(){
 }
 function renderCves(cves){
   const q=state.q.toLowerCase();
-  cves=[...cves].sort((a,b)=>((b.risk??b.cvss??0)-(a.risk??a.cvss??0)));
-  const rows=cves.filter(c=>(!state.sev||c.severity===state.sev)&&(!state.kev||c.kev)&&(!q||(c.id+' '+(c.description||'')+' '+(c.cwes||[]).join(' ')).toLowerCase().includes(q)));
+  cves=[...cves].sort((a,b)=>((b.relevant?1:0)-(a.relevant?1:0))||((b.risk??b.cvss??0)-(a.risk??a.cvss??0)));
+  const rows=cves.filter(c=>(!state.sev||c.severity===state.sev)&&(!state.kev||c.kev)&&(!state.rel||c.relevant)&&(!q||(c.id+' '+(c.description||'')+' '+(c.cwes||[]).join(' ')).toLowerCase().includes(q)));
   $('tCve').innerHTML=rows.map(c=>`<tr>
-    <td class="mono" style="white-space:nowrap"><a href="${safeHref((c.refs&&c.refs[0])||('https://nvd.nist.gov/vuln/detail/'+c.id))}">${esc(c.id)}</a>${c.kev?' <span class="kev">★KEV</span>':''}</td>
+    <td class="mono" style="white-space:nowrap"><a href="${safeHref((c.refs&&c.refs[0])||('https://nvd.nist.gov/vuln/detail/'+c.id))}">${esc(c.id)}</a>${c.kev?' <span class="kev">★KEV</span>':''}${c.relevant?' <span style="color:#f59e0b" title="correspond à votre profil">⭐</span>':''}</td>
     <td>${riskBadge(c.risk)}</td>
     <td>${badge(c.cvss,c.severity)}</td>
     <td style="color:#cbd5e1">${esc((c.description||'').replace(/\s+/g,' ').slice(0,220))}<br><span style="color:#64748b;font-size:11px">${esc((c.cwes||[]).join(', '))}</span></td>
@@ -305,10 +326,26 @@ function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block'
 $('q').addEventListener('input',e=>{state.q=e.target.value;loadData();});
 document.querySelectorAll('[data-sev]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-sev]').forEach(x=>x.classList.remove('on'));b.classList.add('on');state.sev=b.dataset.sev;loadData();}));
 $('bKev').addEventListener('click',()=>{state.kev=!state.kev;$('bKev').classList.toggle('on',state.kev);loadData();});
+$('bRel').addEventListener('click',()=>{state.rel=!state.rel;$('bRel').classList.toggle('on',state.rel);loadData();});
 $('btnRefresh').addEventListener('click',async()=>{try{await fetch('/api/refresh',{method:'POST'});toast('🔄 Collecte lancée (CISA/NVD/KEV)…');}catch(e){toast('Erreur: '+e);}loadData();});
 setInterval(()=>{$('mAgo').textContent='il y a '+ago(lastGen);$('clock').textContent=new Date().toLocaleString('fr-FR');},1000);
+function drawChart(id, series){
+  const w=760,h=130,pad=8;
+  const max=Math.max(1,...series.map(d=>Math.max(d.total,d.critical,d.kev_added)));
+  const X=i=>pad+i*(w-2*pad)/Math.max(1,series.length-1);
+  const Y=v=>h-pad-(v/max)*(h-2*pad);
+  const line=(key)=>'M'+series.map((d,i)=>X(i).toFixed(1)+','+Y(d[key]).toFixed(1)).join(' L');
+  const area=line('total')+` L${X(series.length-1).toFixed(1)},${h-pad} L${pad},${h-pad} Z`;
+  document.getElementById(id).innerHTML=
+    `<svg viewBox="0 0 ${w} ${h}" width="100%" style="background:#0f1830;border-radius:8px">`+
+    `<path d="${area}" fill="rgba(245,158,11,.18)" stroke="#f59e0b" stroke-width="2"/>`+
+    `<path d="${line('critical')}" fill="none" stroke="#ef4444" stroke-width="2"/>`+
+    `<path d="${line('kev_added')}" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 3"/>`+
+    `</svg><div style="display:flex;justify-content:space-between;font-size:10px;color:#8ea0c2"><span>${series[0]?series[0].date:''}</span><span>max ${max}/jour</span><span>${series[series.length-1]?series[series.length-1].date:''}</span></div>`;
+}
+async function loadHistory(){try{const r=await fetch('/api/history');const h=await r.json();if(h.history)drawChart('cvChart',h.history);}catch(e){}}
 setInterval(loadData,15000);  // fallback polling
-loadData();
+loadData();loadHistory();
 if (window.EventSource) {
   const es = new EventSource('/api/stream');
   es.onmessage = (e) => {
@@ -389,6 +426,8 @@ class Handler(BaseHTTPRequestHandler):
                 "collect_runs", "auto_interval_seconds", "stale", "freshness_seconds")}, ensure_ascii=False))
         elif path == "/api/refresh":
             self._send(200, json.dumps({"hint": "utiliser POST"}), )
+        elif path == "/api/history":
+            self._send(200, json.dumps({"history": store.history_daily()}, ensure_ascii=False))
         elif path == "/api/stream":
             self._sse()
             return
@@ -418,8 +457,8 @@ class Handler(BaseHTTPRequestHandler):
                 f"otwatch_stale {1 if p['stale'] else 0}",
                 f"# TYPE otwatch_cves_total gauge\notwatch_cves_total {c.get('cves', 0)}",
                 f"# TYPE otwatch_cves_critical_total gauge\notwatch_cves_critical_total {crit}",
-                f"# TYPE otwatch_kev_ot_total gauge\notwatch_kev_ot_total {c.get('kev_ot', 0)}",
-                f"# TYPE otwatch_advisories_total gauge\notwatch_advisories_total {c.get('cisa_advisories', 0)}",
+                f"# TYPE otwatch_kev_ot_total gauge\notwatch_kev_ot_total {c.get('kev', c.get('kev_ot', 0))}",
+                f"# TYPE otwatch_advisories_total gauge\notwatch_advisories_total {c.get('advisories', c.get('cisa_advisories', 0))}",
                 f"# TYPE otwatch_collect_runs_total gauge\notwatch_collect_runs_total {p['collect_runs']}",
                 f"# TYPE otwatch_last_collect_duration_seconds gauge\notwatch_last_collect_duration_seconds {_state['last_collect_duration']}",
             ]

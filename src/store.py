@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-OT Watch — store persistant SQLite (stdlib) : historique + détection des nouveautés.
-Tables : runs, cves, advisories, kev. Upsert par clé métier -> idempotent, rejouable.
-Retourne le diff « nouveau depuis la dernière collecte » (base des alertes).
+OT Watch — store persistant SQLite (stdlib) : historique + détection des nouveautés + tendances.
+Tables : runs, cves (avec colonne `relevant` = correspond au profil d'exposition), advisories, kev.
+Upsert par clé métier -> idempotent, rejouable. Retourne le diff « nouveau depuis la dernière collecte ».
 """
 import json
 import os
 import sqlite3
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS runs (
 CREATE TABLE IF NOT EXISTS cves (
   cve_id TEXT PRIMARY KEY,
   first_seen_run INTEGER, last_seen_run INTEGER,
-  cvss REAL, severity TEXT, kev INTEGER, epss REAL, risk REAL,
+  cvss REAL, severity TEXT, kev INTEGER, epss REAL, risk REAL, relevant INTEGER DEFAULT 0,
   published TEXT, description TEXT, refs TEXT
 );
 CREATE TABLE IF NOT EXISTS advisories (
@@ -39,10 +39,18 @@ CREATE TABLE IF NOT EXISTS kev (
 """
 
 
+def _migrate(conn):
+    """Ajoute les colonnes apparues après la v1 (ex. cves.relevant)."""
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(cves)").fetchall()]
+    if "relevant" not in cols:
+        conn.execute("ALTER TABLE cves ADD COLUMN relevant INTEGER DEFAULT 0")
+
+
 def _connect(db_path=None):
     os.makedirs(DATA, exist_ok=True)
     conn = sqlite3.connect(db_path or DB_PATH)
     conn.executescript(SCHEMA)
+    _migrate(conn)
     return conn
 
 
@@ -66,14 +74,14 @@ def store_run(payload, validation=None, db_path=None):
             if not exists:
                 new_cves.append(c["id"])
             cur.execute(
-                """INSERT INTO cves (cve_id, first_seen_run, last_seen_run, cvss, severity, kev, epss, risk, published, description, refs)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?)
+                """INSERT INTO cves (cve_id, first_seen_run, last_seen_run, cvss, severity, kev, epss, risk, relevant, published, description, refs)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
                    ON CONFLICT(cve_id) DO UPDATE SET last_seen_run=excluded.last_seen_run, cvss=excluded.cvss,
                      severity=excluded.severity, kev=excluded.kev, epss=excluded.epss, risk=excluded.risk,
-                     published=excluded.published, description=excluded.description, refs=excluded.refs""",
+                     relevant=excluded.relevant, published=excluded.published, description=excluded.description, refs=excluded.refs""",
                 (c["id"], run_id, run_id, c.get("cvss"), c.get("severity"), 1 if c.get("kev") else 0,
-                 c.get("epss"), c.get("risk"), c.get("published"), (c.get("description") or "")[:700],
-                 json.dumps(c.get("refs", []))),
+                 c.get("epss"), c.get("risk"), 1 if c.get("relevant") else 0, c.get("published"),
+                 (c.get("description") or "")[:700], json.dumps(c.get("refs", []))),
             )
 
         new_adv = []
@@ -110,13 +118,33 @@ def store_run(payload, validation=None, db_path=None):
         conn.close()
 
 
-def history(db_path=None, days=30):
-    """Comptage de CVE par jour d'apparition (pour les futurs graphes)."""
+def history_daily(db_path=None, days=30):
+    """Série quotidienne sur `days` jours : {date, total, critical, kev, kev_added} (jours vides = 0)."""
     conn = _connect(db_path)
     try:
-        rows = conn.execute(
-            "SELECT substr(published,1,10) d, COUNT(*) n FROM cves WHERE published IS NOT NULL GROUP BY d ORDER BY d"
+        since = (datetime.now(UTC) - timedelta(days=days - 1)).strftime("%Y-%m-%d")
+        cve_rows = conn.execute(
+            """SELECT substr(published,1,10) d, COUNT(*), SUM(CASE WHEN severity='CRITICAL' THEN 1 ELSE 0 END), SUM(kev)
+               FROM cves WHERE substr(published,1,10) >= ? GROUP BY d""",
+            (since,),
         ).fetchall()
-        return [{"date": d, "count": n} for d, n in rows]
+        kev_rows = conn.execute(
+            "SELECT substr(date_added,1,10) d, COUNT(*) FROM kev WHERE substr(date_added,1,10) >= ? GROUP BY d",
+            (since,),
+        ).fetchall()
     finally:
         conn.close()
+    cve_map = {d: {"total": t, "critical": c or 0, "kev": k or 0} for d, t, c, k in cve_rows}
+    kev_map = {d: n for d, n in kev_rows}
+    series = []
+    for i in range(days):
+        d = (datetime.now(UTC) - timedelta(days=days - 1 - i)).strftime("%Y-%m-%d")
+        row = cve_map.get(d, {"total": 0, "critical": 0, "kev": 0})
+        series.append({"date": d, "total": row["total"], "critical": row["critical"],
+                       "kev": row["kev"], "kev_added": kev_map.get(d, 0)})
+    return series
+
+
+def history(db_path=None):
+    """Compat : comptage de CVE par date de publication."""
+    return [{"date": s["date"], "count": s["total"]} for s in history_daily(db_path)]

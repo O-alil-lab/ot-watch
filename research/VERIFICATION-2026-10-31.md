@@ -67,3 +67,16 @@ Couverture sécurité : XSS (script/img-onerror/javascript: neutralisés), filtr
 | Dashboard : EventSource + toast « 🆕 +N CVE » | ✅ | `EventSource('/api/stream')` présent dans la page servie |
 
 **Boucle ECC v1.2** : ruff 0 erreur · **52/52 tests OK** · couverture **83 %** · serveur live v3 redémarré (port 8000), SSE vérifié en curl.
+
+---
+
+# Addendum v1.3 — profil d'exposition « Mes actifs OT » + historique visuel (01/11/2026, ~00:15 UTC)
+
+| Amélioration P1 | Statut | Preuve |
+|---|---|---|
+| Profil d'exposition `config.exposure.keywords` (~40 mots-clés OT) → `c.relevant`, tri relevant-first (newsletter + dashboard + API) | ✅ | collecte v3 réelle : « exposition: 4/22 CVE » ; `/api/data` live : 4 `relevant:true`, top = CVE-2026-110936 (risque 6.23) en #1 |
+| Filtre dashboard « ⭐ Mes actifs OT » + badges ⭐ + tri client (relevant, risque) | ✅ | `drawChart`, `#bRel`, ⭐ présents dans la page servie (curl) ; 4 ⭐ dans `out/issue-2026-10-31.html` |
+| Historique SQLite 30 j `store.history_daily()` + `GET /api/history` + graphique SVG inline (3 séries) | ✅ | `/api/history` live → 30 points (9 non nuls) ; section « 📈 Tendances » servie ; migration `relevant` testée |
+| Correction métriques `/metrics` (`kev_ot`/`advisories` vs clés `counts`) | ✅ | `curl /metrics` → `otwatch_kev_ot_total 13`, `otwatch_advisories_total 5` |
+
+**Boucle ECC v1.3** : ruff 0 erreur · **59/59 tests OK** · couverture **84 %** (store 100 %, render 97 %, collect 90 %, validate 92 %, server 70 %, alerts 62 %) · collecte réelle v3 terminée en 227,6 s (run #9, 22 CVE, EPSS 22/22) · serveur live v4 redémarré sur 0.0.0.0:8000 — `/api/history`, `/api/data` (relevant), `/api/stream` (SSE `connected`), en-têtes sécurité et `/metrics` vérifiés en curl.

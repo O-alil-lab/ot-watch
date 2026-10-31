@@ -257,6 +257,24 @@ def sort_by_risk(cves):
     return sorted(cves, key=lambda c: (c.get("risk") if c.get("risk") is not None else (c.get("cvss") or 0)), reverse=True)
 
 
+def apply_exposure(cves):
+    """Marque c['relevant']=True si la CVE correspond au profil d'exposition (config.exposure.keywords)."""
+    kws = CFG.get("exposure", {}).get("keywords", [])
+    exp_re = re.compile("|".join(re.escape(k) for k in kws), re.IGNORECASE) if kws else None
+    n = 0
+    for c in cves:
+        c["relevant"] = bool(exp_re and exp_re.search(c.get("description") or ""))
+        n += 1 if c["relevant"] else 0
+    log(f"exposition: {n}/{len(cves)} CVE correspondent au profil « {CFG.get('exposure', {}).get('label', 'mes actifs')} »")
+    return cves
+
+
+def sort_by_priority(cves):
+    """Tri : CVE pertinentes pour mon profil d'abord, puis score de risque décroissant."""
+    return sorted(cves, key=lambda c: (bool(c.get("relevant")),
+                                        c.get("risk") if c.get("risk") is not None else (c.get("cvss") or 0)), reverse=True)
+
+
 # ---------------------------------------------------------------- KEV
 def collect_kev():
     """Entrées KEV liées à l'OT/ICS."""
@@ -296,7 +314,7 @@ def main():
     for c in cves:
         c["kev"] = c["id"] in kev_ids
 
-    cves = sort_by_risk(enrich_epss(cves))
+    cves = sort_by_priority(apply_exposure(enrich_epss(cves)))
 
     # validation qualité (schéma + volume vs collecte précédente)
     prev_meta = {}

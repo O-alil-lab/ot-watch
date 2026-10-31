@@ -131,6 +131,7 @@ def sev_badge(score, severity):
 
 def cve_block(c):
     kev = ' <span style="color:#b91c1c;font-weight:700;" title="Ajoutée au catalogue KEV (exploitation connue)">★KEV</span>' if c.get("kev") else ""
+    rel = ' <span style="color:#f59e0b;font-weight:700;" title="Correspond à votre profil d\'exposition OT">⭐</span>' if c.get("relevant") else ""
     date = (c.get("published") or "")[:10]
     cwes = ", ".join(w for w in (c.get("cwes") or []) if w)[:80]
     ref = safe_url(c["refs"][0]) if c.get("refs") else f"https://nvd.nist.gov/vuln/detail/{c['id']}"
@@ -142,7 +143,7 @@ def cve_block(c):
         extra += f" · EPSS {c['epss']:.3f}"
     return f"""
     <tr>
-      <td style="white-space:nowrap;"><a href="{ref}" style="color:#1d4ed8;font-weight:600;">{c['id']}</a>{kev}</td>
+      <td style="white-space:nowrap;"><a href="{ref}" style="color:#1d4ed8;font-weight:600;">{c['id']}</a>{kev}{rel}</td>
       <td style="text-align:center;">{sev_badge(c.get('cvss'), c.get('severity'))}</td>
       <td style="font-size:12.5px;color:#334155;">{desc}<br><span style="color:#94a3b8;font-size:11px;">{html.escape(cwes)} · publié le {date}{extra}</span></td>
     </tr>"""
@@ -213,7 +214,7 @@ def render_html(issue_date, cves, advisories, kev, meta, articles):
         kicker = f'<div class="kicker">{html.escape(a["kicker"])} · {html.escape(a["section"])}</div>' if a["kicker"] else ""
         return f'<div class="article">{kicker}<h3>{html.escape(a["title"])}</h3>{a["body_html"]}</div>'
 
-    cves = sorted(cves, key=lambda c: (c.get("risk") if c.get("risk") is not None else (c.get("cvss") or 0)), reverse=True)
+    cves = sorted(cves, key=lambda c: (bool(c.get("relevant")), c.get("risk") if c.get("risk") is not None else (c.get("cvss") or 0)), reverse=True)
     cve_rows = "\n".join(cve_block(c) for c in cves[: CFG.get("max_cves", 14)])
     adv_rows = "\n".join(advisory_block(a) for a in advisories[: CFG.get("max_advisories", 12)])
     kev_rows = "\n".join(kev_block(k) for k in kev[: CFG.get("max_kev", 10)])
