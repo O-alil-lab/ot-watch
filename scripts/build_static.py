@@ -87,8 +87,16 @@ def static_dashboard(html):
 def build(out_dir, data_dir=None, issues_dir=None):
     data_dir = data_dir or server.DATA
     issues_dir = issues_dir or server.OUT
+    saved = (server.DATA, server.OUT, growth.DATA, growth.OUT)
     server.DATA, server.OUT = data_dir, issues_dir
     growth.DATA, growth.OUT = data_dir, issues_dir
+    try:
+        return _write_site(out_dir, data_dir)
+    finally:
+        server.DATA, server.OUT, growth.DATA, growth.OUT = saved
+
+
+def _write_site(out_dir, data_dir):
     os.makedirs(os.path.join(out_dir, "api"), exist_ok=True)
 
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as fh:

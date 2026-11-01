@@ -18,6 +18,22 @@ import growth  # noqa: E402
 import server  # noqa: E402
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _fixtures import fixture_data_dir  # noqa: E402
+
+_GROWTH_DATA = None
+
+
+def setUpModule():
+    """Jeu de données figé pour tout le module : aucun besoin de data/ local ni de réseau."""
+    global _GROWTH_DATA
+    _GROWTH_DATA = (growth.DATA,)
+    growth.DATA = fixture_data_dir()
+
+
+def tearDownModule():
+    growth.DATA = _GROWTH_DATA[0]
+
 class TestGrowthUnit(unittest.TestCase):
     def test_rss_valide(self):
         feed = growth.rss_feed("https://otwatch.example")
@@ -94,11 +110,10 @@ class TestGrowthLive(unittest.TestCase):
 
         import render_en
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        from _fixtures import fixture_data_dir
         cls._tmp = tempfile.TemporaryDirectory()
         out = os.path.join(cls._tmp.name, "out")
         shutil.copytree(os.path.join(server.ROOT, "out"), out)
-        data = fixture_data_dir()
+        data = growth.DATA
         load = lambda n: json.load(open(os.path.join(data, n), encoding="utf-8"))  # noqa: E731
         with open(os.path.join(out, "issue-2026-10-31.en.html"), "w", encoding="utf-8") as fh:
             fh.write(render_en.render_en_html("2026-10-31", load("cves.json"), load("cisa_advisories.json"),
