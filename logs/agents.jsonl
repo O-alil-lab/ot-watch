@@ -68,3 +68,9 @@
 {"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:52:42.223050+00:00"}
 {"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpn1pfaoxv/editorial/auto-2026-11-01.md", "ts": "2026-11-01T10:52:42.223717+00:00"}
 {"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:52:42.231495+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "factcheck_en_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T22:43:30.734975+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpzwifoap6/editorial/auto-2026-11-01.md", "ts": "2026-11-01T22:43:30.735942+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "factcheck_en_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T22:43:30.745832+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "factcheck_en_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T22:43:37.184624+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpyby1theg/editorial/auto-2026-11-01.md", "ts": "2026-11-01T22:43:37.184951+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "factcheck_en_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T22:43:37.190928+00:00"}

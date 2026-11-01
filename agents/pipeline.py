@@ -43,8 +43,10 @@ def _audit(entry):
 def run_draft(date=None, data_dir=DATA, db_path=DB, drafts_dir=DRAFTS):
     date = date or datetime.now(UTC).strftime("%Y-%m-%d")
     brief = rag.build_brief(data_dir, db_path)
-    article = writer.write_article(brief)
+    article = writer.write_article(brief, lang=os.environ.get("OTWATCH_ARTICLE_LANG", "fr"))
     report = factcheck.check_draft(article, brief, data_dir)
+    article_en = writer.write_article(brief, lang="en")
+    report_en = factcheck.check_draft(article_en, brief, data_dir)
     ddir = os.path.join(drafts_dir, f"draft-{date}")
     img_dir = os.path.join(ddir, "img")
     os.makedirs(img_dir, exist_ok=True)
@@ -52,13 +54,18 @@ def run_draft(date=None, data_dir=DATA, db_path=DB, drafts_dir=DRAFTS):
         json.dump(brief, fh, ensure_ascii=False, indent=2)
     with open(os.path.join(ddir, "article.md"), "w", encoding="utf-8") as fh:
         fh.write(article)
+    with open(os.path.join(ddir, "article.en.md"), "w", encoding="utf-8") as fh:
+        fh.write(article_en)
     with open(os.path.join(ddir, "factcheck.json"), "w", encoding="utf-8") as fh:
         json.dump(report, fh, ensure_ascii=False, indent=2)
+    with open(os.path.join(ddir, "factcheck.en.json"), "w", encoding="utf-8") as fh:
+        json.dump(report_en, fh, ensure_ascii=False, indent=2)
     imgs = images.generate_svgs(brief, img_dir)
     with open(os.path.join(ddir, "images.json"), "w", encoding="utf-8") as fh:
         json.dump(imgs, fh, ensure_ascii=False, indent=2)
-    _audit({"stage": "draft", "draft": f"draft-{date}", "factcheck_ok": report["ok"],
-            "checked": report["checked"], "failed": len(report["failed"]), "images": len(imgs)})
+    _audit({"stage": "draft", "draft": f"draft-{date}", "factcheck_ok": report["ok"] and report_en["ok"],
+            "factcheck_en_ok": report_en["ok"], "checked": report["checked"], "failed": len(report["failed"]),
+            "images": len(imgs)})
     print(f"[agents] brouillon out/drafts/draft-{date}/ : fact-check {'OK' if report['ok'] else 'KO'} "
           f"({report['passed']}/{report['checked']} vérifiés, {len(report['failed'])} échecs, "
           f"{len(report['human_review'])} points revue humaine) · {len(imgs)} visuels SVG")

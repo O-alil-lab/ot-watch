@@ -476,6 +476,184 @@
           }
         }
       }
+    },
+    "/issue.en": {
+      "get": {
+        "summary": "Dernière édition anglaise (HTML, dir=ltr)",
+        "responses": {
+          "200": {
+            "description": "HTML de l'édition EN",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "404": {
+            "description": "aucune édition EN générée"
+          }
+        }
+      }
+    },
+    "/feed.xml": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Flux RSS 2.0 des CVE OT + avis CISA (dernière fenêtre)",
+        "responses": {
+          "200": {
+            "description": "RSS 2.0",
+            "content": {
+              "application/rss+xml": {}
+            }
+          }
+        }
+      }
+    },
+    "/sitemap.xml": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Sitemap XML (SEO)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/xml; charset=utf-8": {}
+            }
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "robots.txt",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; charset=utf-8": {}
+            }
+          }
+        }
+      }
+    },
+    "/integrate": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Page « intégrer » : extraits TAXII/STIX/MISP/webhook + communautés OT",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/html; charset=utf-8": {}
+            }
+          }
+        }
+      }
+    },
+    "/stats": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Statistiques publiques (preuve sociale, sans tracking)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/html; charset=utf-8": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/subscribers": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Nombre d'abonnés (RSS/webhook/e-mail)",
+        "responses": {
+          "200": {
+            "description": "JSON",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/subscribe": {
+      "post": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Abonnement e-mail ou webhook (RGPD : aucun tracking, dédup)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "webhook": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "inscrit/désinscrit"
+          },
+          "400": {
+            "description": "entrée invalide"
+          }
+        }
+      }
+    },
+    "/unsubscribe": {
+      "post": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Désabonnement par e-mail (droit à l'oubli)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "webhook": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "inscrit/désinscrit"
+          },
+          "400": {
+            "description": "entrée invalide"
+          }
+        }
+      }
     }
   },
   "components": {

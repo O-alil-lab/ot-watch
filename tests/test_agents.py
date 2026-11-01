@@ -52,6 +52,33 @@ class TestWriter(unittest.TestCase):
         self.assertIn("revue éditoriale humaine", self.article)
         self.assertIn("art. 50", self.article)
 
+    def test_ot_impact_section_data_grounded(self):
+        """v1.17 : chaque CVE prioritaire a une section 'impact OT' calculée depuis le brief."""
+        self.assertIn("Pourquoi cela compte pour l'OT", self.article)
+        top = self.brief["top_cves"][0]
+        if top.get("ot_score") is not None:
+            self.assertIn(f"score OT {top['ot_score']:.1f}/10", self.article)
+        if top.get("asset_impact"):
+            self.assertIn(", ".join(top["asset_impact"]), self.article)
+
+    def test_article_en(self):
+        """v1.17 : édition anglaise (lang='en'), dir ltr implicite, mêmes données."""
+        art = writer.write_article(self.brief, lang="en")
+        self.assertIn("OT/ICS Threat Watch", art)
+        self.assertIn("Why this matters for OT", art)
+        self.assertIn("EU AI Act, art. 50", art)
+        self.assertRegex(art, r"CVE-\d{4}-\d{4,7}")
+        rep = factcheck.check_draft(art, self.brief, DATA)
+        self.assertTrue(rep["ok"], rep["failed"])
+
+    def test_brief_ot_fields(self):
+        """v1.17 : le brief RAG expose ot_score / ot_score_detail / asset_impact."""
+        top = self.brief["top_cves"][0]
+        self.assertIn("ot_score", top)
+        self.assertIn("ot_score_detail", top)
+        self.assertIn("asset_impact", top)
+        self.assertIn("new_kev_facts", self.brief)
+
 
 class TestFactcheck(unittest.TestCase):
     def setUp(self):

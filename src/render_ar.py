@@ -25,7 +25,7 @@ AR = {
     "kev": "★ KEV — استغلال مؤكد في البرية",
     "advisories": "تنبيهات CISA ICS",
     "risk": "درجة الخطورة",
-    "ot": "OT (العرض/بورده)",
+    "ot": "درجة OT (العرض x بورده Purdue)",
     "cvss": "CVSS",
     "ssvc": "SSVC",
     "exposure": "◆ أصولي في ملف التعرض (Mes actifs OT)",
@@ -63,14 +63,14 @@ def render_ar_html(issue_date, cves, advisories, kev, meta):
         rel_badge = ' <span style="color:#f59e0b;font-weight:700;">◆</span>' if c.get("relevant") else ""
         ssvc = f' <span style="background:#7c3aed;color:#fff;border-radius:4px;padding:0 5px;font-size:10px;">{html.escape((c.get("ssvc") or "").upper())}</span>' if c.get("ssvc") else ""
         rows.append(
-            f'<tr><td style="white-space:nowrap;"><b>{html.escape(c["id"])}</b>{kev_badge}{rel_badge}{ssvc}</td>'
-            f'<td style="text-align:center;">{html.escape(str(c.get("cvss")))} — {html.escape(sev_ar(c.get("severity")))}</td>'
-            f'<td style="text-align:center;">{c.get("risk") if c.get("risk") is not None else "-"}</td>'
-            f'<td style="text-align:center;">{ot_cell(c)}</td>'
-            f'<td style="font-size:12px;color:#334155;">{html.escape((c.get("description") or "")[:160])}</td></tr>'
+            f'<tr><td style="white-space:nowrap;" dir="ltr" align="right"><bdi><b>{html.escape(c["id"])}</b></bdi>{kev_badge}{rel_badge}{ssvc}</td>'
+            f'<td style="text-align:center;" dir="ltr"><bdi>{html.escape(str(c.get("cvss")))}</bdi> — {html.escape(sev_ar(c.get("severity")))}</td>'
+            f'<td style="text-align:center;" dir="ltr"><bdi>{c.get("risk") if c.get("risk") is not None else "-"}</bdi></td>'
+            f'<td style="text-align:center;" dir="ltr">{ot_cell(c)}</td>'
+            f'<td style="font-size:12px;color:#334155;"><span dir="auto">{html.escape((c.get("description") or "")[:160])}</span></td></tr>'
         )
     adv_rows = "".join(
-        f'<li><b>{html.escape(a.get("code") or "ICS")}</b> — <a href="{html.escape(a.get("link") or "#")}">{html.escape(a.get("title") or "")}</a></li>'
+        f'<li><bdi><b>{html.escape(a.get("code") or "ICS")}</b></bdi> — <a href="{html.escape(a.get("link") or "#")}" dir="auto">{html.escape(a.get("title") or "")}</a></li>'
         for a in advisories[:15]
     )
     return f"""<!DOCTYPE html>
@@ -78,7 +78,7 @@ def render_ar_html(issue_date, cves, advisories, kev, meta):
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{AR["title"]}</title>
 <style>
-body{{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f4f6fa;color:#1a2340;margin:0;padding:24px;}}
+body{{font-family:'Noto Naskh Arabic','Segoe UI',Tahoma,Arial,sans-serif;background:#f4f6fa;color:#1a2340;margin:0;padding:24px;line-height:1.6;}}
 .wrap{{max-width:960px;margin:auto;background:#fff;border-radius:12px;padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.08);}}
 h1{{font-size:22px;margin:0 0 4px;}} .meta{{color:#64748b;font-size:13px;margin-bottom:18px;}}
 .cards{{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;}}
@@ -90,7 +90,7 @@ footer{{margin-top:20px;color:#94a3b8;font-size:11px;}}
 </style></head>
 <body><div class="wrap">
 <h1>🛡 {AR["title"]}</h1>
-<div class="meta">{AR["edition"]} {html.escape(issue_date)} · {AR["generated"]} {html.escape((meta.get("generated_at") or "")[:19].replace("T", " "))} UTC · {AR["window"]} {meta.get("window_days", 14)} {AR["days"]}</div>
+<div class="meta">{AR["edition"]} <span dir="ltr">{html.escape(issue_date)}</span> · {AR["generated"]} <span dir="ltr">{html.escape((meta.get("generated_at") or "")[:19].replace("T", " "))} UTC</span> · {AR["window"]} {meta.get("window_days", 14)} {AR["days"]}</div>
 <div class="cards">
   <div class="card"><div class="n">{len(cves)}</div><div class="l">{AR["cves"]}</div></div>
   <div class="card" style="background:#b91c1c"><div class="n">{crit}</div><div class="l">{AR["critical"]}</div></div>

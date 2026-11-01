@@ -1,0 +1,9 @@
+* @otwatch-maintainers
+/server.py @otwatch-maintainers @security
+/src/collect.py @otwatch-maintainers
+/src/alerts.py @otwatch-maintainers @security
+/scripts/ @otwatch-maintainers
+/.github/workflows/ @otwatch-maintainers
+/.claude/settings.json @security
+/scripts/claude-hooks/ @security
+/config.json @otwatch-maintainers

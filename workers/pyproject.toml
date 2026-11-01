@@ -1,0 +1,7 @@
+# Python Worker OT Watch — deps compatibles Pyodide (pure Python / PyEmscripten).
+# workers-py (SDK) est fourni par le runtime Cloudflare ; pas dans les deps.
+[project]
+name = "otwatch-worker"
+version = "1.16.0"
+requires-python = ">=3.12"
+dependencies = []   # le worker lit D1/KV/R2 via bindings natifs ; aucune lib externe requise

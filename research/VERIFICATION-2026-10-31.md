@@ -194,3 +194,64 @@ Couverture sécurité : XSS (script/img-onerror/javascript: neutralisés), filtr
 | doctor ECC | ✅ | 3/3 après build du plugin opencode (2 erreurs restantes = artefacts .opencode/dist non buildés, hors périmètre) |
 
 **Boucle ECC v1.14** : ruff 0 erreur · **124/124 tests OK** · couverture **86 %** (scope gate CI : 80 %) · harness-audit **39/39** · serveur live v12 (0.0.0.0:8000) — `/openapi.json`, `/`, `/api/data`, `/api/assets`, `/misp`, `/issue.ar`, `/taxii2/*`, `/metrics`, SSE vérifiés en curl.
+
+---
+
+# Addendum v1.15 — DevOps 100 % gratuit : GitHub + Linear + GHCR (01/11/2026, ~10:10 UTC)
+
+| Élément | Statut | Preuve |
+|---|---|---|
+| ADR décision `docs/adr/ADR-2026-11-01-remote-github-linear-ghcr.md` (veille 2026 : Actions illimité sur repo public / 2 000 min privé, Linear Free avec intégration GitHub incluse, GHCR public illimité + push via GITHUB_TOKEN sans PAT ; alternatives rejetées : GitLab 400 min/5 users, Quay 0 privé, OCI signup lourd) | ✅ | ADR commité + sources citées |
+| `.github/workflows/docker.yml` | ✅ | test YAML : `permissions: packages: write`, `contents: read`, login ghcr.io avec `secrets.GITHUB_TOKEN`, build-push-action, scan Trivy CRITICAL/HIGH en amont |
+| `scripts/github-setup.sh` (refuse sans `GITHUB_REPO=<owner>/<repo>`) | ✅ | test : exit 2 sans/malformé ; remote origin + branche main + push -u |
+| `scripts/linear_import.py` (parse la roadmap → mutations `issueCreate`, dry-run par défaut, réel avec `LINEAR_API_KEY`/`LINEAR_TEAM_ID` env) | ✅ | test : 6+ items parsés, dry-run exit 0 sans clé |
+| harness-audit ECC toujours **39/39** après recréation de `.claude/` | ✅ | `research/ecc-audit-2026-11-01/` |
+| Note environnement : le bac à sable réinitialise périodiquement `.git` et `out/` — commits et éditions régénérées/restaurées (out/ régénéré hors-ligne depuis data/, 0 appel réseau) | ✅ | working tree propre après re-commit |
+
+**Boucle ECC v1.15** : ruff 0 erreur · **130/130 tests OK** · couverture **79 %** (scope gate CI src+server+agents ; 86 % sur le total) · secrets grep OK · harness-audit 39/39.
+
+---
+
+# Addendum v1.16 — déploiement LIVE Cloudflare free tier (01/11/2026)
+
+| Élément | Statut | Preuve |
+|---|---|---|
+| Faisabilité free tier vérifiée (veille 2026) : Workers Free 100k req/j, 10 ms CPU (réseau non compté), wall time illimité + SSE natif, cron 5×15 min, **Python Workers GA 21/09/2026**, D1 5 Go/5M reads/j, KV 100k reads/j, R2 10 Go egress 0 $ | ✅ | `docs/deploy/CLOUDFLARE-FREE-TIER-2026-11-01.md` + sources |
+| `workers/otwatch_worker.py` : fetch() lecture D1/KV/R2 + SSE + TAXII/STIX/MISP/AR/OpenAPI ; scheduled() cron collecte légère (< 50 subrequests) → D1/KV/R2 | ✅ | py_compile OK ; test routes vs OpenAPI ; schéma D1 = store.py |
+| `wrangler.toml` (python_workers, bindings DB/KV/R2, cron 6 h), `migrations/0001_init.sql`, `deploy.sh` (garde secrets), `.github/workflows/deploy-cloudflare.yml` | ✅ | test_cloudflare_deploy.py 6/6 |
+| Résilience sandbox : `scaffolds/` + `scripts/restore-sandbox.sh` (le bac à sable efface périodiquement .claude/.github/out et reset .git — restauration testée) | ✅ | restore-sandbox exécuté, 136 tests OK après |
+
+**Boucle ECC v1.16** : ruff 0 erreur · **136/136 tests OK** · couverture gate 80 % OK · harness-audit **39/39** · déploiement Cloudflare non exécuté (pas de compte CF dans le sandbox) — package prêt, 5 commandes dans le doc.
+
+# Addendum v1.17 — i18n AR/EN + rédaction agents (01/11/2026 ~21:30)
+
+**Portée** : correction affichage arabe (RTL/bidi), édition EN, qualité rédaction agents (writer/rag) selon consultations ECC du 01/11/2026 21:24 (notes : `research/ecc-audit-2026-11-01/consult-i18n-writer-2026-11-01.md`).
+
+**Changements** :
+- `src/render_ar.py` : `<bdi>` + `dir="ltr"` sur cellules CVE/CVSS/risque/OT et dates ; `dir="auto"` sur descriptions ; font `'Noto Naskh Arabic','Segoe UI',Tahoma,Arial` ; line-height 1.6.
+- `src/render_en.py` (nouveau) : édition EN `lang="en" dir="ltr"` -> `out/issue-<date>.en.html/.md` ; `run_all.sh` ; `server.py` route `/issue.en` + bouton dashboard 🇬🇧 ; `docs/openapi.json` ; worker `_render_min_en` + route `/issue.en` + R2 `issue-latest.en.html`.
+- Worker : faute « ال edition » -> « إصدار » ; cellules AR en `dir="ltr"` avec `<bdi>`.
+- `agents/rag.py` : cve_facts += ot_score, ot_score_detail, asset_impact, ssvc_detail, vector, cwes ; `new_kev_facts` ; sources dédupliquées.
+- `agents/writer.py` : `lang=fr|en`, structure éditoriale fixe, section « impact OT » data-driven (`_ot_impact_lines`), dédup descriptions, STYLE_GUIDE + DISCLOSURE bilingues, LLM optionnel inchangé (re-vérifié).
+- `agents/pipeline.py` : brouillon = article.md + article.en.md + factcheck.json + factcheck.en.json.
+- Tests : +8 (AR bidi, worker typo/route EN, render_en, run_all, server route, writer EN + impact OT, brief OT) -> **144/144 OK**.
+
+**Gates v1.17** : ruff clean (2 scopes) · **144/144 tests OK** · couverture gate **80 % OK** · grep secrets OK (env uniquement) · harness-audit **16 checks, 0 failing**.
+
+**Vérif live** (serveur redémarré, 0.0.0.0:8000) : `/`, `/issue`, `/issue.ar`, **`/issue.en`**, `/issue.pdf`, `/api/data`, `/api/assets`, `/taxii2/collections`, `/metrics`, `/openapi.json`, `/misp`, `/stix` = 200 ; `/issue.en` contient `lang="en" dir="ltr"` ; `/issue.ar` contient `<bdi><b>CVE-…</b></bdi>` ; dashboard affiche le bouton 🇬🇧 English.
+
+**Brouillon agent** : `python3 -m agents.pipeline draft` -> fact-check OK (29/29) ; `article.en.md` avec section « Why this matters for OT » calculée (ex. CVE-2026-110936 : KEV, SSVC ACT, actifs plc-s7-1500/scada-wincc, Purdue L1/L2, score OT 10.0/10).
+
+# Addendum v1.18 — acquisition (trafic) & monétisation éthique (01/11/2026 ~22:10)
+
+**Contexte** : demande user « interroge ECC comment avoir du trafic et gagner de l'argent ». Consultations ECC 21:56 (capabilities security/content/operators/research) + veille web 2026 (NLnet ≤50 k€, Alpha-Omega 70+ grants, communautés OT 2026, canaux d'adoption OSS).
+
+**Livré** :
+- `src/growth.py` : RSS 2.0, sitemap, robots, subscribe/unsubscribe (RGPD : local, dédup, sans tracking), stats publiques, page `/integrate`, bloc SEO (hreflang FR/AR/EN, canonical, OG, JSON-LD).
+- `server.py` : routes `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/integrate`, `/stats`, `/api/subscribers`, POST `/subscribe`, POST `/unsubscribe` ; injection SEO sur `/issue*` ; bouton 🔔 + formulaire d'abonnement sur le dashboard ; 8 routes ajoutées à `docs/openapi.json`.
+- `FUNDING.yml`, `docs/MONETIZATION.md`, `docs/COMMUNITY.md`, sections README.
+- Tests `tests/test_growth.py` (+12) : RSS valide XML, sitemap/robots, subscribe (validation/dédup/unsubscribe), SEO hreflang, routes live, FUNDING/docs.
+
+**Gates v1.18** : ruff clean (2 scopes) · **156/156 tests OK** · couverture **80 % OK** · grep secrets OK · harness-audit **16 checks, 0 failing**.
+
+**Vérif live** (serveur redémarré 0.0.0.0:8000) : `/`, `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/integrate`, `/stats`, `/issue`, `/issue.ar`, `/issue.en`, `/api/subscribers`, `/api/data`, `/metrics`, `/taxii2/collections`, `/openapi.json` = 200 ; POST `/subscribe` e-mail + webhook = 200 (compteur 2) ; `/issue.en` servi avec `hreflang="fr|ar|en|x-default"`, canonical, OG, JSON-LD ; RSS contient les CVE KEV en item ; dashboard affiche RSS/Intégrer/Stats + formulaire.

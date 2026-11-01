@@ -25,6 +25,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 import collect  # noqa: E402  (pipeline de collecte réel)
+import growth  # noqa: E402  (v1.18 : RSS/sitemap/subscribe/stats/integrations)
 import render  # noqa: E402   (parse les articles éditoriaux)
 import store  # noqa: E402    (historique SQLite)
 import taxii  # noqa: E402    (serveur TAXII 2.1 read-only)
@@ -221,6 +222,18 @@ def latest_issue_ar():
     return None
 
 
+def latest_issue_en():
+    try:
+        files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".en.html"))
+        if not files:
+            return None
+        with open(os.path.join(OUT, files[-1]), encoding="utf-8") as fh:
+            return fh.read(), files[-1]
+    except Exception:
+        return None
+    return None
+
+
 def latest_issue_pdf():
     try:
         files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".pdf"))
@@ -306,9 +319,20 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
     <a href="/taxii2/collections" target="_blank"><button class="ghost">🛰 TAXII 2.1</button></a>
     <a href="/misp" target="_blank"><button class="ghost">🕸 Export MISP</button></a>
     <a href="/issue.ar" target="_blank"><button class="ghost">🌍 العربية</button></a>
+    <a href="/issue.en" target="_blank"><button class="ghost">🇬🇧 English</button></a>
     <a href="/openapi.json" target="_blank"><button class="ghost">📖 OpenAPI</button></a>
+    <a href="/feed.xml" target="_blank"><button class="ghost">📡 RSS</button></a>
+    <a href="/integrate" target="_blank"><button class="ghost">🔌 Intégrer</button></a>
+    <a href="/stats" target="_blank"><button class="ghost">📊 Stats</button></a>
   </div>
 </header>
+<div style="margin:0 0 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+  <form id="subForm" style="display:flex;gap:8px;align-items:center">
+    <input id="subEmail" type="email" placeholder="votre@email.tld — recevoir l'édition (sans tracking)" style="padding:8px 10px;border-radius:8px;border:1px solid #cbd5e1;background:#0f172a;color:#e2e8f0;font-size:13px;min-width:280px">
+    <button class="ghost" type="submit">🔔 S'abonner</button>
+  </form>
+  <span id="subMsg" class="mono" style="color:#64748b"></span>
+</div>
 <div class="wrap">
   <div class="cards">
     <div class="card crit"><div class="n" id="nCve">–</div><div class="l">CVE OT (fenêtre)</div></div>
@@ -455,8 +479,36 @@ if (window.EventSource) {
   };
 }
 </script>
+<script>
+document.getElementById('subForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('subEmail').value.trim();
+  const msg = document.getElementById('subMsg');
+  try {
+    const r = await fetch('/subscribe', {method: 'POST', headers: {'Content-Type': 'application/json'},
+                                        body: JSON.stringify({email})});
+    const j = await r.json();
+    msg.textContent = j.message + ' (' + j.subscribers + ' abonnés)';
+    if (j.ok) document.getElementById('subEmail').value = '';
+  } catch (err) { msg.textContent = 'erreur réseau'; }
+});
+</script>
 </body>
 </html>"""
+
+
+def _base_url(headers):
+    """URL publique : OTWATCH_BASE_URL env prioritaire, sinon Host de la requête."""
+    return (os.environ.get("OTWATCH_BASE_URL")
+            or f"http://{headers.get('Host') or 'localhost:8000'}").rstrip("/")
+
+
+def _with_seo(html_doc, base, lang, route, title, desc, date_iso):
+    """Injecte hreflang FR/AR/EN + canonical + OG + JSON-LD si absent (éditions statiques out/)."""
+    if "hreflang" in html_doc:
+        return html_doc
+    block = growth.seo_head(base, lang, route, title, desc, date_iso)
+    return re.sub(r"(<head[^>]*>)", lambda m: m.group(1) + block, html_doc, count=1)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -571,7 +623,10 @@ class Handler(BaseHTTPRequestHandler):
         elif path == "/issue":
             res = latest_issue_html()
             if res:
-                self._send(200, res[0], "text/html; charset=utf-8")
+                doc = _with_seo(res[0], _base_url(self.headers), "fr", "/issue",
+                                f"OT Watch — édition du {res[1][6:16]}",
+                                "Veille OT/ICS : CVE prioritaires, KEV, avis CISA, score OT.", res[1][6:16])
+                self._send(200, doc, "text/html; charset=utf-8")
             else:
                 self._send(404, json.dumps({"error": "aucune édition générée"}))
         elif path == "/misp":
@@ -625,9 +680,19 @@ class Handler(BaseHTTPRequestHandler):
         elif path == "/issue.ar":
             res = latest_issue_ar()
             if res:
-                self._send(200, res[0], "text/html; charset=utf-8")
+                doc = _with_seo(res[0], _base_url(self.headers), "ar", "/issue.ar",
+                                "نشرة OT Watch — CVE وKEV وأvis CISA (édition arabe)", "Veille OT/ICS en arabe.", res[1][6:16])
+                self._send(200, doc, "text/html; charset=utf-8")
             else:
                 self._send(404, json.dumps({"error": "aucune édition arabe générée"}))
+        elif path == "/issue.en":
+            res = latest_issue_en()
+            if res:
+                doc = _with_seo(res[0], _base_url(self.headers), "en", "/issue.en",
+                                f"OT Watch — English edition {res[1][6:16]}", "OT/ICS watch: priority CVEs, KEV, CISA advisories, OT score.", res[1][6:16])
+                self._send(200, doc, "text/html; charset=utf-8")
+            else:
+                self._send(404, json.dumps({"error": "no English edition generated"}))
         elif path == "/issue.pdf":
             res = latest_issue_pdf()
             if res:
@@ -637,6 +702,18 @@ class Handler(BaseHTTPRequestHandler):
                 })
             else:
                 self._send(404, json.dumps({"error": "aucun PDF généré"}))
+        elif path == "/feed.xml":
+            self._send(200, growth.rss_feed(_base_url(self.headers)), "application/rss+xml; charset=utf-8")
+        elif path == "/sitemap.xml":
+            self._send(200, growth.sitemap(_base_url(self.headers)), "application/xml; charset=utf-8")
+        elif path == "/robots.txt":
+            self._send(200, growth.robots(_base_url(self.headers)), "text/plain; charset=utf-8")
+        elif path == "/integrate":
+            self._send(200, growth.integrate_html(_base_url(self.headers)), "text/html; charset=utf-8")
+        elif path == "/stats":
+            self._send(200, growth.stats_html(_base_url(self.headers)), "text/html; charset=utf-8")
+        elif path == "/api/subscribers":
+            self._send(200, json.dumps({"subscribers": growth.subscriber_count()}))
         else:
             self._send(404, json.dumps({"error": "not found"}))
 
@@ -666,6 +743,31 @@ class Handler(BaseHTTPRequestHandler):
                 _lock.release()
                 threading.Thread(target=run_collect, daemon=True).start()
                 self._send(200, json.dumps({"status": "started", "collecting": True}))
+        elif path in ("/subscribe", "/unsubscribe"):
+            try:
+                n = int(self.headers.get("Content-Length") or 0)
+            except ValueError:
+                n = 0
+            raw = self.rfile.read(min(n, 8192)) if n else b""
+            email = webhook = None
+            try:
+                payload = json.loads(raw.decode("utf-8")) if raw else {}
+                email = payload.get("email")
+                webhook = payload.get("webhook")
+            except Exception:
+                # formulaire url-encoded : email=...&webhook=...
+                from urllib.parse import parse_qs
+                q = parse_qs(raw.decode("utf-8", "replace"))
+                email = (q.get("email") or [None])[0]
+                webhook = (q.get("webhook") or [None])[0]
+            if path == "/subscribe":
+                ok, msg = growth.subscribe(email=email, webhook=webhook)
+                broadcast({"type": "subscribe", "n": growth.subscriber_count()})
+                self._send(200 if ok else 400, json.dumps({"ok": ok, "message": msg,
+                                                            "subscribers": growth.subscriber_count()}))
+            else:
+                deleted = growth.unsubscribe(email or "")
+                self._send(200, json.dumps({"ok": deleted, "subscribers": growth.subscriber_count()}))
         else:
             self._send(404, json.dumps({"error": "not found"}))
 

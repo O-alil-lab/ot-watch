@@ -16,6 +16,7 @@ import assets as assets_mod  # noqa: E402
 import misp_export  # noqa: E402
 import replay  # noqa: E402
 import render_ar  # noqa: E402
+import render_en  # noqa: E402
 
 CVES = [
     {"id": "CVE-2026-110936", "cvss": 8.4, "severity": "HIGH", "kev": True, "epss": 0.4, "risk": 6.23,
@@ -188,6 +189,47 @@ class TestI18nAr(unittest.TestCase):
         md = render_ar.render_ar_md("2026-10-31", CVES, ADVISORIES, [], META)
         self.assertIn("CVE-2026-63350", md)
         self.assertIn("★KEV", md)
+
+    def test_ar_bidi_isolation(self):
+        """v1.17 : les IDs CVE, scores et dates latins sont isolés (bidi) en contexte RTL."""
+        doc = render_ar.render_ar_html("2026-10-31", CVES, ADVISORIES, [], META)
+        self.assertIn("<bdi><b>CVE-2026-110936</b></bdi>", doc)
+        self.assertIn('dir="ltr"', doc)
+        self.assertIn("Noto Naskh Arabic", doc)  # pile de polices arabe système
+        self.assertIn('<span dir="ltr">2026-10-31</span>', doc)  # date isolée
+
+    def test_worker_ar_no_typo(self):
+        """v1.17 : la faute « edition » du worker est corrigée en « إصدار »."""
+        with open(os.path.join(ROOT, "workers", "otwatch_worker.py"), encoding="utf-8") as fh:
+            src = fh.read()
+        self.assertNotIn("ال edition", src)
+        self.assertIn("إصدار", src)
+        self.assertIn("_render_min_en", src)
+        self.assertIn('"/issue.en"', src)
+
+
+class TestI18nEn(unittest.TestCase):
+    def test_edition_en(self):
+        doc = render_en.render_en_html("2026-10-31", CVES, ADVISORIES, [], META)
+        self.assertIn('lang="en"', doc)
+        self.assertIn('dir="ltr"', doc)
+        self.assertIn("CVE-2026-110936", doc)
+        self.assertIn("Cybersecurity Newsletter", doc)
+        self.assertIn("OT-exposed", doc)
+        self.assertIn("/issue.ar", doc)  # lien vers l'édition arabe
+        md = render_en.render_en_md("2026-10-31", CVES, ADVISORIES, [], META)
+        self.assertIn("CVE-2026-63350", md)
+        self.assertIn("★KEV", md)
+
+    def test_run_all_generates_en(self):
+        with open(os.path.join(ROOT, "run_all.sh"), encoding="utf-8") as fh:
+            self.assertIn("render_en.py", fh.read())
+
+    def test_server_route_en(self):
+        with open(os.path.join(ROOT, "server.py"), encoding="utf-8") as fh:
+            src = fh.read()
+        self.assertIn('"/issue.en"', src)
+        self.assertIn("latest_issue_en", src)
 
 
 if __name__ == "__main__":

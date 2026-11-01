@@ -173,6 +173,38 @@ Package `agents/` (`python3 -m agents.pipeline draft|status|publish`) :
 - **Backups/DR** : `scripts/backup.sh` → `backups/otwatch-data-<ts>.tar.gz` + symlink `latest.tar.gz` (rétention 30 j backups + raw) ; `scripts/restore.sh <tar> <dest>`.
 - `server.py` `/metrics` : 4 nouvelles gauges Prometheus — `otwatch_assets_total`, `otwatch_quality_dup_rate`, `otwatch_quality_sources_total`, `otwatch_raw_files_total`.
 
+## 🔌 Intégrer & 🌐 communautés
+- `/integrate` : extraits prêts à l'emploi (RSS, `/api/data`, TAXII 2.1, STIX, MISP, webhook `/subscribe`, `/metrics`, OpenAPI) — voir aussi `docs/COMMUNITY.md`.
+- `/feed.xml` (RSS), `/stats` (chiffres publics, sans tracking), `/subscribe` (abonnement e-mail/webhook RGPD-friendly).
+
+## 💰 Soutenir le projet
+OT Watch reste **100 % gratuit et open source** — politique et canaux (dons, grants NLnet/OpenSSF/EU, services autour) dans [`docs/MONETIZATION.md`](docs/MONETIZATION.md) + `FUNDING.yml`.
+
+## 🚀 v1.18 — acquisition & monétisation éthique (01/11/2026)
+- **Trafic** : flux **RSS** `/feed.xml`, `sitemap.xml` + `robots.txt`, **hreflang FR/AR/EN + Open Graph + JSON-LD** injectés dans les éditions, page **`/integrate`** (extraits TAXII/STIX/MISP/webhook copiables + communautés OT), page **`/stats`** publiques, abonnement **`/subscribe`** (e-mail ou webhook, stockage local, **aucun tracking**, désabonnement `/unsubscribe`), bouton 🔔 sur le dashboard.
+- **Monétisation éthique** : `FUNDING.yml` + `docs/MONETIZATION.md` (dons GitHub Sponsors/Open Collective/Ko-fi, grants **NLnet/NGI ≤ 50 k€**, **OpenSSF Alpha-Omega**, EU CEF ; services payants *autour* du gratuit : hébergement managé, support/SLA, rapports NIS2/CRA, formations) + `docs/COMMUNITY.md` (ISAC/ISAGCA/ICS Village/S4x, checklist awesome-lists, modèle de talk). **Le cœur reste 100 % gratuit : pas de pub, pas de tracking, pas de vente de données.**
+- ECC consulté le 01/11/2026 (~21:56) sur trafic + monétisation (capabilities security/content/operators/research).
+- Gates : **144+ tests OK** · ruff clean · couverture 80 % · harness-audit 0 failing.
+
+## 🌍 v1.17 — i18n : AR corrigé (RTL/bidi) + édition EN + agents rédacteurs data-grounded (01/11/2026)
+- Édition arabe corrigée : `lang="ar" dir="rtl"`, isolation bidi `<bdi>`/`dir="ltr"` sur IDs CVE, scores, dates (plus d'inversion des tirets/chiffres), polices arabes système, pas de ressource externe.
+- **Nouvelle édition anglaise** : `python3 src/render_en.py` -> `out/issue-<date>.en.html/.md`, servi sur **`/issue.en`** (bouton 🇬🇧 sur le dashboard, route worker Cloudflare également).
+- Agents rédacteurs (recommandations ECC 01/11/2026, voir `research/ecc-audit-2026-11-01/`) : brief RAG enrichi (ot_score, actifs touchés, SSVC, ATT&CK for ICS), section « impact OT » calculée depuis les données, rédaction FR **et** EN (`article.md` + `article.en.md`), anti-hallucination renforcé (fallback déterministe, LLM optionnel re-vérifié, HITL inchangé).
+- Gates : **144/144 tests OK** · ruff clean · couverture 80 % · harness-audit 0 failing.
+
+## ☁️ v1.16 — déploiement LIVE sur Cloudflare free tier (01/11/2026)
+Oui — déployable à 0 $ : **Python Workers GA (21/09/2026, Pyodide)** + bindings natifs D1/KV/R2. Plan : `docs/deploy/CLOUDFLARE-FREE-TIER-2026-11-01.md`.
+- `workers/` : `wrangler.toml` (D1 `DB`, KV `KV`, R2 `R2`, cron toutes les 6 h), `otwatch_worker.py` (dashboard + API lecture D1/KV/R2 + SSE + TAXII/STIX/MISP/AR/OpenAPI + `scheduled()` collecte légère), `migrations/0001_init.sql` (schémas = store.py), `deploy.sh` (garde CLOUDFLARE_API_TOKEN/ACCOUNT_ID).
+- Limites free 2026 gérées : 100k req/j, **10 ms CPU/requête** (attente réseau non comptée) → handlers lecture-only ; collecte lourde hors requête HTTP (cron 15 min ou CI) ; 50 subrequests → watchlist ≤ 20 CVE ; KV 1 000 writes/j ; D1 100k writes/j ; R2 10 Go egress 0 $.
+- CI : `.github/workflows/deploy-cloudflare.yml` (deploy sur tag `v*.*.*`, secrets CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID). Tests `test_cloudflare_deploy.py`.
+
+## 🚀 v1.15 — DevOps 100 % gratuit : remote GitHub + Linear + image GHCR (01/11/2026)
+Décision documentée : `docs/adr/ADR-2026-11-01-remote-github-linear-ghcr.md` (veille 2026 : ECC `consult` + sources web).
+- **GitHub** (repo public recommandé) : dépôts privés illimités aussi gratuits, Actions **illimité** sur public (2 000 min/mo sur privé), PR gratuites, CODEOWNERS actif sur public.
+- **Linear Free** : 250 issues, 2 équipes, **intégration GitHub incluse** (branche `OTW-123-…` → PR auto-liée, statut déplacé à l'open/merge).
+- **GHCR** `ghcr.io/<owner>/otwatch` : images publiques **illimitées**, push depuis Actions avec `secrets.GITHUB_TOKEN` + `permissions: packages: write` — **aucun PAT**.
+- Câblage prêt : `scripts/github-setup.sh` (`GITHUB_REPO=owner/repo` → remote + branche main + push), `scripts/linear_import.py` (importe la roadmap dans Linear, dry-run par défaut, `LINEAR_API_KEY`/`LINEAR_TEAM_ID` en env), `.github/workflows/docker.yml` (build+push GHCR sur main/tags + scan Trivy CRITICAL/HIGH), commande `/devops`.
+
 ## 🏆 v1.14 — plateforme « marché » : ECC 39/39, OpenAPI 3.1, Docker, gouvernance (01/11/2026)
 - **harness-audit ECC repo scope 39/39** (rapports : `research/ecc-audit-2026-11-01/`) : plugin ECC installé (`~/.claude/plugins/ecc`), câblage projet `.claude/` — `settings.json` avec **guardrail PreToolUse** (`scripts/claude-hooks/guardrail.sh` bloque `rm -rf /`, `curl|sh`, lecture de credentials…), commandes `/verify` `/collecte` `/audit-ecc`, skill `ot-watch-ops`, `memory.md` — plus `.mcp.json` explicite.
 - **Gouvernance GitHub** : PR template, issue templates (bug/feature), `CODEOWNERS` (chemins sécurité → @security), `dependabot.yml` (pip + github-actions hebdo), CI existante (ruff + py_compile + tests + gate couverture ≥ 80 % + grep secrets/dangerous primitives).

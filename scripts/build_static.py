@@ -10,6 +10,7 @@ Usage : python3 scripts/build_static.py [--out site] [--data data] [--outdir out
 import argparse
 import json
 import os
+import re
 import shutil
 import sys
 
@@ -17,10 +18,15 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "src"))
 
+import growth  # noqa: E402
 import server  # noqa: E402
 import store  # noqa: E402
 
 PAGES_INTERVAL_S = 6 * 3600  # cadence du workflow pages.yml
+PAGES_BASE = os.environ.get("OTWATCH_PAGES_BASE", "https://o-alil-lab.github.io/ot-watch")
+SUBSCRIBE_BLOCK = re.compile(r'<div style="margin:0 0 14px;[^"]*">\s*<form id="subForm".*?</form>.*?</div>', re.S)
+RSS_LINK = ('<div style="margin:0 0 14px"><a href="feed.xml" style="color:#f59e0b">📡 Suivre la veille via le flux RSS</a>'
+            ' — abonnement e-mail/webhook disponible sur la version serveur.</div>')
 
 # (motif dans DASHBOARD_HTML, remplacement statique)
 REWRITES = [
@@ -28,7 +34,13 @@ REWRITES = [
     ("fetch('/api/history')", "fetch('api/history.json',{cache:'no-store'})"),
     ('href="/issue.pdf"', 'href="issue.pdf"'),
     ('href="/issue.ar"', 'href="issue.ar.html"'),
+    ('href="/issue.en"', 'href="issue.en.html"'),
     ('href="/issue"', 'href="issue.html"'),
+    ('href="/feed.xml"', 'href="feed.xml"'),
+    # pages qui exigent le serveur (abonnés, /metrics, TAXII) : retirées de la version statique
+    ('    <a href="/integrate" target="_blank"><button class="ghost">🔌 Intégrer</button></a>\n', ""),
+    ('    <a href="/stats" target="_blank"><button class="ghost">📊 Stats</button></a>\n', ""),
+    ("document.getElementById('subForm').addEventListener", "document.getElementById('subForm')?.addEventListener"),
     ('href="/stix"', 'href="stix.json"'),
     ('href="/misp"', 'href="misp.json"'),
     ('href="/openapi.json"', 'href="openapi.json"'),
@@ -54,6 +66,7 @@ EXPORTS = [  # (fonction server.latest_issue_*, fichier de sortie)
     ("latest_issue_html", "issue.html"),
     ("latest_issue_pdf", "issue.pdf"),
     ("latest_issue_ar", "issue.ar.html"),
+    ("latest_issue_en", "issue.en.html"),
     ("latest_issue_stix", "stix.json"),
     ("latest_issue_misp", "misp.json"),
 ]
@@ -65,6 +78,9 @@ def static_dashboard(html):
         if old not in html:
             raise ValueError(f"motif introuvable dans DASHBOARD_HTML : {old!r}")
         html = html.replace(old, new)
+    html, n = SUBSCRIBE_BLOCK.subn(RSS_LINK, html, count=1)
+    if n != 1:
+        raise ValueError("formulaire d'abonnement introuvable dans DASHBOARD_HTML")
     return html.replace("<body>", "<body>\n" + BANNER, 1)
 
 
@@ -72,6 +88,7 @@ def build(out_dir, data_dir=None, issues_dir=None):
     data_dir = data_dir or server.DATA
     issues_dir = issues_dir or server.OUT
     server.DATA, server.OUT = data_dir, issues_dir
+    growth.DATA, growth.OUT = data_dir, issues_dir
     os.makedirs(os.path.join(out_dir, "api"), exist_ok=True)
 
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as fh:
@@ -101,6 +118,10 @@ def build(out_dir, data_dir=None, issues_dir=None):
         with open(os.path.join(out_dir, name), mode, **({} if mode == "wb" else {"encoding": "utf-8"})) as fh:
             fh.write(res[0])
         written.append(name)
+
+    with open(os.path.join(out_dir, "feed.xml"), "w", encoding="utf-8") as fh:
+        fh.write(growth.rss_feed(PAGES_BASE))
+    written.append("feed.xml")
 
     spec = os.path.join(ROOT, "docs", "openapi.json")
     if os.path.exists(spec):

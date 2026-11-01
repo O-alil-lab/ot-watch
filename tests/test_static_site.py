@@ -37,7 +37,7 @@ class TestBuildStatic(unittest.TestCase):
         cls.tmp.cleanup()
 
     def test_fichiers_publies(self):
-        for name in ("index.html", "api/data.json", "api/history.json", ".nojekyll", "openapi.json"):
+        for name in ("index.html", "api/data.json", "api/history.json", ".nojekyll", "openapi.json", "feed.xml"):
             self.assertTrue(os.path.exists(os.path.join(self.site, name)), name)
 
     def test_chemins_relatifs_pour_sous_dossier_pages(self):
@@ -48,6 +48,9 @@ class TestBuildStatic(unittest.TestCase):
         self.assertNotIn('href="/', html)
         self.assertNotIn("/taxii2", html)
         self.assertIn("if (false) {", html)  # SSE désactivé : pas de serveur
+        self.assertNotIn('id="subForm"', html)  # abonnement = serveur uniquement
+        self.assertIn('href="feed.xml"', html)
+        self.assertIn('href="issue.en.html"', html)
 
     def test_donnees_snapshot(self):
         with open(os.path.join(self.site, "api", "data.json"), encoding="utf-8") as fh:
@@ -56,6 +59,12 @@ class TestBuildStatic(unittest.TestCase):
         self.assertFalse(d["collecting"])
         self.assertEqual(d["auto_interval_seconds"], 6 * 3600)
         self.assertGreater(len(d["cves"]), 0)
+
+    def test_flux_rss(self):
+        with open(os.path.join(self.site, "feed.xml"), encoding="utf-8") as fh:
+            rss = fh.read()
+        self.assertIn('<rss version="2.0">', rss)
+        self.assertIn("<item>", rss)
 
     def test_motif_disparu_detecte(self):
         with self.assertRaises(ValueError):

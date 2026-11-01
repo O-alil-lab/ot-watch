@@ -40,11 +40,23 @@ def build_brief(data_dir, db_path=None, max_top=5):
             cites.append(FIRST_URL.format(cve=c["id"]))
         cites += [ATTCK_URL.format(t=t) for t in (c.get("attack_ics") or [])]
         cites += [r for r in (c.get("refs") or []) if isinstance(r, str) and r.startswith("http")]
+        detail = c.get("ot_score_detail") or {}
         return {
             "id": c.get("id"), "cvss": c.get("cvss"), "severity": c.get("severity"),
             "epss": c.get("epss"), "risk": c.get("risk"), "kev": bool(c.get("kev")),
-            "ssvc": c.get("ssvc"), "attack_ics": c.get("attack_ics") or [],
+            "ssvc": c.get("ssvc"), "ssvc_detail": c.get("ssvc_detail"),
+            "attack_ics": c.get("attack_ics") or [], "vector": c.get("vector"),
+            "cwes": c.get("cwes") or [],
             "relevant": bool(c.get("relevant")), "published": (c.get("published") or "")[:10],
+            "ot_score": c.get("ot_score"),
+            "ot_score_detail": {
+                "base": detail.get("base"),
+                "asset_factor": detail.get("asset_factor"),
+                "kev_bonus": detail.get("kev_bonus"),
+                "ssvc_bonus": detail.get("ssvc_bonus"),
+                "assets": detail.get("assets") or [],
+            },
+            "asset_impact": c.get("asset_impact") or [],
             "description": re.sub(r"\s+", " ", (c.get("description") or ""))[:300],
             "citations": cites,
         }
@@ -66,6 +78,7 @@ def build_brief(data_dir, db_path=None, max_top=5):
         "counts": meta.get("counts", {"cves": len(cves), "advisories": len(advisories), "kev": len(kev)}),
         "new_cves": diff.get("new_cves", []),
         "new_kev": diff.get("new_kev", []),
+        "new_kev_facts": [cve_facts(c) for c in cves if c.get("id") in set(diff.get("new_kev", []))],
         "top_cves": [cve_facts(c) for c in cves[:max_top]],
         "relevant_cves": [cve_facts(c) for c in cves if c.get("relevant")][:max_top],
         "advisories": [{"code": a.get("code"), "title": a.get("title"), "link": a.get("link"),
@@ -77,6 +90,9 @@ def build_brief(data_dir, db_path=None, max_top=5):
                    "delta_pct": round(100 * (last7 - prev7) / prev7, 1) if prev7 else None},
         "exposure_label": "Mes actifs OT",
         "sources": sorted({u for c in cves for u in
-                           [NVD_URL.format(cve=c["id"])] + ([KEV_URL.format(cve=c["id"])] if c.get("kev") else [])}),
+                           [NVD_URL.format(cve=c["id"])]
+                           + ([KEV_URL.format(cve=c["id"])] if c.get("kev") else [])
+                           + ([FIRST_URL.format(cve=c["id"])] if c.get("epss") is not None else [])
+                           + [ATTCK_URL.format(t=t) for t in (c.get("attack_ics") or [])]}),
     }
     return brief

@@ -17,6 +17,7 @@ python3 src/render_pdf.py
 python3 src/stix.py
 python3 src/misp_export.py
 python3 src/render_ar.py
+python3 src/render_en.py
 
 # collecte passive OT (uniquement si des logs Zeek sont présents) — runbook research/RUNBOOK-COLLECTE-PASSIVE-OT-2026-11-01.md
 if ls logs/zeek/conn.log* >/dev/null 2>&1; then python3 src/netwatch.py; else echo "[netwatch] aucun logs/zeek/conn.log — collecte passive non active (voir runbook)"; fi
