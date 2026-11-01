@@ -91,3 +91,16 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # GitHub désactive les workflows planifiés d'un dépôt public après 60 jours sans activité.
+  # Ce job les ré-active à chaque passage, avec le GITHUB_TOKEN du workflow : aucun jeton à gérer.
+  keepalive:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Garder le cron actif
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method PUT "/repos/${{ github.repository }}/actions/workflows/pages.yml/enable"

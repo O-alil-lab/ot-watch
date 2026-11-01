@@ -73,6 +73,9 @@ class TestPagesWorkflow(unittest.TestCase):
         self.assertIn("build_static.py", steps)
         self.assertIn("Garde-fou", steps)
         self.assertEqual(wf["jobs"]["deploy"]["needs"], "build")
+        keep = wf["jobs"]["keepalive"]
+        self.assertEqual(keep["permissions"], {"actions": "write"})
+        self.assertIn("/enable", keep["steps"][0]["run"])
 
 
 if __name__ == "__main__":
