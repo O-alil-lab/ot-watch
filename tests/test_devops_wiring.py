@@ -59,6 +59,7 @@ class TestDockerfile(unittest.TestCase):
             df = fh.read()
         self.assertIn("USER otwatch", df)
         self.assertIn("HEALTHCHECK", df)
+        self.assertIn("pip uninstall -y pip", df)  # surface d'attaque minimale au runtime
 
 
 class TestGithubSetup(unittest.TestCase):

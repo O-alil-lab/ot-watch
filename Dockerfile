@@ -3,7 +3,10 @@ FROM python:3.13-slim
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 WORKDIR /app
 COPY requirements.txt ./
-RUN pip install --quiet --no-cache-dir -r requirements.txt
+RUN pip install --quiet --no-cache-dir -r requirements.txt \
+ && python3 -m pip uninstall -y pip
+# pip n'est pas utile au runtime : on le retire, avec ses bibliothèques embarquées
+# (msgpack, urllib3, pkg_resources) signalées par Trivy.
 COPY . .
 # sécurité : utilisateur non-root
 RUN useradd -m otwatch && chown -R otwatch:otwatch /app
