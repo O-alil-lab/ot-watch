@@ -1,5 +1,5 @@
 # OT Watch — image runtime (dashboard live + collecte)
-FROM python:3.13-slim
+FROM python:3.15-slim
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 WORKDIR /app
 COPY requirements.txt ./
