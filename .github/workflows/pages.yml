@@ -54,7 +54,7 @@ jobs:
 
       - name: Collecte + rendu (non bloquant)
         timeout-minutes: 25
-        run: ./run_all.sh || echo "::warning::run_all.sh a échoué — on republie les dernières données valides"
+        run: bash run_all.sh || echo "::warning::run_all.sh a échoué — on republie les dernières données valides"
 
       - name: Garde-fou données vides
         run: |
