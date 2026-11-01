@@ -195,6 +195,7 @@ Package `agents/` (`python3 -m agents.pipeline draft|status|publish`) :
 Newsletter, PDF, STIX, MISP et OpenAPI sont publiés à côté. Les fonctions qui exigent un serveur
 (SSE temps réel, re-collecte à la demande, TAXII) restent dans `server.py` / l'image Docker.
 Clé NVD optionnelle : secret de dépôt `NVD_API_KEY`.
+Déclenchement fiable toutes les 6 h par un Cron Trigger Cloudflare gratuit : `cloudflare/cron-trigger/`.
 
 ## 🚀 v1.15 — GitHub + GHCR + Linear, 100 % gratuit (01/11/2026)
 Décision et sources : `docs/adr/ADR-2026-11-01-remote-github-linear-ghcr.md`.

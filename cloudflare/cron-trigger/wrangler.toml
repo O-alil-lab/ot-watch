@@ -1,0 +1,8 @@
+name = "ot-watch-cron"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[triggers]
+crons = ["17 */6 * * *"]
+
+# Secret à définir hors du dépôt :  npx wrangler secret put GITHUB_TOKEN
