@@ -1,0 +1,36 @@
+# OT Watch — déploiement Cloudflare Workers FREE tier (2026)
+# Compte free requis : 100k req/jour, 10 ms CPU/requête, 5 cron triggers, D1 5 Go, KV 1 Go, R2 10 Go.
+# Secrets (jamais commités) : wrangler secret put CLOUDFLARE_API_TOKEN n'est PAS nécessaire ici —
+# le déploiement CI utilise CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID en secrets GitHub.
+# Secrets runtime à définir : wrangler secret put OTWATCH_ADMIN_TOKEN / OTWATCH_MISP_URL / OTWATCH_MISP_AUTHKEY / OTWATCH_TAXII_TOKEN / NVD_API_KEY
+name = "otwatch-live"
+main = "otwatch_worker.py"
+compatibility_date = "2026-09-25"
+compatibility_flags = ["python_workers"]
+
+# Entrée HTTP : dashboard + API (lectures D1/KV/R2 -> faible CPU, OK en 10 ms)
+# Cron : collecte (voir [triggers] plus bas) — wall time max 15 min, CPU faible si parsing léger.
+[triggers]
+crons = ["0 */6 * * *"]   # collecte toutes les 6 h (4 runs/jour, dans les 5 crons gratuits)
+
+# D1 = remplace data/otwatch.db (schémas identiques, voir workers/schema.sql)
+[[d1_databases]]
+binding = "DB"
+database_name = "otwatch"
+database_id = "REMPLACER_PAR_ID_D1"   # wrangler d1 create otwatch -> copier l'id ici
+migrations_dir = "migrations"
+
+# KV = payloads lus souvent (cves.json, meta.json, assets.json...) — 100k reads/jour gratuits
+[[kv_namespaces]]
+binding = "KV"
+id = "REMPLACER_PAR_ID_KV"             # wrangler kv namespace create OTWATCH
+
+# R2 = artefacts out/ (HTML/PDF/STIX/MISP/AR/raw) — 10 Go, zéro egress
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "otwatch-out"
+
+[vars]
+WINDOW_DAYS = "14"
+AUTO_REFRESH_SECONDS = "21600"   # 6 h, aligné sur le cron
+ENV_NAME = "free-tier"

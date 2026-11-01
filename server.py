@@ -25,6 +25,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 import collect  # noqa: E402  (pipeline de collecte réel)
+import growth  # noqa: E402  (v1.18 : RSS/sitemap/subscribe/stats/integrations)
 import render  # noqa: E402   (parse les articles éditoriaux)
 import store  # noqa: E402    (historique SQLite)
 import taxii  # noqa: E402    (serveur TAXII 2.1 read-only)
@@ -128,10 +129,13 @@ def api_payload():
         "collect_runs": _state["runs"],
         "auto_interval_seconds": AUTO_REFRESH_SECONDS,
         "cves": cves_raw,
+        "netwatch": load_json("netwatch.json", None),
         "advisories": load_json("cisa_advisories.json", []),
         "kev": load_json("kev.json", []),
         "articles": render.parse_editorial(),
         "agents": agents_status(),
+        "assets": load_json("assets.json", []),
+        "quality": (load_json("meta.json", {}) or {}).get("quality", {}),
     }
 
 
@@ -145,6 +149,18 @@ def latest_issue_html():
     except Exception:
         return None
     return None
+
+
+def raw_files_count():
+    """Nombre de réponses brutes archivées (couche raw rejouable)."""
+    raw = os.path.join(DATA, "raw")
+    try:
+        if not os.path.isdir(raw):
+            return 0
+        return sum(len([f for f in os.listdir(os.path.join(raw, d)) if f != "manifest.json"])
+                   for d in os.listdir(raw) if os.path.isdir(os.path.join(raw, d)))
+    except Exception:
+        return 0
 
 
 def agents_status():
@@ -170,12 +186,48 @@ def agents_status():
         return None
 
 
+def latest_issue_misp():
+    try:
+        files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".misp.json"))
+        if not files:
+            return None
+        with open(os.path.join(OUT, files[-1]), "rb") as fh:
+            return fh.read(), files[-1]
+    except Exception:
+        return None
+    return None
+
+
 def latest_issue_stix():
     try:
         files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".stix.json"))
         if not files:
             return None
         with open(os.path.join(OUT, files[-1]), "rb") as fh:
+            return fh.read(), files[-1]
+    except Exception:
+        return None
+    return None
+
+
+def latest_issue_ar():
+    try:
+        files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".ar.html"))
+        if not files:
+            return None
+        with open(os.path.join(OUT, files[-1]), encoding="utf-8") as fh:
+            return fh.read(), files[-1]
+    except Exception:
+        return None
+    return None
+
+
+def latest_issue_en():
+    try:
+        files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".en.html"))
+        if not files:
+            return None
+        with open(os.path.join(OUT, files[-1]), encoding="utf-8") as fh:
             return fh.read(), files[-1]
     except Exception:
         return None
@@ -265,8 +317,22 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
     <a href="/issue.pdf" target="_blank"><button class="ghost">📄 Télécharger le PDF</button></a>
     <a href="/stix" target="_blank"><button class="ghost">🧬 Export STIX 2.1</button></a>
     <a href="/taxii2/collections" target="_blank"><button class="ghost">🛰 TAXII 2.1</button></a>
+    <a href="/misp" target="_blank"><button class="ghost">🕸 Export MISP</button></a>
+    <a href="/issue.ar" target="_blank"><button class="ghost">🌍 العربية</button></a>
+    <a href="/issue.en" target="_blank"><button class="ghost">🇬🇧 English</button></a>
+    <a href="/openapi.json" target="_blank"><button class="ghost">📖 OpenAPI</button></a>
+    <a href="/feed.xml" target="_blank"><button class="ghost">📡 RSS</button></a>
+    <a href="/integrate" target="_blank"><button class="ghost">🔌 Intégrer</button></a>
+    <a href="/stats" target="_blank"><button class="ghost">📊 Stats</button></a>
   </div>
 </header>
+<div style="margin:0 0 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+  <form id="subForm" style="display:flex;gap:8px;align-items:center">
+    <input id="subEmail" type="email" placeholder="votre@email.tld — recevoir l'édition (sans tracking)" style="padding:8px 10px;border-radius:8px;border:1px solid #cbd5e1;background:#0f172a;color:#e2e8f0;font-size:13px;min-width:280px">
+    <button class="ghost" type="submit">🔔 S'abonner</button>
+  </form>
+  <span id="subMsg" class="mono" style="color:#64748b"></span>
+</div>
 <div class="wrap">
   <div class="cards">
     <div class="card crit"><div class="n" id="nCve">–</div><div class="l">CVE OT (fenêtre)</div></div>
@@ -302,7 +368,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
       <button id="bKev">★ KEV seulement</button>
       <button id="bRel">⭐ Mes actifs OT</button>
     </div>
-    <table><thead><tr><th>CVE</th><th>Risque</th><th>CVSS</th><th>Détail</th><th>Publié</th></tr></thead><tbody id="tCve"></tbody></table>
+    <table><thead><tr><th>CVE</th><th>Risque</th><th>OT</th><th>CVSS</th><th>Détail</th><th>Publié</th></tr></thead><tbody id="tCve"></tbody></table>
   </section>
 
   <section>
@@ -331,6 +397,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 function safeHref(u){try{const x=new URL(u);return (x.protocol==='http:'||x.protocol==='https:')?x.href:'#';}catch(e){return '#';}}
 function ago(iso){if(!iso)return'–';const s=(Date.now()-new Date(iso).getTime())/1000;if(s<60)return Math.floor(s)+' s';if(s<3600)return Math.floor(s/60)+' min';if(s<86400)return Math.floor(s/3600)+' h';return Math.floor(s/86400)+' j';}
 function riskBadge(r){if(r==null)return'<span class="badge b-DEFAULT">–</span>';const cls=r>=8?'b-CRITICAL':r>=6?'b-HIGH':r>=4?'b-MEDIUM':'b-LOW';return `<span class="badge ${cls}">${Number(r).toFixed(1)}</span>`;}
+function otBadge(r){if(r==null)return'<span class="badge b-DEFAULT" title="Aucun actif OT impacté">–</span>';const cls=r>=8?'b-CRITICAL':r>=6?'b-HIGH':r>=4?'b-MEDIUM':'b-LOW';return `<span class="badge ${cls}" title="Score OT expositionxPurduexcriticité (+KEV/SSVC)">${Number(r).toFixed(1)}</span>`;}
 function badge(score,sev){const s=(sev||'').toUpperCase();const cls='b-'+(['CRITICAL','HIGH','MEDIUM','LOW'].includes(s)?s:'DEFAULT');const lab=(typeof score==='number')?score.toFixed(1):(sev||'n/a');return `<span class="badge ${cls}">${esc(lab)}</span>`;}
 let state={sev:'',kev:false,q:'',rel:false},lastGen=null;
 async function loadData(){
@@ -355,14 +422,14 @@ async function loadData(){
 }
 function renderCves(cves){
   const q=state.q.toLowerCase();
-  cves=[...cves].sort((a,b)=>((b.relevant?1:0)-(a.relevant?1:0))||((b.risk??b.cvss??0)-(a.risk??a.cvss??0)));
+  cves=[...cves].sort((a,b)=>((b.relevant?1:0)-(a.relevant?1:0))||((b.ot_score??b.risk??b.cvss??0)-(a.ot_score??a.risk??a.cvss??0)));
   const rows=cves.filter(c=>(!state.sev||c.severity===state.sev)&&(!state.kev||c.kev)&&(!state.rel||c.relevant)&&(!q||(c.id+' '+(c.description||'')+' '+(c.cwes||[]).join(' ')).toLowerCase().includes(q)));
   $('tCve').innerHTML=rows.map(c=>`<tr>
     <td class="mono" style="white-space:nowrap"><a href="${safeHref((c.refs&&c.refs[0])||('https://nvd.nist.gov/vuln/detail/'+c.id))}">${esc(c.id)}</a>${c.kev?' <span class="kev">★KEV</span>':''}${c.relevant?' <span style="color:#f59e0b" title="correspond à votre profil">⭐</span>':''}</td>
     <td>${riskBadge(c.risk)}</td>
-    <td>${badge(c.cvss,c.severity)}</td>
+    <td>${otBadge(c.ot_score)}</td><td>${badge(c.cvss,c.severity)}</td>
     <td style="color:#cbd5e1">${esc((c.description||'').replace(/\s+/g,' ').slice(0,220))}<br><span style="color:#64748b;font-size:11px">${esc((c.cwes||[]).join(', '))}${(c.ssvc||c.attack_ics)?'<br><span style="font-size:10px;color:#a78bfa">'+esc((c.ssvc?('SSVC '+c.ssvc.toUpperCase()):'')+((c.attack_ics&&c.attack_ics.length)?(' · '+c.attack_ics.join(',')):'')+'')+'</span>':''}</span></td>
-    <td class="mono" style="white-space:nowrap;color:#8ea0c2">${esc((c.published||'').slice(0,10))}</td></tr>`).join('')||'<tr><td colspan="5" style="color:#8ea0c2">Aucune CVE ne correspond au filtre.</td></tr>';
+    <td class="mono" style="white-space:nowrap;color:#8ea0c2">${esc((c.published||'').slice(0,10))}</td></tr>`).join('')||'<tr><td colspan="6" style="color:#8ea0c2">Aucune CVE ne correspond au filtre.</td></tr>';
 }
 function renderAdv(adv){$('tAdv').innerHTML=adv.map(a=>`<tr>
   <td class="mono" style="white-space:nowrap">${esc(a.code||'ICS')}</td>
@@ -412,8 +479,36 @@ if (window.EventSource) {
   };
 }
 </script>
+<script>
+document.getElementById('subForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('subEmail').value.trim();
+  const msg = document.getElementById('subMsg');
+  try {
+    const r = await fetch('/subscribe', {method: 'POST', headers: {'Content-Type': 'application/json'},
+                                        body: JSON.stringify({email})});
+    const j = await r.json();
+    msg.textContent = j.message + ' (' + j.subscribers + ' abonnés)';
+    if (j.ok) document.getElementById('subEmail').value = '';
+  } catch (err) { msg.textContent = 'erreur réseau'; }
+});
+</script>
 </body>
 </html>"""
+
+
+def _base_url(headers):
+    """URL publique : OTWATCH_BASE_URL env prioritaire, sinon Host de la requête."""
+    return (os.environ.get("OTWATCH_BASE_URL")
+            or f"http://{headers.get('Host') or 'localhost:8000'}").rstrip("/")
+
+
+def _with_seo(html_doc, base, lang, route, title, desc, date_iso):
+    """Injecte hreflang FR/AR/EN + canonical + OG + JSON-LD si absent (éditions statiques out/)."""
+    if "hreflang" in html_doc:
+        return html_doc
+    block = growth.seo_head(base, lang, route, title, desc, date_iso)
+    return re.sub(r"(<head[^>]*>)", lambda m: m.group(1) + block, html_doc, count=1)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -515,14 +610,58 @@ class Handler(BaseHTTPRequestHandler):
                 f"# TYPE otwatch_advisories_total gauge\notwatch_advisories_total {c.get('advisories', c.get('cisa_advisories', 0))}",
                 f"# TYPE otwatch_collect_runs_total gauge\notwatch_collect_runs_total {p['collect_runs']}",
                 f"# TYPE otwatch_last_collect_duration_seconds gauge\notwatch_last_collect_duration_seconds {_state['last_collect_duration']}",
+                f"# TYPE otwatch_assets_total gauge\notwatch_assets_total {len(p.get('assets') or [])}",
+                f"# TYPE otwatch_cves_impacted_total gauge\notwatch_cves_impacted_total {sum(1 for c in p.get('cves') or [] if c.get('ot_score') is not None)}",
+                f"# TYPE otwatch_ot_score_max gauge\notwatch_ot_score_max {max([c.get('ot_score') or 0 for c in p.get('cves') or []] + [0])}",
+                f"# TYPE otwatch_netwatch_hosts_ot gauge\notwatch_netwatch_hosts_ot {(p.get('netwatch') or {}).get('stats', {}).get('hosts_OT', 0)}",
+                f"# TYPE otwatch_netwatch_anomalies_total gauge\notwatch_netwatch_anomalies_total {len((p.get('netwatch') or {}).get('anomalies', []))}",
+                f"# TYPE otwatch_quality_dup_rate gauge\notwatch_quality_dup_rate {(p.get('quality') or {}).get('dup_rate', 0)}",
+                f"# TYPE otwatch_quality_sources_total gauge\notwatch_quality_sources_total {(p.get('quality') or {}).get('sources', 0)}",
+                f"# TYPE otwatch_raw_files_total gauge\notwatch_raw_files_total {raw_files_count()}",
             ]
             self._send(200, "\n".join(lines) + "\n", "text/plain; version=0.0.4; charset=utf-8")
         elif path == "/issue":
             res = latest_issue_html()
             if res:
-                self._send(200, res[0], "text/html; charset=utf-8")
+                doc = _with_seo(res[0], _base_url(self.headers), "fr", "/issue",
+                                f"OT Watch — édition du {res[1][6:16]}",
+                                "Veille OT/ICS : CVE prioritaires, KEV, avis CISA, score OT.", res[1][6:16])
+                self._send(200, doc, "text/html; charset=utf-8")
             else:
                 self._send(404, json.dumps({"error": "aucune édition générée"}))
+        elif path == "/misp":
+            res = latest_issue_misp()
+            if res:
+                self._send(200, res[0], "application/json", extra_headers={
+                    "Content-Disposition": f'inline; filename="{res[1]}"'})
+            else:
+                self._send(404, json.dumps({"error": "aucun export MISP généré"}))
+        elif path == "/openapi.json":
+            spec_path = os.path.join(ROOT, "docs", "openapi.json")
+            try:
+                with open(spec_path, encoding="utf-8") as fh:
+                    self._send(200, fh.read(), "application/json")
+            except OSError:
+                self._send(404, json.dumps({"error": "spec OpenAPI introuvable"}))
+        elif path == "/api/netwatch":
+            nw = load_json("netwatch.json", None)
+            if nw is None:
+                self._send(404, json.dumps({"error": "aucun rapport netwatch — lancez python3 src/netwatch.py (voir runbook collecte passive)"}))
+            else:
+                self._send(200, json.dumps(nw, ensure_ascii=False))
+        elif path == "/api/assets":
+            assets = load_json("assets.json", [])
+            cves = load_json("cves.json", [])
+            impacted = {}
+            for c in cves:
+                for aid in c.get("asset_impact") or []:
+                    impacted.setdefault(aid, []).append({"id": c.get("id"), "ot_score": c.get("ot_score"),
+                                                         "severity": c.get("severity"), "kev": bool(c.get("kev"))})
+            self._send(200, json.dumps({"assets": assets, "impacted": impacted,
+                                        "purdue": {"L0": "processus", "L1": "contrôle PLC/RTU",
+                                                   "L2": "supervision HMI/SCADA", "L3": "site MES",
+                                                   "L3.5": "DMZ industrielle", "L4": "entreprise IT"}},
+                                       ensure_ascii=False))
         elif path.startswith("/taxii2"):
             from urllib.parse import parse_qs, urlparse
             u = urlparse(self.path)
@@ -538,6 +677,22 @@ class Handler(BaseHTTPRequestHandler):
                 })
             else:
                 self._send(404, json.dumps({"error": "aucun export STIX généré"}))
+        elif path == "/issue.ar":
+            res = latest_issue_ar()
+            if res:
+                doc = _with_seo(res[0], _base_url(self.headers), "ar", "/issue.ar",
+                                "نشرة OT Watch — CVE وKEV وأvis CISA (édition arabe)", "Veille OT/ICS en arabe.", res[1][6:16])
+                self._send(200, doc, "text/html; charset=utf-8")
+            else:
+                self._send(404, json.dumps({"error": "aucune édition arabe générée"}))
+        elif path == "/issue.en":
+            res = latest_issue_en()
+            if res:
+                doc = _with_seo(res[0], _base_url(self.headers), "en", "/issue.en",
+                                f"OT Watch — English edition {res[1][6:16]}", "OT/ICS watch: priority CVEs, KEV, CISA advisories, OT score.", res[1][6:16])
+                self._send(200, doc, "text/html; charset=utf-8")
+            else:
+                self._send(404, json.dumps({"error": "no English edition generated"}))
         elif path == "/issue.pdf":
             res = latest_issue_pdf()
             if res:
@@ -547,6 +702,18 @@ class Handler(BaseHTTPRequestHandler):
                 })
             else:
                 self._send(404, json.dumps({"error": "aucun PDF généré"}))
+        elif path == "/feed.xml":
+            self._send(200, growth.rss_feed(_base_url(self.headers)), "application/rss+xml; charset=utf-8")
+        elif path == "/sitemap.xml":
+            self._send(200, growth.sitemap(_base_url(self.headers)), "application/xml; charset=utf-8")
+        elif path == "/robots.txt":
+            self._send(200, growth.robots(_base_url(self.headers)), "text/plain; charset=utf-8")
+        elif path == "/integrate":
+            self._send(200, growth.integrate_html(_base_url(self.headers)), "text/html; charset=utf-8")
+        elif path == "/stats":
+            self._send(200, growth.stats_html(_base_url(self.headers)), "text/html; charset=utf-8")
+        elif path == "/api/subscribers":
+            self._send(200, json.dumps({"subscribers": growth.subscriber_count()}))
         else:
             self._send(404, json.dumps({"error": "not found"}))
 
@@ -576,6 +743,31 @@ class Handler(BaseHTTPRequestHandler):
                 _lock.release()
                 threading.Thread(target=run_collect, daemon=True).start()
                 self._send(200, json.dumps({"status": "started", "collecting": True}))
+        elif path in ("/subscribe", "/unsubscribe"):
+            try:
+                n = int(self.headers.get("Content-Length") or 0)
+            except ValueError:
+                n = 0
+            raw = self.rfile.read(min(n, 8192)) if n else b""
+            email = webhook = None
+            try:
+                payload = json.loads(raw.decode("utf-8")) if raw else {}
+                email = payload.get("email")
+                webhook = payload.get("webhook")
+            except Exception:
+                # formulaire url-encoded : email=...&webhook=...
+                from urllib.parse import parse_qs
+                q = parse_qs(raw.decode("utf-8", "replace"))
+                email = (q.get("email") or [None])[0]
+                webhook = (q.get("webhook") or [None])[0]
+            if path == "/subscribe":
+                ok, msg = growth.subscribe(email=email, webhook=webhook)
+                broadcast({"type": "subscribe", "n": growth.subscriber_count()})
+                self._send(200 if ok else 400, json.dumps({"ok": ok, "message": msg,
+                                                            "subscribers": growth.subscriber_count()}))
+            else:
+                deleted = growth.unsubscribe(email or "")
+                self._send(200, json.dumps({"ok": deleted, "subscribers": growth.subscriber_count()}))
         else:
             self._send(404, json.dumps({"error": "not found"}))
 

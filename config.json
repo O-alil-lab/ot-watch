@@ -276,5 +276,105 @@
       "exploit code",
       "poc"
     ]
+  },
+  "assets": [
+    {
+      "asset_id": "plc-s7-1500",
+      "name": "Automate Siemens S7-1500 (ligne 2)",
+      "vendor": "Siemens",
+      "product": "SIMATIC S7-1500",
+      "firmware": "V3.1",
+      "purdue_level": "L1",
+      "criticality": "high",
+      "safety": true
+    },
+    {
+      "asset_id": "plc-modicon-m340",
+      "name": "Schneider Modicon M340 (station pompage)",
+      "vendor": "Schneider Electric",
+      "product": "Modicon M340",
+      "firmware": "SV3.60",
+      "purdue_level": "L1",
+      "criticality": "high"
+    },
+    {
+      "asset_id": "scada-wincc",
+      "name": "Poste SCADA WinCC",
+      "vendor": "Siemens",
+      "product": "WinCC",
+      "firmware": "V8.1",
+      "purdue_level": "L2",
+      "criticality": "medium"
+    },
+    {
+      "asset_id": "hmi-rockwell",
+      "name": "HMI Rockwell PanelView",
+      "vendor": "Rockwell",
+      "product": "PanelView Plus",
+      "firmware": "12.0",
+      "purdue_level": "L2",
+      "criticality": "medium"
+    },
+    {
+      "asset_id": "ewon-gateway",
+      "name": "Passerelle eWON Flexy (accès distant)",
+      "vendor": "HMS",
+      "product": "eWON Flexy",
+      "firmware": "4.8",
+      "purdue_level": "L3.5",
+      "criticality": "critical"
+    }
+  ],
+  "ot_scoring": {
+    "purdue_weights": {
+      "L0": 1.0,
+      "L1": 1.0,
+      "L2": 0.9,
+      "L3": 0.7,
+      "L3.5": 0.5,
+      "L4": 0.3
+    },
+    "criticality_weights": {
+      "high": 1.2,
+      "medium": 1.0,
+      "low": 0.8
+    },
+    "safety_bonus": 0.3,
+    "kev_bonus": 1.0,
+    "ssvc_act_bonus": 1.0,
+    "cap": 10.0
+  },
+  "netwatch": {
+    "conn_logs": "logs/zeek/conn.log*",
+    "ot_ports": {
+      "502": {
+        "proto": "Modbus/TCP",
+        "vendor_hint": "multi-éditeurs"
+      },
+      "20000": {
+        "proto": "DNP3",
+        "vendor_hint": "multi-éditeurs"
+      },
+      "102": {
+        "proto": "S7comm (ISO-on-TCP)",
+        "vendor_hint": "Siemens"
+      },
+      "44818": {
+        "proto": "EtherNet/IP (CIP)",
+        "vendor_hint": "Rockwell"
+      },
+      "4840": {
+        "proto": "OPC UA",
+        "vendor_hint": "multi-éditeurs"
+      },
+      "2404": {
+        "proto": "IEC 60870-5-104",
+        "vendor_hint": "multi-éditeurs"
+      },
+      "47808": {
+        "proto": "BACnet/IP",
+        "vendor_hint": "BMS"
+      }
+    }
   }
 }

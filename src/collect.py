@@ -26,6 +26,7 @@ DATA = os.path.join(ROOT, "data")
 os.makedirs(DATA, exist_ok=True)
 
 import alerts
+import assets as assets_mod
 import enrich_ot
 import store
 import validate
@@ -35,12 +36,38 @@ def log(*args):
     print("[collect]", *args, flush=True)
 
 
-def fetch(url, timeout=40, headers=None):
+RAW_DIR = None  # renseigné par main() : data/raw/<run>/ — couche raw rejouable (DR)
+QUALITY = {"records": 0, "sources": set()}  # métriques qualité : doublons + sources (lignage)
+
+
+def _raw_slug(url):
+    import hashlib
+    h = hashlib.sha1(url.encode()).hexdigest()[:10]
+    tail = url.rstrip("/").split("/")[-1].split("?")[0] or "root"
+    return re.sub(r"[^A-Za-z0-9_.-]", "_", tail)[:40] + "." + h
+
+
+def fetch(url, timeout=40, headers=None, save_raw=False):
     req = urllib.request.Request(
         url, headers={"User-Agent": CFG.get("user_agent", "ot-watch/1.0"), **(headers or {})}
     )
     with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return resp.read()
+        body = resp.read()
+    QUALITY["sources"].add(url.split("/")[2])
+    if save_raw and RAW_DIR:
+        os.makedirs(RAW_DIR, exist_ok=True)
+        fn = _raw_slug(url)
+        with open(os.path.join(RAW_DIR, fn), "wb") as fh:
+            fh.write(body)
+        man = os.path.join(RAW_DIR, "manifest.json")
+        entries = []
+        if os.path.exists(man):
+            with open(man, encoding="utf-8") as fh:
+                entries = json.load(fh)
+        entries.append({"url": url, "file": fn, "fetched_at": datetime.now(UTC).isoformat(), "bytes": len(body)})
+        with open(man, "w", encoding="utf-8") as fh:
+            json.dump(entries, fh, ensure_ascii=False, indent=2)
+    return body
 
 
 def _dump_json(obj, name):
@@ -98,7 +125,7 @@ def collect_cisa(window_days):
         if not url:
             continue
         try:
-            items = parse_rss_items(fetch(url, timeout=60), window_days)
+            items = parse_rss_items(fetch(url, timeout=60, save_raw=True), window_days)
         except Exception as exc:
             log(f"CISA {key}: échec ({exc})")
             continue
@@ -123,7 +150,7 @@ def collect_ghsa_cves():
     for q in queries:
         url = f"{api}?type=reviewed&per_page={per_page}&query={urllib.parse.quote(q)}"
         try:
-            data = json.loads(fetch(url, timeout=40, headers={"Accept": "application/vnd.github+json"}))
+            data = json.loads(fetch(url, timeout=40, headers={"Accept": "application/vnd.github+json"}, save_raw=True))
         except Exception as exc:
             log(f"GHSA '{q}': échec ({exc})")
             continue
@@ -147,7 +174,7 @@ def collect_otx_cves():
     for q in CFG["sources"].get("otx_queries", []):
         url = f"{api}?q={urllib.parse.quote(q)}&limit=20"
         try:
-            data = json.loads(fetch(url, timeout=40, headers={"X-OTX-API-KEY": key}))
+            data = json.loads(fetch(url, timeout=40, headers={"X-OTX-API-KEY": key}, save_raw=True))
         except Exception as exc:
             log(f"OTX '{q}': échec ({exc})")
             continue
@@ -220,8 +247,9 @@ def _nvd_get(url, label, vendor_re, api_key, cves, allow_any=False):
     headers = {"apiKey": api_key} if api_key else None
     for attempt in range(5):
         try:
-            d = json.loads(fetch(url, headers=headers))
+            d = json.loads(fetch(url, headers=headers, save_raw=True))
             n = 0
+            QUALITY["records"] += len(d.get("vulnerabilities", []))
             for v in d.get("vulnerabilities", []):
                 rec = _cve_record(v["cve"], vendor_re)
                 if rec is None and not allow_any:
@@ -234,6 +262,9 @@ def _nvd_get(url, label, vendor_re, api_key, cves, allow_any=False):
                         "cvss": None, "severity": None, "vector": None, "cwes": [],
                         "refs": [r["url"] for r in c.get("references", [])][:6],
                     }
+                rec.setdefault("found_by", [])
+                if label not in rec["found_by"]:
+                    rec["found_by"].append(label)
                 cves[rec["id"]] = rec
                 n += 1
             log(f"NVD '{label}': {n} CVE retenues (total {len(cves)})")
@@ -269,7 +300,7 @@ def nvd_collect(window_days, extra_ids=None):
     # 1) mots-clés (découverte large)
     for kw in CFG["nvd_keywords"]:
         url = f"{CFG['sources']['nvd_api']}?keywordSearch={urllib.parse.quote(kw)}&{window_q}"
-        _nvd_get(url, kw, vendor_re, api_key, cves)
+        _nvd_get(url, f"keyword:{kw}", vendor_re, api_key, cves)
         time.sleep(sleep_s)
 
     # 2) CPE éditeurs OT (précision) — virtualMatchString cpe:2.3:*:<vendor>:*:*...
@@ -283,11 +314,13 @@ def nvd_collect(window_days, extra_ids=None):
         time.sleep(sleep_s)
 
     # 3) watchlist par cveId (fiable même si rate-limité)
-    for cid in list(CFG.get("cve_watchlist", [])) + list(extra_ids or []):
+    extra = set(extra_ids or [])
+    for cid in list(CFG.get("cve_watchlist", [])) + sorted(extra):
         if cid in cves:
             continue
         url = f"{CFG['sources']['nvd_api']}?cveId={cid}"
-        _nvd_get(url, f"watchlist {cid}", vendor_re, api_key, cves, allow_any=True)
+        label = f"watchlist {cid}" if cid not in extra else f"ghsa/otx {cid}"
+        _nvd_get(url, label, vendor_re, api_key, cves, allow_any=True)
         time.sleep(sleep_s)
     return list(cves.values())
 
@@ -345,7 +378,7 @@ def sort_by_priority(cves):
 # ---------------------------------------------------------------- KEV
 def collect_kev():
     """Entrées KEV liées à l'OT/ICS."""
-    d = json.loads(fetch(CFG["sources"]["cisa_kev"], timeout=60))
+    d = json.loads(fetch(CFG["sources"]["cisa_kev"], timeout=60, save_raw=True))
     ot_re = re.compile(CFG["ot_kev_regex"], re.IGNORECASE)
     out = []
     for v in d.get("vulnerabilities", []):
@@ -364,9 +397,11 @@ def collect_kev():
 
 # ---------------------------------------------------------------- main
 def main():
+    global RAW_DIR
     window_days = int(CFG.get("window_days", 14))
     t0 = datetime.now(UTC)
-    log(f"démarrage — fenêtre {window_days} jours")
+    RAW_DIR = os.path.join(DATA, "raw", t0.strftime("%Y%m%dT%H%M%SZ"))
+    log(f"démarrage — fenêtre {window_days} jours (raw: {RAW_DIR})")
 
     cisa = collect_cisa(window_days)
     log(f"CISA: {len(cisa)} avis ICS dans la fenêtre")
@@ -390,6 +425,11 @@ def main():
         c["kev"] = c["id"] in kev_ids
 
     cves, n_tech, n_act = enrich_ot.enrich(apply_exposure(enrich_epss(cves)), CFG)
+    assets = assets_mod.load_assets(CFG, DATA)
+    cves = assets_mod.match_assets(cves, assets)
+    cves, n_imp = assets_mod.score_ot_all(cves, assets, CFG)
+    assets_mod.save_assets_json(assets, DATA)
+    log(f"assets: {len(assets)} inventoriés · {n_imp} CVE impactent >=1 actif (score OT expositionxPurduexcriticité)")
     cves = sort_by_priority(cves)
     log(f"ATT&CK for ICS: {n_tech} techniques mappées · SSVC act: {n_act}/{len(cves)}")
 
@@ -411,6 +451,7 @@ def main():
 
     # stockage SQLite + diff nouveautés
     diff = store.store_run(payload, validation=validation)
+    store.store_assets(assets)
     log(f"store: run #{diff['run_id']} — nouvelles CVE: {len(diff['new_cves'])}, nouveaux avis: {len(diff['new_advisories'])}, nouveau KEV: {len(diff['new_kev'])}")
 
     meta = {
@@ -419,6 +460,13 @@ def main():
         "counts": validation["counts"],
         "validation": validation,
         "diff": {"new_cves": diff["new_cves"], "new_advisories": diff["new_advisories"], "new_kev": diff["new_kev"], "run_id": diff["run_id"]},
+        "quality": {
+            "sources": len(QUALITY["sources"]),
+            "nvd_records": QUALITY["records"],
+            "cves_uniques": len(cves),
+            "dup_rate": round(1 - len(cves) / max(1, QUALITY["records"]), 4) if QUALITY["records"] else 0.0,
+            "raw_dir": os.path.basename(RAW_DIR) if RAW_DIR else None,
+        },
     }
     _dump_json(cisa, "cisa_advisories.json")
     _dump_json(cves, "cves.json")

@@ -1,0 +1,30 @@
+# CI OT Watch — quality gates ECC (lint + tests + couverture >= 80 %) à chaque push/PR
+name: CI
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install deps (lint + coverage)
+        run: pip install --quiet ruff coverage -r requirements.txt
+      - name: Lint (ruff)
+        run: python3 -m ruff check server.py src agents tests --config ruff.toml
+      - name: Build (py_compile)
+        run: python3 -m py_compile server.py src/*.py agents/*.py tests/*.py
+      - name: Tests + couverture (gate >= 80 %)
+        run: |
+          python3 -m coverage run -m unittest discover -s tests
+          python3 -m coverage report --include="*/src/*,*/server.py"
+          python3 -m coverage report --include="*/src/*,*/server.py" --fail-under=80
+      - name: Security grep (secrets / primitives dangereuses)
+        run: |
+          ! grep -rniE "(api[_-]?key|secret|token|password)\s*[:=]\s*[\"'][A-Za-z0-9+/=_.-]{8,}" src tests config.json server.py
+          ! grep -rniE "eval\(|exec\(|shell=True|os\.system|pickle\.load" src tests server.py

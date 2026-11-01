@@ -1,0 +1,15 @@
+- codex-home
+  Status: OK
+  Install-state: /home/user/.codex/ecc-install-state.json
+  Issues: none
+- opencode-home
+  Status: ERROR
+  Install-state: /home/user/.config/opencode/ecc-install-state.json
+  - [error] missing-managed-files: 56 managed file(s) are missing
+  - [error] resolution-unavailable: OpenCode install requires the compiled plugin payload under .opencode/dist, but the following artefact(s) were missing or had the wrong type: .opencode/dist/index.js, .opencode/dist/plugins, .opencode/dist/tools. Run node scripts/build-opencode.js (or: npm run build:opencode) from the repo root before re-running the installer.
+
+Summary: checked=3, ok=2, warnings=0, errors=2
+
+Report this problem (public GitHub issue):
+https://github.com/affaan-m/ECC/issues/new?template=install-problem.yml
+ECC does not upload diagnostics. Redact paths, repository names, prompts, and secrets before sharing output.

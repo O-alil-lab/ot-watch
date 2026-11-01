@@ -1,0 +1,29 @@
+Observability Readiness: 0/21
+Ready: no
+
+Categories:
+- Live Status: 0/4 (0/2)
+- Session Trace: 0/2 (0/1)
+- Harness Baseline: 0/2 (0/1)
+- Tool Activity: 0/5 (0/2)
+- Operator Onramp: 0/2 (0/1)
+- Tracker Sync: 0/2 (0/1)
+- Release Safety: 0/3 (0/1)
+- Packaging: 0/1 (0/1)
+
+Checks:
+- FAIL loop-status-live-signal: Loop status supports JSON output, watch mode, and snapshot writes
+- FAIL hud-status-control-contract: HUD/status and session-control surfaces have a portable JSON contract
+- FAIL session-inspect-adapter-registry: Session inspection exposes registered adapters and writable snapshots
+- FAIL harness-audit-scorecard: Harness audit emits deterministic text/JSON scorecards
+- FAIL hook-activity-jsonl: Hook activity tracker writes tool usage JSONL for later sync
+- FAIL ecc2-tool-risk-ledger: ECC2 records tool calls with risk scoring and paginated queries
+- FAIL release-observability-onramp: Release docs explain the local observability readiness workflow
+- FAIL progress-sync-contract: Linear, GitHub, handoff, and roadmap progress sync has an evidence-backed contract
+- FAIL release-safety-evidence: Release readiness includes package, workflow, and supply-chain evidence before publication
+- FAIL package-exposes-readiness-gate: Package exposes the observability readiness gate
+
+Top Actions:
+- ecc2/src/observability/mod.rs: Restore ECC2 tool logging, risk scoring, store queries, and metrics sync.
+- docs/releases/2.0.0-rc.1/publication-readiness.md: Refresh publication readiness, post-hardening evidence, supply-chain response docs, workflow-security validator coverage, and package/release surface tests.
+- scripts/harness-audit.js: Restore the harness:audit package script and deterministic scorecard output.

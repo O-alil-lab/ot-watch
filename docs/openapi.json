@@ -1,0 +1,668 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OT Watch — API live",
+    "version": "1.14.0",
+    "description": "Plateforme de veille OT/ICS : collecte automatique (CISA, NVD, KEV, EPSS, GHSA), scoring (risque, SSVC, score OT exposition x Purdue x criticite), inventaire d'actifs + SBOM, collecte passive Zeek, exports STIX 2.1 / TAXII 2.1 / MISP, édition FR + AR, métriques Prometheus. Toutes les réponses portent des en-têtes de sécurité (X-Content-Type-Options, X-Frame-Options, CSP).",
+    "license": {
+      "name": "MIT"
+    },
+    "contact": {
+      "name": "OT Watch",
+      "url": "https://github.com/otwatch/ot-watch"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "dashboard",
+      "description": "Pages HTML"
+    },
+    {
+      "name": "data",
+      "description": "Données live JSON"
+    },
+    {
+      "name": "exports",
+      "description": "STIX 2.1 / TAXII 2.1 / MISP"
+    },
+    {
+      "name": "ops",
+      "description": "Métriques, santé, refresh admin"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Dashboard live",
+        "responses": {
+          "200": {
+            "description": "HTML inline CSS/JS (aucune ressource externe)",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/data": {
+      "get": {
+        "tags": [
+          "data"
+        ],
+        "summary": "Payload complet (meta, cves avec risk/ot_score/ssvc/attack_ics/asset_impact, advisories, kev, articles, agents, assets, quality, netwatch)",
+        "responses": {
+          "200": {
+            "description": "JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/history": {
+      "get": {
+        "tags": [
+          "data"
+        ],
+        "summary": "Historique 30 j (runs SQLite)",
+        "responses": {
+          "200": {
+            "description": "JSON {history: [...]}",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/meta": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Métadonnées serveur + fraîcheur (healthcheck)",
+        "responses": {
+          "200": {
+            "description": "JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assets": {
+      "get": {
+        "tags": [
+          "data"
+        ],
+        "summary": "Inventaire actifs OT (config + SBOM CycloneDX) + CVE impactées avec ot_score + niveaux Purdue",
+        "responses": {
+          "200": {
+            "description": "JSON {assets, impacted, purdue}",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/netwatch": {
+      "get": {
+        "tags": [
+          "data"
+        ],
+        "summary": "Rapport collecte passive (Zeek conn.log) : actifs découverts, anomalies, stats",
+        "responses": {
+          "200": {
+            "description": "JSON netwatch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucun rapport — déposer des conn.log dans logs/zeek/ puis lancer src/netwatch.py"
+          }
+        }
+      }
+    },
+    "/api/stream": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "SSE — push temps réel (connected, collecte terminée, erreurs)",
+        "responses": {
+          "200": {
+            "description": "text/event-stream",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/refresh": {
+      "post": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Déclenche une collecte manuelle",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON {started: true}"
+          },
+          "401": {
+            "description": "Bearer OTWATCH_ADMIN_TOKEN requis si défini"
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Métriques Prometheus (cves, kev, assets, quality, raw, netwatch, fraîcheur…)",
+        "responses": {
+          "200": {
+            "description": "text/plain; version=0.0.4",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/issue": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Dernière édition HTML (FR)",
+        "responses": {
+          "200": {
+            "description": "HTML",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/issue.pdf": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Dernière édition PDF",
+        "responses": {
+          "200": {
+            "description": "PDF",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/issue.ar": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Dernière édition arabe RTL (lang=ar dir=rtl)",
+        "responses": {
+          "200": {
+            "description": "HTML",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stix": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Dernier bundle STIX 2.1 (TLP:WHITE)",
+        "responses": {
+          "200": {
+            "description": "STIX 2.1 bundle",
+            "content": {
+              "application/stix+json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/misp": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Dernier événement MISP 2.1 JSON (attributs cve/link, tags TLP:WHITE/ot/ics)",
+        "responses": {
+          "200": {
+            "description": "MISP event JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucun export MISP généré"
+          }
+        }
+      }
+    },
+    "/taxii2/": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "TAXII 2.1 discovery",
+        "responses": {
+          "200": {
+            "description": "application/taxii+json",
+            "content": {
+              "application/taxii+json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxii2/collections": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Collections TAXII (otwatch-ot-cves, read-only)",
+        "responses": {
+          "200": {
+            "description": "application/taxii+json",
+            "content": {
+              "application/taxii+json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxii2/collections/otwatch-ot-cves/objects": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Objets STIX 2.1 de la collection (?added_after=ISO8601 pour le polling incrémental)",
+        "parameters": [
+          {
+            "name": "added_after",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Enveloppe STIX (application/stix+json)",
+            "content": {
+              "application/stix+json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Read-only : POST/PUT/DELETE refusés"
+          }
+        }
+      }
+    },
+    "/taxii2/collections/otwatch-ot-cves/manifest": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Manifeste TAXII (id, version, media_type par objet)",
+        "responses": {
+          "200": {
+            "description": "application/taxii+json",
+            "content": {
+              "application/taxii+json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxii2/collections/otwatch-ot-cves/versions": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Versions des objets",
+        "responses": {
+          "200": {
+            "description": "application/taxii+json",
+            "content": {
+              "application/taxii+json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Ce schéma OpenAPI 3.1",
+        "responses": {
+          "200": {
+            "description": "OpenAPI 3.1",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/index.html": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Alias de / (dashboard live)",
+        "responses": {
+          "200": {
+            "description": "HTML",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/issue.en": {
+      "get": {
+        "summary": "Dernière édition anglaise (HTML, dir=ltr)",
+        "responses": {
+          "200": {
+            "description": "HTML de l'édition EN",
+            "content": {
+              "text/html": {}
+            }
+          },
+          "404": {
+            "description": "aucune édition EN générée"
+          }
+        }
+      }
+    },
+    "/feed.xml": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Flux RSS 2.0 des CVE OT + avis CISA (dernière fenêtre)",
+        "responses": {
+          "200": {
+            "description": "RSS 2.0",
+            "content": {
+              "application/rss+xml": {}
+            }
+          }
+        }
+      }
+    },
+    "/sitemap.xml": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Sitemap XML (SEO)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/xml; charset=utf-8": {}
+            }
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "robots.txt",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; charset=utf-8": {}
+            }
+          }
+        }
+      }
+    },
+    "/integrate": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Page « intégrer » : extraits TAXII/STIX/MISP/webhook + communautés OT",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/html; charset=utf-8": {}
+            }
+          }
+        }
+      }
+    },
+    "/stats": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Statistiques publiques (preuve sociale, sans tracking)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/html; charset=utf-8": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/subscribers": {
+      "get": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Nombre d'abonnés (RSS/webhook/e-mail)",
+        "responses": {
+          "200": {
+            "description": "JSON",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/subscribe": {
+      "post": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Abonnement e-mail ou webhook (RGPD : aucun tracking, dédup)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "webhook": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "inscrit/désinscrit"
+          },
+          "400": {
+            "description": "entrée invalide"
+          }
+        }
+      }
+    },
+    "/unsubscribe": {
+      "post": {
+        "tags": [
+          "growth"
+        ],
+        "summary": "Désabonnement par e-mail (droit à l'oubli)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "webhook": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "inscrit/désinscrit"
+          },
+          "400": {
+            "description": "entrée invalide"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "OTWATCH_ADMIN_TOKEN (refresh) / OTWATCH_TAXII_TOKEN (TAXII, optionnels)"
+      }
+    }
+  }
+}

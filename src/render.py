@@ -139,6 +139,14 @@ def cve_block(c):
     if len(desc) > 220:
         desc = desc[:217] + "…"
     extra = f" · risque {c['risk']}/10" if c.get("risk") is not None else ""
+    if c.get("ot_score") is not None:
+        det = c.get("ot_score_detail") or {}
+        aids = ", ".join(a.get("asset_id", "") for a in det.get("assets", []))
+        base, fac = det.get("base"), det.get("asset_factor")
+        kb, sb, ots = det.get("kev_bonus"), det.get("ssvc_bonus"), c["ot_score"]
+        title = f"Score OT exposition x Purdue x criticite : base {base} x facteur {fac} + KEV {kb} + SSVC {sb} — actifs : {aids}"
+        extra += (f' · <span style="background:#0e7490;color:#fff;border-radius:4px;padding:0 5px;font-size:10px;font-weight:700;"'
+                  f' title="{html.escape(title)}">OT {ots:.1f}/10</span>')
     if c.get("epss") is not None:
         extra += f" · EPSS {c['epss']:.3f}"
     ssvc = (c.get("ssvc") or "").upper()
