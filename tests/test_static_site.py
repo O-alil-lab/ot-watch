@@ -50,6 +50,7 @@ class TestBuildStatic(unittest.TestCase):
         self.assertIn("if (false) {", html)  # SSE désactivé : pas de serveur
         self.assertNotIn('id="subForm"', html)  # abonnement = serveur uniquement
         self.assertIn('href="feed.xml"', html)
+        self.assertNotIn("version serveur", html)
         self.assertIn('href="issue.en.html"', html)
 
     def test_donnees_snapshot(self):
@@ -64,6 +65,8 @@ class TestBuildStatic(unittest.TestCase):
         with open(os.path.join(self.site, "feed.xml"), encoding="utf-8") as fh:
             rss = fh.read()
         self.assertIn('<rss version="2.0">', rss)
+        self.assertIn('<?xml-stylesheet type="text/xsl" href="feed.xsl"?>', rss)
+        self.assertTrue(os.path.exists(os.path.join(self.site, "feed.xsl")))
         self.assertIn("<item>", rss)
 
     def test_motif_disparu_detecte(self):

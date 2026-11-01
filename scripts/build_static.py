@@ -25,8 +25,10 @@ import store  # noqa: E402
 PAGES_INTERVAL_S = 6 * 3600  # cadence du workflow pages.yml
 PAGES_BASE = os.environ.get("OTWATCH_PAGES_BASE", "https://o-alil-lab.github.io/ot-watch")
 SUBSCRIBE_BLOCK = re.compile(r'<div style="margin:0 0 14px;[^"]*">\s*<form id="subForm".*?</form>.*?</div>', re.S)
-RSS_LINK = ('<div style="margin:0 0 14px"><a href="feed.xml" style="color:#f59e0b">📡 Suivre la veille via le flux RSS</a>'
-            ' — abonnement e-mail/webhook disponible sur la version serveur.</div>')
+RSS_LINK = ('<div style="margin:0 0 14px"><a href="feed.xml" style="color:#f59e0b">📡 S\'abonner au flux RSS</a>'
+            ' — gratuit, sans inscription : nouvelles CVE OT/ICS et avis CISA dans votre lecteur RSS'
+            ' (Feedly, Inoreader, Outlook…).</div>')
+FEED_XSL = os.path.join(os.path.dirname(os.path.abspath(__file__)), "feed.xsl")
 
 # (motif dans DASHBOARD_HTML, remplacement statique)
 REWRITES = [
@@ -127,9 +129,14 @@ def _write_site(out_dir, data_dir):
             fh.write(res[0])
         written.append(name)
 
+    # feuille XSL : le flux reste du RSS valide, mais s'affiche comme une page lisible dans un navigateur
+    rss = growth.rss_feed(PAGES_BASE).replace(
+        '<?xml version="1.0" encoding="UTF-8"?>\n',
+        '<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="feed.xsl"?>\n', 1)
     with open(os.path.join(out_dir, "feed.xml"), "w", encoding="utf-8") as fh:
-        fh.write(growth.rss_feed(PAGES_BASE))
-    written.append("feed.xml")
+        fh.write(rss)
+    shutil.copy(FEED_XSL, os.path.join(out_dir, "feed.xsl"))
+    written += ["feed.xml", "feed.xsl"]
 
     spec = os.path.join(ROOT, "docs", "openapi.json")
     if os.path.exists(spec):
