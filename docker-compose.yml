@@ -1,0 +1,22 @@
+# OT Watch — déploiement local / lab
+#   docker compose up -d  ->  http://localhost:8000
+services:
+  otwatch:
+    build: .
+    image: otwatch:latest
+    ports:
+      - "8000:8000"
+    environment:
+      AUTO_REFRESH_SECONDS: "1800"
+      # secrets / intégrations : NE JAMAIS les mettre ici en clair — utiliser un .env (gitignoré)
+      # OTWATCH_ADMIN_TOKEN: ${OTWATCH_ADMIN_TOKEN}
+      # OTWATCH_MISP_URL: ${OTWATCH_MISP_URL}
+      # OTWATCH_MISP_AUTHKEY: ${OTWATCH_MISP_AUTHKEY}
+      # OTWATCH_TAXII_TOKEN: ${OTWATCH_TAXII_TOKEN}
+      # NVD_API_KEY: ${NVD_API_KEY}
+    volumes:
+      - ./data:/app/data          # persistance : DB, raw, netwatch, backups
+      - ./out:/app/out            # éditions générées
+      - ./logs:/app/logs          # logs runs + agents
+      - ./logs/zeek:/app/logs/zeek:ro  # collecte passive : déposer ici les conn.log (lecture seule)
+    restart: unless-stopped

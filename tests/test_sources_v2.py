@@ -26,7 +26,7 @@ GHSA_PAGE = json.dumps([
 ])
 
 
-def fake_fetch(url, timeout=40, headers=None):
+def fake_fetch(url, timeout=40, headers=None, save_raw=False):
     if "ics-advisories.xml" in url or "rss.xml" in url:
         return RSS_ICS.encode()
     if "api.github.com/advisories" in url:
@@ -45,7 +45,7 @@ class TestCisaIcsFeed(unittest.TestCase):
         self.assertTrue(all(i["summary"] and "<" not in i["summary"] for i in items))
 
     def test_collect_cisa_dedup_2_flux(self):
-        def fetch2(url, timeout=60, headers=None):
+        def fetch2(url, timeout=60, headers=None, save_raw=False):
             return RSS_ICS.encode()  # même contenu sur les 2 flux -> dédup
         with mock.patch.object(collect, "fetch", side_effect=fetch2):
             out = collect.collect_cisa(14)

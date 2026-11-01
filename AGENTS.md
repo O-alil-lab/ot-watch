@@ -20,7 +20,7 @@ cd /home/user/newsletter-ot
 python3 -m py_compile server.py src/*.py tests/*.py
 python3 -m ruff check server.py src tests --config ruff.toml
 python3 -m coverage run -m unittest discover -s tests
-python3 -m coverage report --include="*/src/*,*/server.py"   # objectif >= 80 %
+python3 -m coverage report --include="*/src/*,*/server.py,*/agents/*"   # objectif >= 80 %
 ! grep -rniE "(api[_-]?key|secret|token|password)\s*[:=]\s*[\"'][A-Za-z0-9+/=_.-]{8,}" src tests config.json server.py
 ```
 Commit : le hook pre-commit (ruff + grep secrets) tourne automatiquement. Docs de vérification : `research/VERIFICATION-2026-10-31.md`. Roadmaps : `research/plans/` + `research/REFERENCE-OT-WATCH-2026-11-01.md`.

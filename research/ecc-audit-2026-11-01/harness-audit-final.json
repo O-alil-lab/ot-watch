@@ -1,0 +1,212 @@
+{
+  "scope": "repo",
+  "root_dir": "/home/user/newsletter-ot",
+  "target_mode": "consumer",
+  "deterministic": true,
+  "rubric_version": "2026-05-19",
+  "overall_score": 39,
+  "max_score": 39,
+  "categories": {
+    "Tool Coverage": {
+      "score": 10,
+      "earned": 7,
+      "max": 7
+    },
+    "Context Efficiency": {
+      "score": 10,
+      "earned": 5,
+      "max": 5
+    },
+    "Quality Gates": {
+      "score": 10,
+      "earned": 7,
+      "max": 7
+    },
+    "Memory Persistence": {
+      "score": 10,
+      "earned": 2,
+      "max": 2
+    },
+    "Eval Coverage": {
+      "score": 10,
+      "earned": 2,
+      "max": 2
+    },
+    "Security Guardrails": {
+      "score": 10,
+      "earned": 6,
+      "max": 6
+    },
+    "Cost Efficiency": {
+      "score": 0,
+      "earned": 0,
+      "max": 0
+    },
+    "GitHub Integration": {
+      "score": 10,
+      "earned": 10,
+      "max": 10
+    },
+    "Vercel Integration": {
+      "score": 0,
+      "earned": 0,
+      "max": 0
+    },
+    "Netlify Integration": {
+      "score": 0,
+      "earned": 0,
+      "max": 0
+    },
+    "Cloudflare Integration": {
+      "score": 0,
+      "earned": 0,
+      "max": 0
+    },
+    "Fly Integration": {
+      "score": 0,
+      "earned": 0,
+      "max": 0
+    }
+  },
+  "applicable_categories": [
+    "Tool Coverage",
+    "Context Efficiency",
+    "Quality Gates",
+    "Memory Persistence",
+    "Eval Coverage",
+    "Security Guardrails",
+    "GitHub Integration"
+  ],
+  "category_count": 7,
+  "checks": [
+    {
+      "id": "consumer-plugin-install",
+      "category": "Tool Coverage",
+      "points": 4,
+      "path": "~/.claude/plugins/ecc/ (legacy everything-claude-code paths also supported)",
+      "description": "ECC is installed for the active user or project",
+      "pass": true
+    },
+    {
+      "id": "consumer-project-overrides",
+      "category": "Tool Coverage",
+      "points": 3,
+      "path": ".claude/",
+      "description": "Project-specific harness overrides exist under .claude/",
+      "pass": true
+    },
+    {
+      "id": "consumer-instructions",
+      "category": "Context Efficiency",
+      "points": 3,
+      "path": "AGENTS.md",
+      "description": "The project has explicit agent or instruction context",
+      "pass": true
+    },
+    {
+      "id": "consumer-project-config",
+      "category": "Context Efficiency",
+      "points": 2,
+      "path": ".mcp.json",
+      "description": "The project declares local MCP or Claude settings",
+      "pass": true
+    },
+    {
+      "id": "consumer-test-suite",
+      "category": "Quality Gates",
+      "points": 4,
+      "path": "tests/",
+      "description": "The project has an automated test entrypoint",
+      "pass": true
+    },
+    {
+      "id": "consumer-ci-workflow",
+      "category": "Quality Gates",
+      "points": 3,
+      "path": ".github/workflows/",
+      "description": "The project has CI workflows checked in",
+      "pass": true
+    },
+    {
+      "id": "consumer-memory-notes",
+      "category": "Memory Persistence",
+      "points": 2,
+      "path": ".claude/memory.md",
+      "description": "Project memory or durable notes are checked in",
+      "pass": true
+    },
+    {
+      "id": "consumer-eval-coverage",
+      "category": "Eval Coverage",
+      "points": 2,
+      "path": "evals/",
+      "description": "The project has evals or multiple automated tests",
+      "pass": true
+    },
+    {
+      "id": "consumer-security-policy",
+      "category": "Security Guardrails",
+      "points": 2,
+      "path": "SECURITY.md",
+      "description": "The project exposes a security policy or automated dependency scanning",
+      "pass": true
+    },
+    {
+      "id": "consumer-secret-hygiene",
+      "category": "Security Guardrails",
+      "points": 2,
+      "path": ".gitignore",
+      "description": "The project ignores common secret env files",
+      "pass": true
+    },
+    {
+      "id": "consumer-hook-guardrails",
+      "category": "Security Guardrails",
+      "points": 2,
+      "path": ".claude/settings.json",
+      "description": "Project-local hook settings reference tool/prompt guardrails",
+      "pass": true
+    },
+    {
+      "id": "github-workflows",
+      "category": "GitHub Integration",
+      "points": 3,
+      "path": ".github/workflows/",
+      "description": "GitHub Actions workflows are checked in",
+      "pass": true
+    },
+    {
+      "id": "github-pr-template",
+      "category": "GitHub Integration",
+      "points": 2,
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "description": "A pull request template is configured",
+      "pass": true
+    },
+    {
+      "id": "github-issue-templates",
+      "category": "GitHub Integration",
+      "points": 2,
+      "path": ".github/ISSUE_TEMPLATE/",
+      "description": "Issue templates are configured",
+      "pass": true
+    },
+    {
+      "id": "github-codeowners",
+      "category": "GitHub Integration",
+      "points": 1,
+      "path": ".github/CODEOWNERS",
+      "description": "A CODEOWNERS file routes reviews",
+      "pass": true
+    },
+    {
+      "id": "github-dep-updates",
+      "category": "GitHub Integration",
+      "points": 2,
+      "path": ".github/dependabot.yml",
+      "description": "Automated dependency updates are configured",
+      "pass": true
+    }
+  ],
+  "top_actions": []
+}

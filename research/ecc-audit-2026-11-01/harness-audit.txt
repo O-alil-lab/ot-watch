@@ -1,0 +1,17 @@
+Harness Audit (repo, consumer): 19/39
+Root: /home/user/newsletter-ot
+
+- Tool Coverage: 0/10 (0/7 pts)
+- Context Efficiency: 6/10 (3/5 pts)
+- Quality Gates: 10/10 (7/7 pts)
+- Memory Persistence: 0/10 (0/2 pts)
+- Eval Coverage: 10/10 (2/2 pts)
+- Security Guardrails: 7/10 (4/6 pts)
+- GitHub Integration: 3/10 (3/10 pts)
+
+Checks: 16 total, 9 failing
+
+Top 3 Actions:
+1) [Tool Coverage] Install the ECC plugin for this user or project before auditing project-specific harness quality. (~/.claude/plugins/ecc/ (legacy everything-claude-code paths also supported))
+2) [Tool Coverage] Add project-local .claude hooks, commands, skills, or settings that tailor ECC to this repo. (.claude/)
+3) [Context Efficiency] Add .mcp.json or .claude/settings.json so project-local tool configuration is explicit. (.mcp.json)

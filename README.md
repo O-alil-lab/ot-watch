@@ -160,13 +160,56 @@ Package `agents/` (`python3 -m agents.pipeline draft|status|publish`) :
 - Live : 66 objets servis (37 vulnerabilities, 27 course-of-action, report, marking TLP:WHITE), manifest 66 entrées — vérifié en curl. Bouton « 🛰 TAXII 2.1 » dans le dashboard.
 - 102 tests OK (`test_taxii.py` : discovery, read-only, added_after, manifest, 405, auth Bearer), couverture 82 % (taxii 81 %).
 
+## 🕸 v1.9 — export MISP + inventaire d'actifs OT & SBOM CycloneDX (P2 OT-ISAC) (01/11/2026)
+- **`src/misp_export.py`** : événement MISP 2.1 JSON par édition — attributs `cve` avec commentaire CVSS/EPSS/KEV/SSVC/ATT&CK for ICS, `link` vers les avis CISA, tags `TLP:WHITE`/`ot`/`ics`/`ics-ot`. **Push réel** `POST /events/add` si `OTWATCH_MISP_URL` + `OTWATCH_MISP_AUTHKEY` (+ `OTWATCH_MISP_VERIFY_SSL`) définis, sinon **dry-run** `out/issue-<date>.misp.json`. Édition 2026-11-01 : 49 attributs.
+- **`src/assets.py`** : inventaire depuis `config.json["assets"]` (5 actifs d'exemple : S7-1500, Modicon M340, WinCC, PanelView, passerelle eWON — avec `purdue_level` + `criticality`) + composants du **SBOM CycloneDX** `data/sbom.cdx.json` ; `match_assets()` → `asset_impact` par CVE (CVE-2026-110936 touche `plc-s7-1500` + `scada-wincc`).
+- `collect.py` : matching actifs à la collecte + persistance `data/assets.json` ; `store.py` : table `assets`, colonne `cves.assets`, `store_assets()`.
+- `server.py` : routes **`/misp`** (dernier événement, `Content-Disposition` inline) et **`/api/assets`** (actifs + carte `impacted` CVE→actifs + niveaux Purdue), payload `/api/data` enrichi (`assets`, `quality`), boutons « 🕸 Export MISP » et « 🌍 العربية ».
+
+## 🔁 v1.10 — lignage, replay hors-ligne, métriques qualité + backups/DR (01/11/2026)
+- **Capture raw** : chaque source live est sauvegardée dans `data/raw/<run>/` (fichier sluggué + `manifest.json` : url, fetched_at, bytes — 43 fichiers pour le run 20261101T000347Z).
+- **Lignage** : chaque CVE porte `found_by` (`keyword:…` / `cpe:…` / `watchlist …` / `ghsa/otx …`) ; `meta.quality` = {sources, nvd_records, cves_uniques, dup_rate, raw_dir}.
+- **`src/replay.py`** : rejoue un run **hors-ligne** depuis `data/raw/<run>/manifest.json` → `data/replay/<run>.json`, **0 appel réseau** (reproductibilité/audit).
+- **Backups/DR** : `scripts/backup.sh` → `backups/otwatch-data-<ts>.tar.gz` + symlink `latest.tar.gz` (rétention 30 j backups + raw) ; `scripts/restore.sh <tar> <dest>`.
+- `server.py` `/metrics` : 4 nouvelles gauges Prometheus — `otwatch_assets_total`, `otwatch_quality_dup_rate`, `otwatch_quality_sources_total`, `otwatch_raw_files_total`.
+
+## 🏆 v1.14 — plateforme « marché » : ECC 39/39, OpenAPI 3.1, Docker, gouvernance (01/11/2026)
+- **harness-audit ECC repo scope 39/39** (rapports : `research/ecc-audit-2026-11-01/`) : plugin ECC installé (`~/.claude/plugins/ecc`), câblage projet `.claude/` — `settings.json` avec **guardrail PreToolUse** (`scripts/claude-hooks/guardrail.sh` bloque `rm -rf /`, `curl|sh`, lecture de credentials…), commandes `/verify` `/collecte` `/audit-ecc`, skill `ot-watch-ops`, `memory.md` — plus `.mcp.json` explicite.
+- **Gouvernance GitHub** : PR template, issue templates (bug/feature), `CODEOWNERS` (chemins sécurité → @security), `dependabot.yml` (pip + github-actions hebdo), CI existante (ruff + py_compile + tests + gate couverture ≥ 80 % + grep secrets/dangerous primitives).
+- **OpenAPI 3.1** : `docs/openapi.json` (toutes les routes, TAXII, sécurité Bearer) servi par **`/openapi.json`** + bouton « 📖 OpenAPI ».
+- **Packaging** : `Dockerfile` (python:3.13-slim, user non-root, HEALTHCHECK), `docker-compose.yml` (volumes data/out/logs, secrets via `.env` gitignoré), `.dockerignore`, `LICENSE` MIT, `CHANGELOG.md`, `CONTRIBUTING.md`.
+- tests `test_platform.py` : spec OpenAPI couvre les routes serveur, fichiers plateforme présents, guardrail bloque les commandes dangereuses.
+
+## 📡 v1.13 — collecte réseau PASSIVE OT (Zeek/Suricata+ICSNPP/Malcolm sur SPAN/TAP) (01/11/2026)
+- **Runbook** : `research/RUNBOOK-COLLECTE-PASSIVE-OT-2026-11-01.md` — règles d'or (jamais inline, jamais de scan actif), Zeek standalone, Suricata + ET ICSNPP, Malcolm (Docker), ports OT surveillés (502/20000/102/44818/4840/2404/47808), check-list hebdo, procédure incident.
+- **`src/netwatch.py`** : parse les `conn.log` Zeek (lecture seule) → `data/netwatch.json` : **actifs OT découverts** (IP responder + services ICS + clients), **anomalies** (nouvel hôte OT, nouveau flux OT vs baseline), stats. Ports surchargeables via `config.json["netwatch"]["ot_ports"]`.
+- **`scripts/zeek_to_assets.py`** : convertit les découvertes en propositions d'actifs pour `config.json["assets"]` (qui alimentent ensuite le score OT v1.12).
+- Live : route **`/api/netwatch`** (404 tant qu'aucun rapport), `netwatch` dans `/api/data`, gauges `otwatch_netwatch_hosts_ot` / `otwatch_netwatch_anomalies_total`. Étape gardée dans `run_all.sh` (ne s'exécute que si `logs/zeek/conn.log*` existe).
+
+## 🌍 v1.11 — édition arabe RTL (i18n AR) (01/11/2026)
+- **`src/render_ar.py`** : édition arabe complète `out/issue-<date>.ar.html` + `.ar.md` — `<html lang="ar" dir="rtl">`, libellés arabe, CSS inline (aucune lib externe), même données que l'édition FR. Route **`/issue.ar`**, bouton « 🌍 العربية ».
+
+## 🚀 v1.15 — GitHub + GHCR + Linear, 100 % gratuit (01/11/2026)
+Décision et sources : `docs/adr/ADR-2026-11-01-remote-github-linear-ghcr.md`.
+```bash
+# 1. créer un dépôt PUBLIC vide sur github.com, puis
+GITHUB_REPO=<owner>/<repo> ./scripts/github-setup.sh      # DRY_RUN=1 pour simuler
+# 2. roadmap -> Linear (dry-run d'abord)
+python3 scripts/linear_import.py
+LINEAR_API_KEY=... LINEAR_TEAM_ID=... python3 scripts/linear_import.py --apply --only P1
+# 3. publier une image (scan Trivy puis push GHCR)
+git tag v1.15.0 && git push origin v1.15.0
+docker pull ghcr.io/<owner>/<repo>:latest
+```
+Après le premier push, passez le paquet GHCR en **public** (Package settings) pour un pull sans login.
+
 ## Quality gates (boucle de vérification ECC)
 ```bash
 cd /home/user/newsletter-ot
 python3 -m py_compile server.py src/*.py agents/*.py tests/*.py      # phase 1 : build
 python3 -m ruff check server.py src agents tests --config ruff.toml   # phase 3 : lint
 python3 -m coverage run -m unittest discover -s tests # phase 4 : tests
-python3 -m coverage report --include="*/src/*"        # couverture (objectif ECC >= 80 %)
+python3 -m coverage report --include="*/src/*,*/server.py,*/agents/*"        # couverture (objectif ECC >= 80 %)
 # phase 5 : security grep (secrets / eval / shell=True)
 grep -rniE "(api[_-]?key|secret|token|password)\s*[:=]\s*[\"'][A-Za-z0-9+/=_.-]{8,}" src tests config.json
 # phase 6 : AgentShield (ECC) sur la config agent + doctor

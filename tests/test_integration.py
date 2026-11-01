@@ -21,7 +21,7 @@ KEV_DOC = json.dumps({"vulnerabilities": [
 ]})
 
 
-def fake_fetch(url, timeout=40, headers=None):
+def fake_fetch(url, timeout=40, headers=None, save_raw=False):
     if "rss.xml" in url:
         return RSS_FIXTURE.encode()
     if "known_exploited" in url:

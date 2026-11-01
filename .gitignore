@@ -7,3 +7,4 @@ out/*.log
 .env.local
 *.key
 *.pem
+.coverage

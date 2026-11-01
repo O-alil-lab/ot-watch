@@ -24,13 +24,17 @@ CREATE TABLE IF NOT EXISTS cves (
   cve_id TEXT PRIMARY KEY,
   first_seen_run INTEGER, last_seen_run INTEGER,
   cvss REAL, severity TEXT, kev INTEGER, epss REAL, risk REAL, relevant INTEGER DEFAULT 0,
-  attack_ics TEXT, ssvc TEXT,
+  attack_ics TEXT, ssvc TEXT, assets TEXT,
   published TEXT, description TEXT, refs TEXT
 );
 CREATE TABLE IF NOT EXISTS advisories (
   code TEXT PRIMARY KEY,
   first_seen_run INTEGER, last_seen_run INTEGER,
   title TEXT, link TEXT, published TEXT, summary TEXT
+);
+CREATE TABLE IF NOT EXISTS assets (
+  asset_id TEXT PRIMARY KEY, name TEXT, vendor TEXT, product TEXT, firmware TEXT,
+  purdue_level TEXT, criticality TEXT, source TEXT
 );
 CREATE TABLE IF NOT EXISTS kev (
   cve_id TEXT PRIMARY KEY,
@@ -49,6 +53,10 @@ def _migrate(conn):
         conn.execute("ALTER TABLE cves ADD COLUMN attack_ics TEXT")
     if "ssvc" not in cols:
         conn.execute("ALTER TABLE cves ADD COLUMN ssvc TEXT")
+    if "assets" not in cols:
+        conn.execute("ALTER TABLE cves ADD COLUMN assets TEXT")
+    if "ot_score" not in cols:
+        conn.execute("ALTER TABLE cves ADD COLUMN ot_score REAL")
 
 
 def _connect(db_path=None):
@@ -79,13 +87,14 @@ def store_run(payload, validation=None, db_path=None):
             if not exists:
                 new_cves.append(c["id"])
             cur.execute(
-                """INSERT INTO cves (cve_id, first_seen_run, last_seen_run, cvss, severity, kev, epss, risk, relevant, attack_ics, ssvc, published, description, refs)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                """INSERT INTO cves (cve_id, first_seen_run, last_seen_run, cvss, severity, kev, epss, risk, relevant, attack_ics, ssvc, assets, ot_score, published, description, refs)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                    ON CONFLICT(cve_id) DO UPDATE SET last_seen_run=excluded.last_seen_run, cvss=excluded.cvss,
                      severity=excluded.severity, kev=excluded.kev, epss=excluded.epss, risk=excluded.risk,
-                     relevant=excluded.relevant, attack_ics=excluded.attack_ics, ssvc=excluded.ssvc, published=excluded.published, description=excluded.description, refs=excluded.refs""",
+                     relevant=excluded.relevant, attack_ics=excluded.attack_ics, ssvc=excluded.ssvc, assets=excluded.assets,
+                     ot_score=excluded.ot_score, published=excluded.published, description=excluded.description, refs=excluded.refs""",
                 (c["id"], run_id, run_id, c.get("cvss"), c.get("severity"), 1 if c.get("kev") else 0,
-                 c.get("epss"), c.get("risk"), 1 if c.get("relevant") else 0, json.dumps(c.get("attack_ics") or []), c.get("ssvc"), c.get("published"),
+                 c.get("epss"), c.get("risk"), 1 if c.get("relevant") else 0, json.dumps(c.get("attack_ics") or []), c.get("ssvc"), json.dumps(c.get("asset_impact") or []), c.get("ot_score"), c.get("published"),
                  (c.get("description") or "")[:700], json.dumps(c.get("refs", []))),
             )
 
@@ -119,6 +128,25 @@ def store_run(payload, validation=None, db_path=None):
 
         conn.commit()
         return {"run_id": run_id, "new_cves": new_cves, "new_advisories": new_adv, "new_kev": new_kev}
+    finally:
+        conn.close()
+
+
+def store_assets(assets, db_path=None):
+    """Upsert idempotent de l'inventaire d'actifs OT."""
+    conn = _connect(db_path)
+    try:
+        with conn:
+            for a in assets or []:
+                conn.execute(
+                    """INSERT INTO assets (asset_id, name, vendor, product, firmware, purdue_level, criticality, source)
+                       VALUES (?,?,?,?,?,?,?,?)
+                       ON CONFLICT(asset_id) DO UPDATE SET name=excluded.name, vendor=excluded.vendor,
+                         product=excluded.product, firmware=excluded.firmware, purdue_level=excluded.purdue_level,
+                         criticality=excluded.criticality, source=excluded.source""",
+                    (a.get("asset_id"), a.get("name"), a.get("vendor"), a.get("product"), a.get("firmware"),
+                     a.get("purdue_level"), a.get("criticality"), a.get("source")),
+                )
     finally:
         conn.close()
 

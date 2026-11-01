@@ -80,6 +80,19 @@ class TestTaxii(unittest.TestCase):
         st, _, _ = taxii.handle("/taxii2/collections/nope/objects")
         self.assertEqual(st, 404)
 
+    def test_sans_dossier_out(self):
+        """Clone neuf / CI : out/ absent -> discovery 200, objects 404 propre (pas d'exception)."""
+        self.assertIsNone(taxii.load_latest_bundle("/chemin/inexistant/out"))
+        orig = taxii.OUT
+        try:
+            taxii.load_latest_bundle.__defaults__ = ("/chemin/inexistant/out",)
+            st, _, _ = taxii.handle("/taxii2/")
+            self.assertEqual(st, 200)
+            st, _, _ = taxii.handle(f"/taxii2/collections/{taxii.COLLECTION_ID}/objects")
+            self.assertEqual(st, 404)
+        finally:
+            taxii.load_latest_bundle.__defaults__ = (orig,)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,9 +5,13 @@ import sqlite3
 import sys
 import tempfile
 import unittest
+from datetime import UTC, datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 import store  # noqa: E402
+
+
+TODAY = datetime.now(UTC).strftime("%Y-%m-%d")
 
 
 class TestHistoryDaily(unittest.TestCase):
@@ -16,10 +20,10 @@ class TestHistoryDaily(unittest.TestCase):
             db = os.path.join(tmp, "t.db")
             payload = {"cves": [
                 {"id": "CVE-2026-1", "cvss": 9.8, "severity": "CRITICAL", "kev": 1, "epss": 0.5, "risk": 8.0,
-                 "relevant": True, "published": "2026-10-31T10:00:00", "description": "x", "refs": []},
-                {"id": "CVE-2026-2", "cvss": 5.0, "severity": "MEDIUM", "kev": 0, "published": "2026-10-31T11:00:00",
+                 "relevant": True, "published": TODAY + "T10:00:00", "description": "x", "refs": []},
+                {"id": "CVE-2026-2", "cvss": 5.0, "severity": "MEDIUM", "kev": 0, "published": TODAY + "T11:00:00",
                  "description": "y", "refs": []},
-            ], "advisories": [], "kev": [{"cveID": "CVE-2026-1", "dateAdded": "2026-10-31", "vendorProject": "Siemens"}]}
+            ], "advisories": [], "kev": [{"cveID": "CVE-2026-1", "dateAdded": TODAY, "vendorProject": "Siemens"}]}
             store.store_run(payload, validation={"ok": True, "counts": {"cves": 2, "advisories": 0, "kev": 1}}, db_path=db)
 
             series = store.history_daily(db_path=db, days=30)

@@ -1,0 +1,14 @@
+.git
+__pycache__/
+*.pyc
+.coverage
+.env
+.env.local
+*.key
+*.pem
+data/
+out/
+logs/
+backups/
+research/ecc-audit-*/
+*.tar.gz

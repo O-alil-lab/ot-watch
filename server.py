@@ -128,10 +128,13 @@ def api_payload():
         "collect_runs": _state["runs"],
         "auto_interval_seconds": AUTO_REFRESH_SECONDS,
         "cves": cves_raw,
+        "netwatch": load_json("netwatch.json", None),
         "advisories": load_json("cisa_advisories.json", []),
         "kev": load_json("kev.json", []),
         "articles": render.parse_editorial(),
         "agents": agents_status(),
+        "assets": load_json("assets.json", []),
+        "quality": (load_json("meta.json", {}) or {}).get("quality", {}),
     }
 
 
@@ -145,6 +148,18 @@ def latest_issue_html():
     except Exception:
         return None
     return None
+
+
+def raw_files_count():
+    """Nombre de réponses brutes archivées (couche raw rejouable)."""
+    raw = os.path.join(DATA, "raw")
+    try:
+        if not os.path.isdir(raw):
+            return 0
+        return sum(len([f for f in os.listdir(os.path.join(raw, d)) if f != "manifest.json"])
+                   for d in os.listdir(raw) if os.path.isdir(os.path.join(raw, d)))
+    except Exception:
+        return 0
 
 
 def agents_status():
@@ -170,12 +185,36 @@ def agents_status():
         return None
 
 
+def latest_issue_misp():
+    try:
+        files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".misp.json"))
+        if not files:
+            return None
+        with open(os.path.join(OUT, files[-1]), "rb") as fh:
+            return fh.read(), files[-1]
+    except Exception:
+        return None
+    return None
+
+
 def latest_issue_stix():
     try:
         files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".stix.json"))
         if not files:
             return None
         with open(os.path.join(OUT, files[-1]), "rb") as fh:
+            return fh.read(), files[-1]
+    except Exception:
+        return None
+    return None
+
+
+def latest_issue_ar():
+    try:
+        files = sorted(f for f in os.listdir(OUT) if f.startswith("issue-") and f.endswith(".ar.html"))
+        if not files:
+            return None
+        with open(os.path.join(OUT, files[-1]), encoding="utf-8") as fh:
             return fh.read(), files[-1]
     except Exception:
         return None
@@ -265,6 +304,9 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
     <a href="/issue.pdf" target="_blank"><button class="ghost">📄 Télécharger le PDF</button></a>
     <a href="/stix" target="_blank"><button class="ghost">🧬 Export STIX 2.1</button></a>
     <a href="/taxii2/collections" target="_blank"><button class="ghost">🛰 TAXII 2.1</button></a>
+    <a href="/misp" target="_blank"><button class="ghost">🕸 Export MISP</button></a>
+    <a href="/issue.ar" target="_blank"><button class="ghost">🌍 العربية</button></a>
+    <a href="/openapi.json" target="_blank"><button class="ghost">📖 OpenAPI</button></a>
   </div>
 </header>
 <div class="wrap">
@@ -302,7 +344,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:18px}
       <button id="bKev">★ KEV seulement</button>
       <button id="bRel">⭐ Mes actifs OT</button>
     </div>
-    <table><thead><tr><th>CVE</th><th>Risque</th><th>CVSS</th><th>Détail</th><th>Publié</th></tr></thead><tbody id="tCve"></tbody></table>
+    <table><thead><tr><th>CVE</th><th>Risque</th><th>OT</th><th>CVSS</th><th>Détail</th><th>Publié</th></tr></thead><tbody id="tCve"></tbody></table>
   </section>
 
   <section>
@@ -331,6 +373,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 function safeHref(u){try{const x=new URL(u);return (x.protocol==='http:'||x.protocol==='https:')?x.href:'#';}catch(e){return '#';}}
 function ago(iso){if(!iso)return'–';const s=(Date.now()-new Date(iso).getTime())/1000;if(s<60)return Math.floor(s)+' s';if(s<3600)return Math.floor(s/60)+' min';if(s<86400)return Math.floor(s/3600)+' h';return Math.floor(s/86400)+' j';}
 function riskBadge(r){if(r==null)return'<span class="badge b-DEFAULT">–</span>';const cls=r>=8?'b-CRITICAL':r>=6?'b-HIGH':r>=4?'b-MEDIUM':'b-LOW';return `<span class="badge ${cls}">${Number(r).toFixed(1)}</span>`;}
+function otBadge(r){if(r==null)return'<span class="badge b-DEFAULT" title="Aucun actif OT impacté">–</span>';const cls=r>=8?'b-CRITICAL':r>=6?'b-HIGH':r>=4?'b-MEDIUM':'b-LOW';return `<span class="badge ${cls}" title="Score OT expositionxPurduexcriticité (+KEV/SSVC)">${Number(r).toFixed(1)}</span>`;}
 function badge(score,sev){const s=(sev||'').toUpperCase();const cls='b-'+(['CRITICAL','HIGH','MEDIUM','LOW'].includes(s)?s:'DEFAULT');const lab=(typeof score==='number')?score.toFixed(1):(sev||'n/a');return `<span class="badge ${cls}">${esc(lab)}</span>`;}
 let state={sev:'',kev:false,q:'',rel:false},lastGen=null;
 async function loadData(){
@@ -355,14 +398,14 @@ async function loadData(){
 }
 function renderCves(cves){
   const q=state.q.toLowerCase();
-  cves=[...cves].sort((a,b)=>((b.relevant?1:0)-(a.relevant?1:0))||((b.risk??b.cvss??0)-(a.risk??a.cvss??0)));
+  cves=[...cves].sort((a,b)=>((b.relevant?1:0)-(a.relevant?1:0))||((b.ot_score??b.risk??b.cvss??0)-(a.ot_score??a.risk??a.cvss??0)));
   const rows=cves.filter(c=>(!state.sev||c.severity===state.sev)&&(!state.kev||c.kev)&&(!state.rel||c.relevant)&&(!q||(c.id+' '+(c.description||'')+' '+(c.cwes||[]).join(' ')).toLowerCase().includes(q)));
   $('tCve').innerHTML=rows.map(c=>`<tr>
     <td class="mono" style="white-space:nowrap"><a href="${safeHref((c.refs&&c.refs[0])||('https://nvd.nist.gov/vuln/detail/'+c.id))}">${esc(c.id)}</a>${c.kev?' <span class="kev">★KEV</span>':''}${c.relevant?' <span style="color:#f59e0b" title="correspond à votre profil">⭐</span>':''}</td>
     <td>${riskBadge(c.risk)}</td>
-    <td>${badge(c.cvss,c.severity)}</td>
+    <td>${otBadge(c.ot_score)}</td><td>${badge(c.cvss,c.severity)}</td>
     <td style="color:#cbd5e1">${esc((c.description||'').replace(/\s+/g,' ').slice(0,220))}<br><span style="color:#64748b;font-size:11px">${esc((c.cwes||[]).join(', '))}${(c.ssvc||c.attack_ics)?'<br><span style="font-size:10px;color:#a78bfa">'+esc((c.ssvc?('SSVC '+c.ssvc.toUpperCase()):'')+((c.attack_ics&&c.attack_ics.length)?(' · '+c.attack_ics.join(',')):'')+'')+'</span>':''}</span></td>
-    <td class="mono" style="white-space:nowrap;color:#8ea0c2">${esc((c.published||'').slice(0,10))}</td></tr>`).join('')||'<tr><td colspan="5" style="color:#8ea0c2">Aucune CVE ne correspond au filtre.</td></tr>';
+    <td class="mono" style="white-space:nowrap;color:#8ea0c2">${esc((c.published||'').slice(0,10))}</td></tr>`).join('')||'<tr><td colspan="6" style="color:#8ea0c2">Aucune CVE ne correspond au filtre.</td></tr>';
 }
 function renderAdv(adv){$('tAdv').innerHTML=adv.map(a=>`<tr>
   <td class="mono" style="white-space:nowrap">${esc(a.code||'ICS')}</td>
@@ -515,6 +558,14 @@ class Handler(BaseHTTPRequestHandler):
                 f"# TYPE otwatch_advisories_total gauge\notwatch_advisories_total {c.get('advisories', c.get('cisa_advisories', 0))}",
                 f"# TYPE otwatch_collect_runs_total gauge\notwatch_collect_runs_total {p['collect_runs']}",
                 f"# TYPE otwatch_last_collect_duration_seconds gauge\notwatch_last_collect_duration_seconds {_state['last_collect_duration']}",
+                f"# TYPE otwatch_assets_total gauge\notwatch_assets_total {len(p.get('assets') or [])}",
+                f"# TYPE otwatch_cves_impacted_total gauge\notwatch_cves_impacted_total {sum(1 for c in p.get('cves') or [] if c.get('ot_score') is not None)}",
+                f"# TYPE otwatch_ot_score_max gauge\notwatch_ot_score_max {max([c.get('ot_score') or 0 for c in p.get('cves') or []] + [0])}",
+                f"# TYPE otwatch_netwatch_hosts_ot gauge\notwatch_netwatch_hosts_ot {(p.get('netwatch') or {}).get('stats', {}).get('hosts_OT', 0)}",
+                f"# TYPE otwatch_netwatch_anomalies_total gauge\notwatch_netwatch_anomalies_total {len((p.get('netwatch') or {}).get('anomalies', []))}",
+                f"# TYPE otwatch_quality_dup_rate gauge\notwatch_quality_dup_rate {(p.get('quality') or {}).get('dup_rate', 0)}",
+                f"# TYPE otwatch_quality_sources_total gauge\notwatch_quality_sources_total {(p.get('quality') or {}).get('sources', 0)}",
+                f"# TYPE otwatch_raw_files_total gauge\notwatch_raw_files_total {raw_files_count()}",
             ]
             self._send(200, "\n".join(lines) + "\n", "text/plain; version=0.0.4; charset=utf-8")
         elif path == "/issue":
@@ -523,6 +574,39 @@ class Handler(BaseHTTPRequestHandler):
                 self._send(200, res[0], "text/html; charset=utf-8")
             else:
                 self._send(404, json.dumps({"error": "aucune édition générée"}))
+        elif path == "/misp":
+            res = latest_issue_misp()
+            if res:
+                self._send(200, res[0], "application/json", extra_headers={
+                    "Content-Disposition": f'inline; filename="{res[1]}"'})
+            else:
+                self._send(404, json.dumps({"error": "aucun export MISP généré"}))
+        elif path == "/openapi.json":
+            spec_path = os.path.join(ROOT, "docs", "openapi.json")
+            try:
+                with open(spec_path, encoding="utf-8") as fh:
+                    self._send(200, fh.read(), "application/json")
+            except OSError:
+                self._send(404, json.dumps({"error": "spec OpenAPI introuvable"}))
+        elif path == "/api/netwatch":
+            nw = load_json("netwatch.json", None)
+            if nw is None:
+                self._send(404, json.dumps({"error": "aucun rapport netwatch — lancez python3 src/netwatch.py (voir runbook collecte passive)"}))
+            else:
+                self._send(200, json.dumps(nw, ensure_ascii=False))
+        elif path == "/api/assets":
+            assets = load_json("assets.json", [])
+            cves = load_json("cves.json", [])
+            impacted = {}
+            for c in cves:
+                for aid in c.get("asset_impact") or []:
+                    impacted.setdefault(aid, []).append({"id": c.get("id"), "ot_score": c.get("ot_score"),
+                                                         "severity": c.get("severity"), "kev": bool(c.get("kev"))})
+            self._send(200, json.dumps({"assets": assets, "impacted": impacted,
+                                        "purdue": {"L0": "processus", "L1": "contrôle PLC/RTU",
+                                                   "L2": "supervision HMI/SCADA", "L3": "site MES",
+                                                   "L3.5": "DMZ industrielle", "L4": "entreprise IT"}},
+                                       ensure_ascii=False))
         elif path.startswith("/taxii2"):
             from urllib.parse import parse_qs, urlparse
             u = urlparse(self.path)
@@ -538,6 +622,12 @@ class Handler(BaseHTTPRequestHandler):
                 })
             else:
                 self._send(404, json.dumps({"error": "aucun export STIX généré"}))
+        elif path == "/issue.ar":
+            res = latest_issue_ar()
+            if res:
+                self._send(200, res[0], "text/html; charset=utf-8")
+            else:
+                self._send(404, json.dumps({"error": "aucune édition arabe générée"}))
         elif path == "/issue.pdf":
             res = latest_issue_pdf()
             if res:
@@ -582,8 +672,10 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--host", default="0.0.0.0")
-    ap.add_argument("--port", type=int, default=8000)
+    # env d'abord (Dockerfile : OTWATCH_HOST/OTWATCH_PORT ; PaaS type Render : PORT), CLI en dernier
+    ap.add_argument("--host", default=os.environ.get("OTWATCH_HOST", "0.0.0.0"))
+    ap.add_argument("--port", type=int,
+                    default=int(os.environ.get("OTWATCH_PORT") or os.environ.get("PORT") or 8000))
     args = ap.parse_args()
 
     if not os.path.exists(os.path.join(DATA, "meta.json")):

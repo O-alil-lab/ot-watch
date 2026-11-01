@@ -8,3 +8,63 @@
 {"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-10-31T23:54:14.511566+00:00"}
 {"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpjmokigsm/editorial/auto-2026-11-01.md", "ts": "2026-10-31T23:54:14.512120+00:00"}
 {"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-10-31T23:54:14.519071+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:00:51.619572+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpyu8322t9/editorial/auto-2026-11-01.md", "ts": "2026-11-01T00:00:51.620137+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:00:51.627513+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:00:58.794534+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpwk217aa3/editorial/auto-2026-11-01.md", "ts": "2026-11-01T00:00:58.794829+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:00:58.798651+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:02:49.890222+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpbg_kd0n5/editorial/auto-2026-11-01.md", "ts": "2026-11-01T00:02:49.890761+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:02:49.897895+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:02:56.393058+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpxgddz69b/editorial/auto-2026-11-01.md", "ts": "2026-11-01T00:02:56.393416+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:02:56.397259+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:03:42.324158+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpwbn4rzhj/editorial/auto-2026-11-01.md", "ts": "2026-11-01T00:03:42.324724+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 30, "failed": 0, "images": 3, "ts": "2026-11-01T00:03:42.331817+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:11:32.386257+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpzoxd9bhc/editorial/auto-2026-11-01.md", "ts": "2026-11-01T06:11:32.386589+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:11:32.390372+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:11:45.871153+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpvz9soc6l/editorial/auto-2026-11-01.md", "ts": "2026-11-01T06:11:45.871540+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:11:45.875505+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:13:42.551219+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmp7u0knbva/editorial/auto-2026-11-01.md", "ts": "2026-11-01T06:13:42.551522+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:13:42.555202+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:19:34.732722+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmplx1vcy3r/editorial/auto-2026-11-01.md", "ts": "2026-11-01T06:19:34.733376+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:19:34.740452+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:21:12.649168+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpuleynq7s/editorial/auto-2026-11-01.md", "ts": "2026-11-01T06:21:12.649483+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:21:12.653168+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:40:27.248290+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpf9aa46u1/editorial/auto-2026-11-01.md", "ts": "2026-11-01T06:40:27.248890+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:40:27.255900+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:40:46.172899+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpq1kq94iy/editorial/auto-2026-11-01.md", "ts": "2026-11-01T06:40:46.173254+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:40:46.178515+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:40:52.370063+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmp8m0sgehn/editorial/auto-2026-11-01.md", "ts": "2026-11-01T06:40:52.370728+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:40:52.377887+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:48:29.393885+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpd8udf_k2/editorial/auto-2026-11-01.md", "ts": "2026-11-01T06:48:29.394228+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T06:48:29.398060+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:46:53.065676+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmp2lnfjsdp/editorial/auto-2026-11-01.md", "ts": "2026-11-01T10:46:53.066023+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:46:53.071871+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:47:02.434209+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpeab3p3_d/editorial/auto-2026-11-01.md", "ts": "2026-11-01T10:47:02.434632+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:47:02.440228+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:50:51.515463+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmp3rdhsr0x/editorial/auto-2026-11-01.md", "ts": "2026-11-01T10:50:51.516195+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:50:51.524856+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:51:17.437911+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpm6pl4h2z/editorial/auto-2026-11-01.md", "ts": "2026-11-01T10:51:17.438506+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:51:17.446349+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:51:42.143116+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpumyle7fs/editorial/auto-2026-11-01.md", "ts": "2026-11-01T10:51:42.143934+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:51:42.152640+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:52:42.223050+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpn1pfaoxv/editorial/auto-2026-11-01.md", "ts": "2026-11-01T10:52:42.223717+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T10:52:42.231495+00:00"}

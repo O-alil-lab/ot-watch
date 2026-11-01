@@ -29,6 +29,8 @@ COLLECTION_ID = "otwatch-ot-cves"
 
 
 def load_latest_bundle(out_dir=OUT):
+    if not os.path.isdir(out_dir):
+        return None
     files = sorted(f for f in os.listdir(out_dir) if f.startswith("issue-") and f.endswith(".stix.json"))
     if not files:
         return None
@@ -101,18 +103,19 @@ def handle(path, method="GET", query=None, headers=None, environ=None):
         return 401, json.dumps({"title": "Unauthorized", "description": "Bearer OTWATCH_TAXII_TOKEN requis"}), TAXII_JSON
     if method != "GET":
         return 405, json.dumps({"title": "Method Not Allowed", "description": "collection read-only (TAXII 2.1)"}), TAXII_JSON
-    res = load_latest_bundle()
-    if res is None:
-        return 404, json.dumps({"title": "Not Found", "description": "aucun bundle STIX généré (lancez ./run_all.sh)"}), TAXII_JSON
-    bundle, fname = res
-
     p = path.rstrip("/")
+    # discovery / collections : métadonnées statiques, disponibles même sans bundle généré
     if p in ("/taxii2", "/taxii2/"):
         return 200, json.dumps(discovery_doc()), TAXII_JSON
     if p == "/taxii2/collections":
         return 200, json.dumps(collections_doc()), TAXII_JSON
     if p == f"/taxii2/collections/{COLLECTION_ID}":
         return 200, json.dumps(collection_info()), TAXII_JSON
+
+    res = load_latest_bundle()
+    if res is None:
+        return 404, json.dumps({"title": "Not Found", "description": "aucun bundle STIX généré (lancez ./run_all.sh)"}), TAXII_JSON
+    bundle, fname = res
     if p == f"/taxii2/collections/{COLLECTION_ID}/objects":
         added_after = (query.get("added_after") or [None])[0]
         return 200, json.dumps(objects_envelope(bundle, added_after), ensure_ascii=False), STIX_JSON

@@ -14,9 +14,9 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install deps (lint + coverage)
-        run: pip install --quiet ruff coverage -r requirements.txt
+        run: pip install --quiet ruff coverage pyyaml -r requirements.txt
       - name: Lint (ruff)
-        run: python3 -m ruff check server.py src agents tests --config ruff.toml
+        run: python3 -m ruff check server.py src agents tests scripts --config ruff.toml
       - name: Build (py_compile)
         run: python3 -m py_compile server.py src/*.py agents/*.py tests/*.py
       - name: Tests + couverture (gate >= 80 %)
