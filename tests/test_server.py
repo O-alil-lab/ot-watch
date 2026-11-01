@@ -11,10 +11,15 @@ from unittest import mock
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + "/..")
 import server  # noqa: E402
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _fixtures import fixture_data_dir  # noqa: E402
+
 
 class TestLiveServer(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls._data = mock.patch.object(server, "DATA", fixture_data_dir())
+        cls._data.start()
         cls.httpd = server.ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
         cls.port = cls.httpd.server_address[1]
         cls.thread = threading.Thread(target=cls.httpd.serve_forever, daemon=True)
@@ -24,6 +29,7 @@ class TestLiveServer(unittest.TestCase):
     def tearDownClass(cls):
         cls.httpd.shutdown()
         cls.httpd.server_close()
+        cls._data.stop()
 
     def req(self, method, path):
         c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)

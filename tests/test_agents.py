@@ -12,7 +12,10 @@ sys.path.insert(0, os.path.join(ROOT, "src"))
 
 from agents import factcheck, images, pipeline, rag, writer  # noqa: E402
 
-DATA = os.path.join(ROOT, "data")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _fixtures import fixture_data_dir  # noqa: E402
+
+DATA = fixture_data_dir()  # jeu figé, indépendant de data/ et du réseau
 DB = os.path.join(DATA, "otwatch.db")
 
 

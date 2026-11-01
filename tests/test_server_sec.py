@@ -12,10 +12,15 @@ from unittest import mock
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + "/..")
 import server  # noqa: E402
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _fixtures import fixture_data_dir  # noqa: E402
+
 
 class TestServerSecurity(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls._data = mock.patch.object(server, "DATA", fixture_data_dir())
+        cls._data.start()
         cls.httpd = server.ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
         cls.port = cls.httpd.server_address[1]
         threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
@@ -24,6 +29,7 @@ class TestServerSecurity(unittest.TestCase):
     def tearDownClass(cls):
         cls.httpd.shutdown()
         cls.httpd.server_close()
+        cls._data.stop()
 
     def req(self, method, path, headers=None):
         c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
@@ -52,7 +58,8 @@ class TestServerSecurity(unittest.TestCase):
         self.assertIn("otwatch_data_freshness_seconds", txt)
 
     def test_refresh_sans_token_quand_env_set(self):
-        with mock.patch.dict(os.environ, {"OTWATCH_ADMIN_TOKEN": "secret123"}):
+        with mock.patch.dict(os.environ, {"OTWATCH_ADMIN_TOKEN": "secret123"}), \
+             mock.patch.object(server, "run_collect", return_value=True):
             code, _, _ = self.req("POST", "/api/refresh")
             self.assertEqual(code, 401)
             code, _, body = self.req("POST", "/api/refresh", headers={"Authorization": "Bearer secret123"})
