@@ -1,0 +1,57 @@
+[
+  {
+    "asset_id": "plc-s7-1500",
+    "name": "Automate Siemens S7-1500 (ligne 2)",
+    "vendor": "Siemens",
+    "product": "SIMATIC S7-1500",
+    "firmware": "V3.1",
+    "purdue_level": "L1",
+    "criticality": "high",
+    "safety": true,
+    "source": "config"
+  },
+  {
+    "asset_id": "plc-modicon-m340",
+    "name": "Schneider Modicon M340 (station pompage)",
+    "vendor": "Schneider Electric",
+    "product": "Modicon M340",
+    "firmware": "SV3.60",
+    "purdue_level": "L1",
+    "criticality": "high",
+    "safety": false,
+    "source": "config"
+  },
+  {
+    "asset_id": "scada-wincc",
+    "name": "Poste SCADA WinCC",
+    "vendor": "Siemens",
+    "product": "WinCC",
+    "firmware": "V8.1",
+    "purdue_level": "L2",
+    "criticality": "medium",
+    "safety": false,
+    "source": "config"
+  },
+  {
+    "asset_id": "hmi-rockwell",
+    "name": "HMI Rockwell PanelView",
+    "vendor": "Rockwell",
+    "product": "PanelView Plus",
+    "firmware": "12.0",
+    "purdue_level": "L2",
+    "criticality": "medium",
+    "safety": false,
+    "source": "config"
+  },
+  {
+    "asset_id": "ewon-gateway",
+    "name": "Passerelle eWON Flexy (accès distant)",
+    "vendor": "HMS",
+    "product": "eWON Flexy",
+    "firmware": "4.8",
+    "purdue_level": "L3.5",
+    "criticality": "critical",
+    "safety": false,
+    "source": "config"
+  }
+]

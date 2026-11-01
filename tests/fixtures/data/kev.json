@@ -1,0 +1,145 @@
+[
+  {
+    "cveID": "CVE-2026-110936",
+    "vendorProject": "Siemens",
+    "product": "Software Center",
+    "vulnerabilityName": "Siemens Software Center Uncontrolled Search Path Element Vulnerability",
+    "dateAdded": "2026-10-20",
+    "dueDate": "2026-11-03",
+    "knownRansomwareCampaignUse": "Unknown",
+    "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+    "shortDescription": "Siemens Software Center contains an uncontrolled search path element vulnerability that could allow an authenticated local attacker to place a specially crafted DLL in a directory that the application searches, leading to arbitrary code execution with the privileges of the affected application."
+  },
+  {
+    "cveID": "CVE-2021-22681",
+    "vendorProject": "Rockwell",
+    "product": "Multiple Products",
+    "vulnerabilityName": "Rockwell Multiple Products Insufficient Protected Credentials Vulnerability",
+    "dateAdded": "2026-03-05",
+    "dueDate": "2026-03-26",
+    "knownRansomwareCampaignUse": "Unknown",
+    "requiredAction": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
+    "shortDescription": "Multiple Rockwell products contain an insufficient protected credentials vulnerability. Studio 5000 Logix Designer software may allow a key to be discovered. This key is used to verify Logix controllers are communicating with Rockwell Automation design software. If successfully exploited, this vulnerability could allow an unauthorized application to connect with Logix controllers. To leverage this vulnerability, an unauthorized user would require network access to the controller."
+  },
+  {
+    "cveID": "CVE-2021-26828",
+    "vendorProject": "OpenPLC",
+    "product": "ScadaBR",
+    "vulnerabilityName": "OpenPLC ScadaBR Unrestricted Upload of File with Dangerous Type Vulnerability",
+    "dateAdded": "2025-12-03",
+    "dueDate": "2025-12-24",
+    "knownRansomwareCampaignUse": "Unknown",
+    "requiredAction": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
+    "shortDescription": "OpenPLC ScadaBR contains an unrestricted upload of file with dangerous type vulnerability that allows remote authenticated users to upload and execute arbitrary JSP files via view_edit.shtm."
+  },
+  {
+    "cveID": "CVE-2021-26829",
+    "vendorProject": "OpenPLC",
+    "product": "ScadaBR",
+    "vulnerabilityName": "OpenPLC ScadaBR Cross-site Scripting Vulnerability",
+    "dateAdded": "2025-11-28",
+    "dueDate": "2025-12-19",
+    "knownRansomwareCampaignUse": "Unknown",
+    "requiredAction": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
+    "shortDescription": "OpenPLC ScadaBR contains a cross-site scripting vulnerability via system_settings.shtm."
+  },
+  {
+    "cveID": "CVE-2025-27915",
+    "vendorProject": "Synacor",
+    "product": "Zimbra Collaboration Suite (ZCS)",
+    "vulnerabilityName": "Synacor Zimbra Collaboration Suite (ZCS) Cross-site Scripting Vulnerability",
+    "dateAdded": "2025-10-07",
+    "dueDate": "2025-10-28",
+    "knownRansomwareCampaignUse": "Unknown",
+    "requiredAction": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
+    "shortDescription": "Synacor Zimbra Collaboration Suite (ZCS) contains a cross-site scripting vulnerability that exists in the Classic Web Client due to insufficient sanitization of HTML content in ICS files. When a user views an e-mail message containing a malicious ICS entry, its embedded JavaScript executes via an ontoggle event inside a tag. This allows an attacker to run arbitrary JavaScript within the victim's session, potentially leading to unauthorized actions such as setting e-mail filters to redirect messages to an attacker-controlled address. As a result, an attacker can perform unauthorized actions on the victim's account, including e-mail redirection and data exfiltration."
+  },
+  {
+    "cveID": "CVE-2024-21893",
+    "vendorProject": "Ivanti",
+    "product": "Connect Secure, Policy Secure, and Neurons",
+    "vulnerabilityName": "Ivanti Connect Secure, Policy Secure, and Neurons Server-Side Request Forgery (SSRF) Vulnerability",
+    "dateAdded": "2024-01-31",
+    "dueDate": "2024-02-02",
+    "knownRansomwareCampaignUse": "Known",
+    "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+    "shortDescription": "Ivanti Connect Secure (ICS, formerly known as Pulse Connect Secure), Ivanti Policy Secure, and Ivanti Neurons contain a server-side request forgery (SSRF) vulnerability in the SAML component that allows an attacker to access certain restricted resources without authentication."
+  },
+  {
+    "cveID": "CVE-2023-46805",
+    "vendorProject": "Ivanti",
+    "product": "Connect Secure and Policy Secure",
+    "vulnerabilityName": "Ivanti Connect Secure and Policy Secure Authentication Bypass Vulnerability",
+    "dateAdded": "2024-01-10",
+    "dueDate": "2024-01-22",
+    "knownRansomwareCampaignUse": "Known",
+    "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+    "shortDescription": "Ivanti Connect Secure (ICS, formerly known as Pulse Connect Secure) and Ivanti Policy Secure gateways contain an authentication bypass vulnerability in the web component that allows an attacker to access restricted resources by bypassing control checks. This vulnerability can be leveraged in conjunction with CVE-2024-21887, a command injection vulnerability."
+  },
+  {
+    "cveID": "CVE-2024-21887",
+    "vendorProject": "Ivanti",
+    "product": "Connect Secure and Policy Secure",
+    "vulnerabilityName": "Ivanti Connect Secure and Policy Secure Command Injection Vulnerability",
+    "dateAdded": "2024-01-10",
+    "dueDate": "2024-01-22",
+    "knownRansomwareCampaignUse": "Known",
+    "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+    "shortDescription": "Ivanti Connect Secure (ICS, formerly known as Pulse Connect Secure) and Ivanti Policy Secure contain a command injection vulnerability in the web components of these products, which can allow an authenticated administrator to send crafted requests to execute code on affected appliances. This vulnerability can be leveraged in conjunction with CVE-2023-46805, an authenticated bypass issue."
+  },
+  {
+    "cveID": "CVE-2023-6448",
+    "vendorProject": "Unitronics",
+    "product": "Vision PLC and HMI",
+    "vulnerabilityName": "Unitronics Vision PLC and HMI Insecure Default Password Vulnerability",
+    "dateAdded": "2023-12-11",
+    "dueDate": "2023-12-18",
+    "knownRansomwareCampaignUse": "Unknown",
+    "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+    "shortDescription": "Unitronics Vision Series PLCs and HMIs ship with an insecure default password, which if left unchanged, can allow attackers to execute remote commands."
+  },
+  {
+    "cveID": "CVE-2021-3129",
+    "vendorProject": "Laravel",
+    "product": "Ignition",
+    "vulnerabilityName": "Laravel Ignition File Upload Vulnerability",
+    "dateAdded": "2023-09-18",
+    "dueDate": "2023-10-09",
+    "knownRansomwareCampaignUse": "Known",
+    "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+    "shortDescription": "Laravel Ignition contains a file upload vulnerability that allows unauthenticated remote attackers to execute malicious code due to insecure usage of file_get_contents() and file_put_contents()."
+  },
+  {
+    "cveID": "CVE-2018-7841",
+    "vendorProject": "Schneider Electric",
+    "product": "U.motion Builder",
+    "vulnerabilityName": "Schneider Electric U.motion Builder SQL Injection Vulnerability",
+    "dateAdded": "2022-04-15",
+    "dueDate": "2022-05-06",
+    "knownRansomwareCampaignUse": "Unknown",
+    "requiredAction": "The impacted product is end-of-life and should be disconnected if still in use.",
+    "shortDescription": "A SQL Injection vulnerability exists in U.motion Builder software which could cause unwanted code execution when an improper set of characters is entered."
+  },
+  {
+    "cveID": "CVE-2017-12235",
+    "vendorProject": "Cisco",
+    "product": "IOS software",
+    "vulnerabilityName": "Cisco IOS Software for Cisco Industrial Ethernet Switches PROFINET Denial-of-Service Vulnerability",
+    "dateAdded": "2022-03-03",
+    "dueDate": "2022-03-24",
+    "knownRansomwareCampaignUse": "Unknown",
+    "requiredAction": "Apply updates per vendor instructions.",
+    "shortDescription": "A vulnerability in the implementation of the PROFINET Discovery and Configuration Protocol (PN-DCP) for Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service."
+  },
+  {
+    "cveID": "CVE-2016-8562",
+    "vendorProject": "Siemens",
+    "product": "SIMATIC CP",
+    "vulnerabilityName": "Siemens SIMATIC CP 1543-1 Improper Privilege Management Vulnerability",
+    "dateAdded": "2022-03-03",
+    "dueDate": "2022-03-24",
+    "knownRansomwareCampaignUse": "Unknown",
+    "requiredAction": "Apply updates per vendor instructions.",
+    "shortDescription": "An improper privilege management vulnerability exists within the Siemens SIMATIC Communication Processor (CP) that allows a privileged attacker to remotely cause a denial of service."
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-11-01T00:03:47.275648+00:00",
+  "window_days": 14,
+  "counts": {
+    "cves": 22,
+    "advisories": 27,
+    "kev": 13
+  },
+  "validation": {
+    "ok": false,
+    "issues": [
+      "volume CVE en chute: 37 -> 22 (-40%) : vérifier la source NVD"
+    ],
+    "counts": {
+      "cves": 22,
+      "advisories": 27,
+      "kev": 13
+    },
+    "checked_at": "2026-11-01T00:12:20.019937Z"
+  },
+  "diff": {
+    "new_cves": [],
+    "new_advisories": [],
+    "new_kev": [],
+    "run_id": 23
+  },
+  "quality": {
+    "sources": 4,
+    "nvd_records": 22,
+    "cves_uniques": 22,
+    "dup_rate": 0.0,
+    "raw_dir": "20261101T000347Z"
+  }
+}

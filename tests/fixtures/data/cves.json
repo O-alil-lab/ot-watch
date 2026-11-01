@@ -1,0 +1,921 @@
+[
+  {
+    "id": "CVE-2026-110936",
+    "published": "2026-10-15T15:17:30.383",
+    "lastModified": "2026-10-21T13:10:11.553",
+    "description": "A vulnerability has been identified in Siemens Software Center (All versions < V4.0.9.8). The affected application loads dynamic-link libraries (DLLs) from an uncontrolled search path. This could allow an authenticated local attacker to place a specially crafted DLL in a directory that the application searches, leading to arbitrary code execution with the privileges of the affected application.",
+    "cvss": 8.4,
+    "severity": "HIGH",
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:H/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X",
+    "cwes": [],
+    "refs": [
+      "https://cert-portal.siemens.com/productcert/html/ssa-580366.html",
+      "https://productcert.siemens.com/news/2026/10/19/active-exploitation-of-cve-2026-110936-in-siemens-software-center/",
+      "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-110936"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-110936"
+    ],
+    "kev": true,
+    "epss": 0.00967,
+    "risk": 6.23,
+    "relevant": true,
+    "attack_ics": [],
+    "ssvc": "act",
+    "ssvc_detail": {
+      "decision": "act",
+      "exploitation": "active",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "high"
+    },
+    "asset_impact": [
+      "plc-s7-1500",
+      "scada-wincc"
+    ],
+    "ot_score": 10.0,
+    "ot_score_detail": {
+      "base": 6.23,
+      "asset_factor": 1.5,
+      "assets": [
+        {
+          "asset_id": "plc-s7-1500",
+          "purdue_level": "L1",
+          "criticality": "high",
+          "safety": true,
+          "factor": 1.5
+        },
+        {
+          "asset_id": "scada-wincc",
+          "purdue_level": "L2",
+          "criticality": "medium",
+          "safety": false,
+          "factor": 0.9
+        }
+      ],
+      "kev_bonus": 1.0,
+      "ssvc_bonus": 1.0,
+      "score": 10.0
+    }
+  },
+  {
+    "id": "CVE-2026-116014",
+    "published": "2026-10-24T12:16:57.607",
+    "lastModified": "2026-10-29T17:18:01.983",
+    "description": "open62541 1.5.0 before 1.5.7 contains an integer overflow in UA_DataType_fromStructureDescription() that wraps the 16-bit memSize field for large custom structure definitions. A malicious OPC UA server can supply DataType definitions via UA_Client_getRemoteDataTypes(), causing decodeBinaryStructure() to overflow the heap, crashing clients or enabling code execution.",
+    "cvss": 9.2,
+    "severity": "CRITICAL",
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X",
+    "cwes": [],
+    "refs": [
+      "https://github.com/open62541/open62541/blob/v1.5.6/src/ua_types_definition.c#L274",
+      "https://github.com/open62541/open62541/commit/0cf4806768c493bc6ccffcd4419da24153b970ec",
+      "https://github.com/open62541/open62541/pull/8298",
+      "https://github.com/open62541/open62541/pull/8302",
+      "https://github.com/open62541/open62541/releases/tag/v1.5.7",
+      "https://www.vulncheck.com/advisories/open62541-1.5.0-before-1.5.7-integer-overflow-heap-buffer-overflow-via-custom-datatype"
+    ],
+    "found_by": [
+      "keyword:OPC UA"
+    ],
+    "kev": false,
+    "epss": 0.00432,
+    "risk": 4.61,
+    "relevant": true,
+    "attack_ics": [
+      "T0885"
+    ],
+    "ssvc": "act",
+    "ssvc_detail": {
+      "decision": "act",
+      "exploitation": "none",
+      "automatable": "yes",
+      "technical_impact": "total",
+      "mission": "high"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 4.61,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-72895",
+    "published": "2026-10-13T10:17:20.130",
+    "lastModified": "2026-10-15T16:03:48.883",
+    "description": "A vulnerability has been identified in SIMATIC IPC BX-21A (All versions < V31.01.13), SIMATIC IPC RW-543A (All versions < V1.1.4), SIMATIC IPC227G / IPC277G / IPC277G PRO / IPC327G / IPC377G (All versions < V28.01.15). A BIOS vendor test key is present in the UEFI Secure Boot key database. This could allow a local attacker with physical or administrative access to the device to boot an operating system or UEFI application signed with that test key, bypassing UEFI Secure Boot protections even when Secure Boot is enabled, potentially leading to a full loss of confidentiality, integrity, and availability of the device.",
+    "cvss": 8.4,
+    "severity": "HIGH",
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X",
+    "cwes": [],
+    "refs": [
+      "https://cert-portal.siemens.com/productcert/html/ssa-159454.html"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-72895"
+    ],
+    "kev": false,
+    "epss": 0.00107,
+    "risk": 4.2,
+    "relevant": true,
+    "attack_ics": [],
+    "ssvc": "track*",
+    "ssvc_detail": {
+      "decision": "track*",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "high"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 4.2,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-111280",
+    "published": "2026-10-15T22:19:29.317",
+    "lastModified": "2026-10-23T20:17:19.987",
+    "description": "snap7 through 1.4.3 contains an out-of-bounds write vulnerability in TSnap7MicroClient::opReadArea() that allows malicious S7 peers to overflow client buffers via an unchecked DataLength field. Rogue or impersonated PLCs can return crafted ReadVar responses causing memcpy of up to 65535 bytes into caller buffers, crashing SCADA, HMI, or gateway processes and corrupting memory.",
+    "cvss": 8.3,
+    "severity": "HIGH",
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X",
+    "cwes": [],
+    "refs": [
+      "https://github.com/davenardella/snap7",
+      "https://github.com/davenardella/snap7/blob/30f37da3114024a71ba93f7fd855c680b97a406f/src/core/s7_micro_client.cpp#L136-L150",
+      "https://github.com/davenardella/snap7/issues/31",
+      "https://www.vulncheck.com/advisories/snap7-through-1.4.3-out-of-bounds-write-via-tsnap7microclient-opreadarea",
+      "https://github.com/davenardella/snap7/issues/31"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-111280"
+    ],
+    "kev": false,
+    "epss": 0.0051,
+    "risk": 4.17,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 4.17,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-115723",
+    "published": "2026-10-23T12:18:12.983",
+    "lastModified": "2026-10-23T15:17:30.323",
+    "description": "Snap7 through 1.4.3 contains an out-of-bounds write vulnerability in the passive partner that allows a malicious active partner to overflow application buffers by declaring an unvalidated BSend total length. Attackers connecting from the configured peer address can declare up to 65535 bytes and send a short fragment, causing BRecv to memcpy past the buffer and crash or corrupt SCADA, HMI or gateway processes.",
+    "cvss": 8.3,
+    "severity": "HIGH",
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X",
+    "cwes": [],
+    "refs": [
+      "https://github.com/davenardella/snap7/blob/30f37da3114024a71ba93f7fd855c680b97a406f/src/core/s7_partner.cpp#L1126-L1166",
+      "https://github.com/davenardella/snap7/blob/30f37da3114024a71ba93f7fd855c680b97a406f/src/core/s7_partner.cpp#L850-L867",
+      "https://github.com/davenardella/snap7/pull/41",
+      "https://www.vulncheck.com/advisories/snap7-through-1.4.3-out-of-bounds-write-via-brecv-and-checkasbrecvcompletion"
+    ],
+    "found_by": [
+      "keyword:SCADA"
+    ],
+    "kev": false,
+    "epss": 0.00418,
+    "risk": 4.16,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 4.16,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-109618",
+    "published": "2026-10-21T14:17:09.357",
+    "lastModified": "2026-10-30T19:18:07.373",
+    "description": "PHP uses longjmp() for out-of-memory (OOM) errors to exit the current context and abort handling of the request. Some contexts may not properly account for this scenario and leave request memory in an uninitialized state before performing an allocation. The subsequent request cleanup procedure may read or branch on this memory. Multiple OOM strategies can consistently trigger this condition and lead to remote code execution (RCE).",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w",
+      "http://seclists.org/fulldisclosure/2026/Oct/51",
+      "http://www.openwall.com/lists/oss-security/2026/10/21/6",
+      "http://www.openwall.com/lists/oss-security/2026/10/23/5",
+      "https://arcticwolf.com/resources/blog/php2shell-critical-php-vulnerabilities-enable-unauthenticated-remote-code-execution/",
+      "https://cert-portal.siemens.com/productcert/html/ssa-166980.html"
+    ],
+    "found_by": [
+      "cpe:siemens"
+    ],
+    "kev": false,
+    "epss": 0.99999,
+    "risk": 3.0,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "attend",
+    "ssvc_detail": {
+      "decision": "attend",
+      "exploitation": "poc",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 3.0,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-109619",
+    "published": "2026-10-21T14:17:09.823",
+    "lastModified": "2026-10-30T19:18:07.753",
+    "description": "PHP has various global state that temporarily points into request memory. In some scenarios, global state may not be correctly reset, or may be repopulated after being reset. The global state may then refer to request memory even after it has been freed. Subsequent requests may read or branch on this stale state before it is fully initialized. Multiple strategies can trigger this condition and produce remote code execution (RCE).",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp",
+      "http://www.openwall.com/lists/oss-security/2026/10/21/16",
+      "http://www.openwall.com/lists/oss-security/2026/10/21/17",
+      "http://www.openwall.com/lists/oss-security/2026/10/21/23",
+      "http://www.openwall.com/lists/oss-security/2026/10/21/7",
+      "http://www.openwall.com/lists/oss-security/2026/10/22/14"
+    ],
+    "found_by": [
+      "cpe:siemens"
+    ],
+    "kev": false,
+    "epss": 0.99999,
+    "risk": 3.0,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "attend",
+    "ssvc_detail": {
+      "decision": "attend",
+      "exploitation": "poc",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 3.0,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-111497",
+    "published": "2026-10-22T14:17:37.190",
+    "lastModified": "2026-10-30T20:30:11.670",
+    "description": "A buffer overflow vulnerability in the Brotli decoder (c/dec/decode.c) in Google Brotli versions 1.0.3 through 1.2.0 on all platforms allows a remote unauthenticated attacker to corrupt adjacent decoder state memory, disclose sensitive memory contents, cause a denial of service, or potentially execute arbitrary code using a crafted Brotli-compressed stream.\n\n\n\n\n\nUsers need to update any Brotli libraries or binaries between 1.0.3 through 1.2.0 to the latest available version: 1.0.10 or 1.1.1 or 1.2.1.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://github.com/andybalholm/brotli/releases/tag/v1.2.7",
+      "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases#nodejs-brotli-decoder-out-of-bounds-write-permits-remote-code-execution-cve-2026-111497---high",
+      "http://www.openwall.com/lists/oss-security/2026/10/23/25",
+      "http://www.openwall.com/lists/oss-security/2026/10/24/6",
+      "http://www.openwall.com/lists/oss-security/2026/10/26/12",
+      "http://www.openwall.com/lists/oss-security/2026/10/26/13"
+    ],
+    "found_by": [
+      "cpe:siemens"
+    ],
+    "kev": false,
+    "epss": 0.82641,
+    "risk": 2.48,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "attend",
+    "ssvc_detail": {
+      "decision": "attend",
+      "exploitation": "poc",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 2.48,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-115803",
+    "published": "2026-10-24T07:16:46.637",
+    "lastModified": "2026-10-26T18:17:37.740",
+    "description": "A flaw has been found in Scada-LTS 2.8.0. Affected by this vulnerability is the function HttpServletRequest.getParameter of the file AmChartValuesAPI.java of the component AmCharts Data API. Executing a manipulation of the argument ids can lead to authorization bypass. The attack can be executed remotely. The exploit has been published and may be used. The vendor announces: \"At this moment we are working on new release with security enhancements which will be introduced to the community soon.\"",
+    "cvss": 2.1,
+    "severity": "LOW",
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N/E:P/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X",
+    "cwes": [],
+    "refs": [
+      "https://vuldb.com/cve/CVE-2026-115803",
+      "https://vuldb.com/submit/916011",
+      "https://vuldb.com/vuln/425987",
+      "https://vuldb.com/vuln/425987/cti"
+    ],
+    "found_by": [
+      "keyword:SCADA"
+    ],
+    "kev": false,
+    "epss": 0.00223,
+    "risk": 1.06,
+    "relevant": false,
+    "attack_ics": [
+      "T0832"
+    ],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 1.06,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-18963",
+    "published": "2026-08-18T17:16:57.083",
+    "lastModified": "2026-10-23T17:17:21.527",
+    "description": "A flaw was found in the reset-credentials flow of the keycloak-services component, which is the core engine for identity and access management in Red Hat Build of Keycloak. The issue allows an unauthenticated attacker to force the password reset process for any user without needing to click the required email verification link. This can result in the attacker gaining full control over target user accounts by directly setting new credentials.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://access.redhat.com/errata/RHSA-2026:56519",
+      "https://access.redhat.com/errata/RHSA-2026:56520",
+      "https://access.redhat.com/errata/RHSA-2026:56523",
+      "https://access.redhat.com/errata/RHSA-2026:56524",
+      "https://access.redhat.com/security/cve/CVE-2026-18963",
+      "https://bugzilla.redhat.com/show_bug.cgi?id=2511595"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-18963"
+    ],
+    "kev": false,
+    "epss": 0.04682,
+    "risk": 0.14,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.14,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-27565",
+    "published": "2026-09-16T08:16:39.740",
+    "lastModified": "2026-09-16T19:17:14.183",
+    "description": "An unauthenticated remote attacker can upload a malicious IODD file that places and executes a shell script with root privileges. The shell script remains active even after a reboot.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://www.certvde.com/en/advisories/VDE-2026-014/",
+      "https://www.certvde.com/en/advisories/VDE-2026-027/",
+      "https://www.certvde.com/en/advisories/VDE-2026-028/"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-27565"
+    ],
+    "kev": false,
+    "epss": 0.00969,
+    "risk": 0.03,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.03,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-27546",
+    "published": "2026-09-16T08:16:36.850",
+    "lastModified": "2026-09-16T19:17:10.840",
+    "description": "An unauthenticated remote attacker can exploit an authentication bypass in the _account_log function to log in as an admin, even when accounts are properly configured.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://www.certvde.com/en/advisories/VDE-2026-014/",
+      "https://www.certvde.com/en/advisories/VDE-2026-027/",
+      "https://www.certvde.com/en/advisories/VDE-2026-028/"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-27546"
+    ],
+    "kev": false,
+    "epss": 0.01017,
+    "risk": 0.03,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.03,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-63350",
+    "published": "2026-10-13T10:17:16.777",
+    "lastModified": "2026-10-15T20:38:04.303",
+    "description": "Affected devices do not properly restrict executable content contained in imported trace files.\r\n\r\nThis could allow an attacker to social engineer an authorized user who holds the function right “Read diagnostics” into importing a specially crafted trace file. Successful exploitation could allow attacker-controlled JavaScript to execute in the user’s browser session and perform PLC operations through the web server within the scope of the user’s authorization.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://cert-portal.siemens.com/productcert/html/ssa-591731.html"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-63350"
+    ],
+    "kev": false,
+    "epss": 0.00335,
+    "risk": 0.01,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.01,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-63353",
+    "published": "2026-10-13T10:17:18.040",
+    "lastModified": "2026-10-15T20:38:04.303",
+    "description": "Affected devices do not properly sanitize comment fields contained in imported trace files before rendering them on the Trace page.\r\n\r\nThis could allow an attacker to social engineer an authorized user who holds the function right “Read diagnostics” into importing a specially crafted trace file. Successful exploitation could allow attacker-controlled JavaScript to execute in the user’s browser session and perform PLC operations through the web server within the scope of the user’s authorization.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://cert-portal.siemens.com/productcert/html/ssa-591731.html"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-63353"
+    ],
+    "kev": false,
+    "epss": 0.00314,
+    "risk": 0.01,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.01,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-63354",
+    "published": "2026-10-13T10:17:18.450",
+    "lastModified": "2026-10-16T18:17:59.857",
+    "description": "Affected devices do not properly validate and sanitize visual marker data contained in imported CSV trace files before rendering it on the Trace page.\r\n\r\nThis could allow an attacker to social engineer an authorized user who holds the function right “Read diagnostics” into importing a specially crafted trace file. Successful exploitation could allow attacker-controlled JavaScript to execute in the user’s browser session and perform PLC operations through the web server within the scope of the user’s authorization.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://cert-portal.siemens.com/productcert/html/ssa-591731.html"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-63354"
+    ],
+    "kev": false,
+    "epss": 0.00314,
+    "risk": 0.01,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.01,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-6284",
+    "published": "2026-04-17T16:17:07.620",
+    "lastModified": "2026-10-25T23:10:00.167",
+    "description": "An attacker with network access to the PLC is able to brute force discover passwords to gain unauthorized access to systems and services. The limited password complexity and no password input limiters makes brute force password enumeration possible.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-106-02.json",
+      "https://hornerautomation.com/cscape-software-free/cscape-software/",
+      "https://www.cisa.gov/news-events/ics-advisories/icsa-26-106-02"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-6284"
+    ],
+    "kev": false,
+    "epss": 0.00449,
+    "risk": 0.01,
+    "relevant": false,
+    "attack_ics": [
+      "T0846"
+    ],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.01,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-119205",
+    "published": "2026-10-29T21:17:19.677",
+    "lastModified": "2026-10-30T17:18:03.880",
+    "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.4, pypdf can enter an infinite loop when cloning or duplicating a crafted cyclic DictionaryObject. Clone traversal checked generated destination references rather than the original source references, allowing some source cycles to evade the visited-object check. This issue is fixed in version 6.21.4.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://github.com/py-pdf/pypdf/commit/f176db1a1f7f9af3e472e69a843ef1175653b044",
+      "https://github.com/py-pdf/pypdf/pull/4288",
+      "https://github.com/py-pdf/pypdf/releases/tag/6.21.4",
+      "https://github.com/py-pdf/pypdf/security/advisories/GHSA-mfr5-77xh-9j7h"
+    ],
+    "found_by": [
+      "ghsa/otx CVE-2026-119205"
+    ],
+    "kev": false,
+    "epss": 0.00304,
+    "risk": 0.01,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.01,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-119206",
+    "published": "2026-10-29T21:17:19.817",
+    "lastModified": "2026-10-30T17:18:03.880",
+    "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.3, pypdf can take excessive time to retrieve page labels from a crafted PDF containing a flat page-label number tree with many ranges. The page_labels property resolves each page independently and repeatedly scans the same /Nums array from the beginning, causing work to grow with both the page count and the number of label ranges. This issue is fixed in version 6.21.3.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://github.com/py-pdf/pypdf/commit/b891fef37000cd86baa6e9848a3387d080b3b03e",
+      "https://github.com/py-pdf/pypdf/pull/4251",
+      "https://github.com/py-pdf/pypdf/releases/tag/6.21.3",
+      "https://github.com/py-pdf/pypdf/security/advisories/GHSA-42gh-23hr-vphw"
+    ],
+    "found_by": [
+      "ghsa/otx CVE-2026-119206"
+    ],
+    "kev": false,
+    "epss": 0.00304,
+    "risk": 0.01,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.01,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-119207",
+    "published": "2026-10-29T21:17:19.953",
+    "lastModified": "2026-10-30T17:18:03.880",
+    "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.3, pypdf can consume excessive memory when strict mode loads a crafted invalid PDF dictionary. Nested parsing failures add repeated exception text to newly raised errors, allowing a small malformed dictionary to amplify into very large error messages. This issue is fixed in version 6.21.3.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://github.com/py-pdf/pypdf/commit/64270258c0eced720f7960aecf8cef31afd39f8d",
+      "https://github.com/py-pdf/pypdf/pull/4265",
+      "https://github.com/py-pdf/pypdf/releases/tag/6.21.3",
+      "https://github.com/py-pdf/pypdf/security/advisories/GHSA-4vqv-7265-gm2w"
+    ],
+    "found_by": [
+      "ghsa/otx CVE-2026-119207"
+    ],
+    "kev": false,
+    "epss": 0.00304,
+    "risk": 0.01,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.01,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-119208",
+    "published": "2026-10-29T21:17:20.090",
+    "lastModified": "2026-10-30T17:18:03.880",
+    "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.3, pypdf can consume excessive time and memory when an application accesses the page count of a crafted encrypted PDF whose page tree declares a forged /Count value. Even after successful decryption, page-count retrieval trusts the unvalidated declared count instead of walking the page tree, allowing the attacker-controlled value to drive excessive work and memory use. This issue is fixed in version 6.21.3.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://github.com/py-pdf/pypdf/commit/82b91951dc74496bb3efe6465434f041bb6a5e6b",
+      "https://github.com/py-pdf/pypdf/pull/4270",
+      "https://github.com/py-pdf/pypdf/releases/tag/6.21.3",
+      "https://github.com/py-pdf/pypdf/security/advisories/GHSA-62m5-6wh8-28x7"
+    ],
+    "found_by": [
+      "ghsa/otx CVE-2026-119208"
+    ],
+    "kev": false,
+    "epss": 0.00304,
+    "risk": 0.01,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.01,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-119209",
+    "published": "2026-10-29T21:17:20.230",
+    "lastModified": "2026-10-31T00:39:43.507",
+    "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.21.3, pypdf can consume excessive memory while opening a crafted PDF containing cross-reference streams that declare very large entry counts. Highly compressible streams and /Prev chains can multiply the number of parsed entries across a document, while negative /Index counts can bypass the existing per-stream clamp. This issue is fixed in version 6.21.3.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://github.com/py-pdf/pypdf/commit/a93fe3a901fd00af38f0a105c3ba7175fa72dcb4",
+      "https://github.com/py-pdf/pypdf/pull/4269",
+      "https://github.com/py-pdf/pypdf/releases/tag/6.21.3",
+      "https://github.com/py-pdf/pypdf/security/advisories/GHSA-x3rh-gjgm-fmqc"
+    ],
+    "found_by": [
+      "ghsa/otx CVE-2026-119209"
+    ],
+    "kev": false,
+    "epss": 0.00268,
+    "risk": 0.01,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.01,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  },
+  {
+    "id": "CVE-2026-12663",
+    "published": "2026-09-01T14:17:24.290",
+    "lastModified": "2026-09-01T20:50:01.960",
+    "description": "A security issue exists within ControlFLASH™, where the installer grants write permissions to the \"Everyone\" group on a product installation directory. This could allow arbitrary code execution, resulting in an attacker being given the ability to run any commands or code of the attacker's choice on a target machine at the logged-in user's permission level.",
+    "cvss": null,
+    "severity": null,
+    "vector": null,
+    "cwes": [],
+    "refs": [
+      "https://www.rockwellautomation.com/en-us/trust-center/security-advisories/advisory.SD1793.html"
+    ],
+    "found_by": [
+      "watchlist CVE-2026-12663"
+    ],
+    "kev": false,
+    "epss": 0.00151,
+    "risk": 0.0,
+    "relevant": false,
+    "attack_ics": [],
+    "ssvc": "track",
+    "ssvc_detail": {
+      "decision": "track",
+      "exploitation": "none",
+      "automatable": "no",
+      "technical_impact": "partial",
+      "mission": "low"
+    },
+    "asset_impact": [],
+    "ot_score": null,
+    "ot_score_detail": {
+      "base": 0.0,
+      "assets": [],
+      "kev_bonus": 0.0,
+      "ssvc_bonus": 0.0,
+      "score": null
+    }
+  }
+]
