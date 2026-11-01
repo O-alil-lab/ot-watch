@@ -189,6 +189,13 @@ Package `agents/` (`python3 -m agents.pipeline draft|status|publish`) :
 ## 🌍 v1.11 — édition arabe RTL (i18n AR) (01/11/2026)
 - **`src/render_ar.py`** : édition arabe complète `out/issue-<date>.ar.html` + `.ar.md` — `<html lang="ar" dir="rtl">`, libellés arabe, CSS inline (aucune lib externe), même données que l'édition FR. Route **`/issue.ar`**, bouton « 🌍 العربية ».
 
+## 🌐 En ligne sur GitHub Pages (gratuit)
+**https://o-alil-lab.github.io/ot-watch/** — version statique du dashboard, régénérée toutes les 6 h par
+`.github/workflows/pages.yml` (collecte → rendu → `scripts/build_static.py` → déploiement Pages).
+Newsletter, PDF, STIX, MISP et OpenAPI sont publiés à côté. Les fonctions qui exigent un serveur
+(SSE temps réel, re-collecte à la demande, TAXII) restent dans `server.py` / l'image Docker.
+Clé NVD optionnelle : secret de dépôt `NVD_API_KEY`.
+
 ## 🚀 v1.15 — GitHub + GHCR + Linear, 100 % gratuit (01/11/2026)
 Décision et sources : `docs/adr/ADR-2026-11-01-remote-github-linear-ghcr.md`.
 ```bash

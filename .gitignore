@@ -8,3 +8,4 @@ out/*.log
 *.key
 *.pem
 .coverage
+site/

@@ -2,6 +2,11 @@
 
 Format : Keep a Changelog. Versions sémantiques (vMAJEUR.MINEUR).
 
+## v1.16 — 2026-11-01 — OT Watch en ligne sur GitHub Pages
+- `scripts/build_static.py` : dashboard statique (chemins relatifs, snapshots `api/data.json` / `api/history.json`), newsletter HTML/PDF/AR, STIX, MISP, OpenAPI.
+- `.github/workflows/pages.yml` : collecte toutes les 6 h, données conservées via le cache Actions (historique 30 j), garde-fou anti-collecte vide, déploiement GitHub Pages.
+- Tests `test_static_site.py`.
+
 ## v1.15 — 2026-11-01 — stack DevOps gratuite (GitHub + GHCR + Linear)
 - ADR `docs/adr/ADR-2026-11-01-remote-github-linear-ghcr.md` (offres gratuites vérifiées sur sources primaires).
 - `.github/workflows/docker.yml` : job `scan` lecture seule (Trivy v0.35.0, CRITICAL/HIGH bloquant ; versions ≤ v0.34.2 compromises, CVE-2026-33634) puis job `push` GHCR via `GITHUB_TOKEN`.

@@ -1,0 +1,93 @@
+# OT Watch en ligne sur GitHub Pages (gratuit) : collecte -> rendu -> site statique -> déploiement.
+# URL : https://<owner>.github.io/<repo>/
+# Les données (JSON + SQLite) sont conservées entre deux exécutions via le cache Actions,
+# pour garder l'historique 30 jours. Si une collecte ne ramène aucune CVE (source bloquée,
+# panne réseau), on republie les dernières données valides au lieu d'un site vide.
+name: Pages
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      AUTO_REFRESH_SECONDS: "21600"
+      NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Dépendances
+        run: pip install --quiet -r requirements.txt
+
+      - name: Restaurer les données précédentes
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/*.json
+            data/otwatch.db
+          key: otwatch-data-${{ github.run_id }}
+          restore-keys: otwatch-data-
+
+      - name: Amorcer les données au premier lancement
+        run: |
+          if [ ! -f data/meta.json ]; then
+            mkdir -p data && cp tests/fixtures/data/* data/
+            echo "données amorcées depuis tests/fixtures/data"
+          fi
+          mkdir -p /tmp/otwatch-prev && cp data/*.json data/otwatch.db /tmp/otwatch-prev/ 2>/dev/null || true
+
+      - name: Collecte + rendu (non bloquant)
+        timeout-minutes: 25
+        run: ./run_all.sh || echo "::warning::run_all.sh a échoué — on republie les dernières données valides"
+
+      - name: Garde-fou données vides
+        run: |
+          n=$(python3 -c "import json;print(json.load(open('data/meta.json'))['counts'].get('cves',0))" 2>/dev/null || echo 0)
+          if [ "$n" = "0" ] && [ -f /tmp/otwatch-prev/meta.json ]; then
+            echo "::warning::collecte vide — restauration des données précédentes"
+            cp /tmp/otwatch-prev/* data/
+          fi
+          echo "CVE publiées : $(python3 -c "import json;print(json.load(open('data/meta.json'))['counts'].get('cves',0))")"
+
+      - name: Sauvegarder les données
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            data/*.json
+            data/otwatch.db
+          key: otwatch-data-${{ github.run_id }}
+
+      - name: Construire le site statique
+        run: python3 scripts/build_static.py --out site
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
