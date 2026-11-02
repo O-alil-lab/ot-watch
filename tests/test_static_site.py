@@ -51,6 +51,12 @@ class TestBuildStatic(unittest.TestCase):
         self.assertNotIn('id="subForm"', html)  # abonnement = serveur uniquement
         self.assertIn('href="feed.xml"', html)
         self.assertNotIn("version serveur", html)
+        # re-collecte via le Worker Cloudflare (jamais de jeton côté navigateur)
+        self.assertIn("await refreshViaWorker();return;", html)
+        self.assertIn("ot-watch-cron.alilououssama.workers.dev", html)
+        self.assertIn('id="nextRun"', html)
+        self.assertNotIn("github_pat_", html)
+        self.assertNotIn("GITHUB_TOKEN", html)
         self.assertIn('href="issue.en.html"', html)
 
     def test_donnees_snapshot(self):

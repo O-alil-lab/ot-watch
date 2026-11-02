@@ -77,3 +77,6 @@
 {"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "factcheck_en_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T22:56:50.050040+00:00"}
 {"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpm9nkrh_t/editorial/auto-2026-11-01.md", "ts": "2026-11-01T22:56:50.050630+00:00"}
 {"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "factcheck_en_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-01T22:56:50.056433+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-01", "factcheck_ok": true, "factcheck_en_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-02T13:02:47.540692+00:00"}
+{"stage": "publish", "draft": "draft-2026-11-01", "reviewer": "A. Reviewer", "dest": "/tmp/tmpatioudi0/editorial/auto-2026-11-01.md", "ts": "2026-11-02T13:02:47.544771+00:00"}
+{"stage": "draft", "draft": "draft-2026-11-02", "factcheck_ok": true, "factcheck_en_ok": true, "checked": 29, "failed": 0, "images": 3, "ts": "2026-11-02T13:02:47.552682+00:00"}

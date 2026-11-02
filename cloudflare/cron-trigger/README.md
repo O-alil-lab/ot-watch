@@ -1,5 +1,8 @@
 # Cron Cloudflare → publication GitHub Pages
 
+Le Worker sert aussi le bouton « 🔄 Mettre à jour maintenant » du site : `POST /refresh`
+(origine `https://o-alil-lab.github.io` uniquement ; refusé si une collecte tourne ou date de moins de 15 min).
+
 Un Cron Trigger Cloudflare (offre gratuite) relance `.github/workflows/pages.yml` toutes les 6 h
 via l'API GitHub. Plus fiable que le seul `schedule` GitHub (retards possibles, désactivé après
 60 jours sans activité sur le dépôt). Le `schedule` GitHub reste actif en secours, et le job `keepalive`

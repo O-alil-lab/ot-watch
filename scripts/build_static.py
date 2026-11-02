@@ -48,21 +48,61 @@ REWRITES = [
     ('href="/openapi.json"', 'href="openapi.json"'),
     # pas de serveur TAXII sur Pages : le bundle STIX reste disponible via stix.json
     ('    <a href="/taxii2/collections" target="_blank"><button class="ghost">🛰 TAXII 2.1</button></a>\n', ""),
-    # pas de serveur : pas de SSE ni de re-collecte à la demande
+    # pas de serveur : SSE désactivé ; la re-collecte passe par le Worker Cloudflare (POST /refresh, limité)
     ('<button id="btnRefresh">🔄 Re-collecter maintenant</button>',
-     '<button id="btnRefresh">🕒 Collecte auto toutes les 6 h</button>'),
+     '<button id="btnRefresh">🔄 Mettre à jour maintenant</button>'),
     ("'⏳ Collecte en cours…':'🔄 Re-collecter maintenant'",
-     "'⏳ Collecte en cours…':'🕒 Collecte auto toutes les 6 h'"),
+     "'⏳ Collecte en cours…':'🔄 Mettre à jour maintenant'"),
     ("if (window.EventSource) {", "if (false) {"),
     ("await fetch('/api/refresh',{method:'POST'});toast('🔄 Collecte lancée (CISA/NVD/KEV)…');",
-     "toast('Version GitHub Pages : collecte automatique toutes les 6 h');"),
+     "await refreshViaWorker();return;"),
     ("setInterval(loadData,15000);", "setInterval(loadData,300000);"),
 ]
 
+WORKER_URL = os.environ.get("OTWATCH_WORKER_URL", "https://ot-watch-cron.alilououssama.workers.dev")
+
 BANNER = ('<div style="background:#1e293b;color:#cbd5e1;font:13px system-ui;padding:8px 16px;'
-          'text-align:center">Version publique GitHub Pages · données mises à jour automatiquement '
-          'toutes les 6 h · <a style="color:#f59e0b" '
+          'text-align:center">Version publique GitHub Pages · mise à jour automatique toutes les 6 h '
+          '(prochaine : <b id="nextRun">...</b>) · <a style="color:#f59e0b" '
           'href="https://github.com/O-alil-lab/ot-watch">code source</a></div>')
+
+# Bouton « Mettre à jour maintenant » -> Worker Cloudflare (le jeton GitHub reste côté Worker).
+# Créneaux auto : 00:17, 06:17, 12:17, 18:17 UTC (cron Cloudflare 17 */6 * * *), affichés en heure locale.
+REFRESH_JS = """<script>
+const OTW_WORKER = __WORKER__;
+function otwNextRun(now) {
+  const d = new Date(now); d.setUTCMinutes(17, 0, 0);
+  d.setUTCHours(Math.floor(d.getUTCHours() / 6) * 6);
+  while (d <= now) d.setUTCHours(d.getUTCHours() + 6);
+  return d;
+}
+function otwShowNext() {
+  const el = document.getElementById('nextRun');
+  if (el) el.textContent = otwNextRun(new Date()).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
+}
+async function refreshViaWorker() {
+  const b = document.getElementById('btnRefresh');
+  b.disabled = true;
+  try {
+    const r = await fetch(OTW_WORKER + '/refresh', {method: 'POST'});
+    const j = await r.json();
+    if (r.status === 202) {
+      toast('🔄 Collecte lancée : le site se met à jour dans 5 à 8 min');
+      b.textContent = '⏳ Collecte en cours…';
+      setTimeout(() => location.reload(), 480000);
+      return;
+    }
+    if (j.error === 'running') toast('⏳ Une collecte est déjà en cours, revenez dans quelques minutes');
+    else if (j.error === 'too_soon') toast('✅ Données toutes fraîches — nouvelle collecte possible dans ' + Math.ceil(j.retry_after_s / 60) + ' min');
+    else toast('Mise à jour indisponible pour le moment');
+  } catch (e) {
+    toast('Mise à jour indisponible pour le moment');
+  }
+  setTimeout(() => { b.disabled = false; }, 5000);
+}
+otwShowNext(); setInterval(otwShowNext, 60000);
+</script>
+""".replace("__WORKER__", json.dumps(WORKER_URL))
 
 EXPORTS = [  # (fonction server.latest_issue_*, fichier de sortie)
     ("latest_issue_html", "issue.html"),
@@ -83,7 +123,8 @@ def static_dashboard(html):
     html, n = SUBSCRIBE_BLOCK.subn(RSS_LINK, html, count=1)
     if n != 1:
         raise ValueError("formulaire d'abonnement introuvable dans DASHBOARD_HTML")
-    return html.replace("<body>", "<body>\n" + BANNER, 1)
+    html = html.replace("<body>", "<body>\n" + BANNER, 1)
+    return html.replace("</body>", REFRESH_JS + "</body>", 1)
 
 
 def build(out_dir, data_dir=None, issues_dir=None):
