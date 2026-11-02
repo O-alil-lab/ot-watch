@@ -9,3 +9,4 @@ out/*.log
 *.pem
 .coverage
 site/
+config.assets.local.json

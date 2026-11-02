@@ -280,7 +280,7 @@
   "assets": [
     {
       "asset_id": "plc-s7-1500",
-      "name": "Automate Siemens S7-1500 (ligne 2)",
+      "name": "Exemple fictif — Automate Siemens S7-1500",
       "vendor": "Siemens",
       "product": "SIMATIC S7-1500",
       "firmware": "V3.1",
@@ -290,7 +290,7 @@
     },
     {
       "asset_id": "plc-modicon-m340",
-      "name": "Schneider Modicon M340 (station pompage)",
+      "name": "Exemple fictif — Schneider Modicon M340",
       "vendor": "Schneider Electric",
       "product": "Modicon M340",
       "firmware": "SV3.60",
@@ -299,7 +299,7 @@
     },
     {
       "asset_id": "scada-wincc",
-      "name": "Poste SCADA WinCC",
+      "name": "Exemple fictif — Poste SCADA WinCC",
       "vendor": "Siemens",
       "product": "WinCC",
       "firmware": "V8.1",
@@ -308,7 +308,7 @@
     },
     {
       "asset_id": "hmi-rockwell",
-      "name": "HMI Rockwell PanelView",
+      "name": "Exemple fictif — HMI Rockwell PanelView",
       "vendor": "Rockwell",
       "product": "PanelView Plus",
       "firmware": "12.0",
@@ -317,7 +317,7 @@
     },
     {
       "asset_id": "ewon-gateway",
-      "name": "Passerelle eWON Flexy (accès distant)",
+      "name": "Exemple fictif — Passerelle eWON Flexy",
       "vendor": "HMS",
       "product": "eWON Flexy",
       "firmware": "4.8",

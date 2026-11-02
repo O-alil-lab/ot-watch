@@ -162,7 +162,7 @@ Package `agents/` (`python3 -m agents.pipeline draft|status|publish`) :
 
 ## 🕸 v1.9 — export MISP + inventaire d'actifs OT & SBOM CycloneDX (P2 OT-ISAC) (01/11/2026)
 - **`src/misp_export.py`** : événement MISP 2.1 JSON par édition — attributs `cve` avec commentaire CVSS/EPSS/KEV/SSVC/ATT&CK for ICS, `link` vers les avis CISA, tags `TLP:WHITE`/`ot`/`ics`/`ics-ot`. **Push réel** `POST /events/add` si `OTWATCH_MISP_URL` + `OTWATCH_MISP_AUTHKEY` (+ `OTWATCH_MISP_VERIFY_SSL`) définis, sinon **dry-run** `out/issue-<date>.misp.json`. Édition 2026-11-01 : 49 attributs.
-- **`src/assets.py`** : inventaire depuis `config.json["assets"]` (5 actifs d'exemple : S7-1500, Modicon M340, WinCC, PanelView, passerelle eWON — avec `purdue_level` + `criticality`) + composants du **SBOM CycloneDX** `data/sbom.cdx.json` ; `match_assets()` → `asset_impact` par CVE (CVE-2026-110936 touche `plc-s7-1500` + `scada-wincc`).
+- **`src/assets.py`** : inventaire depuis `config.json["assets"]` (5 actifs d'exemple **fictifs** : S7-1500, Modicon M340, WinCC, PanelView, passerelle eWON — inventaire réel dans `config.assets.local.json`, ignoré par git — avec `purdue_level` + `criticality`) + composants du **SBOM CycloneDX** `data/sbom.cdx.json` ; `match_assets()` → `asset_impact` par CVE (CVE-2026-110936 touche `plc-s7-1500` + `scada-wincc`).
 - `collect.py` : matching actifs à la collecte + persistance `data/assets.json` ; `store.py` : table `assets`, colonne `cves.assets`, `store_assets()`.
 - `server.py` : routes **`/misp`** (dernier événement, `Content-Disposition` inline) et **`/api/assets`** (actifs + carte `impacted` CVE→actifs + niveaux Purdue), payload `/api/data` enrichi (`assets`, `quality`), boutons « 🕸 Export MISP » et « 🌍 العربية ».
 
@@ -220,6 +220,14 @@ Décision documentée : `docs/adr/ADR-2026-11-01-remote-github-linear-ghcr.md` (
 
 ## 🌍 v1.11 — édition arabe RTL (i18n AR) (01/11/2026)
 - **`src/render_ar.py`** : édition arabe complète `out/issue-<date>.ar.html` + `.ar.md` — `<html lang="ar" dir="rtl">`, libellés arabe, CSS inline (aucune lib externe), même données que l'édition FR. Route **`/issue.ar`**, bouton « 🌍 العربية ».
+
+## 🔒 Données privées vs site public
+- **Votre inventaire OT réel** (automates, firmware, niveaux Purdue, criticité) va dans `config.assets.local.json`
+  (même format que `config.json["assets"]`, ignoré par git — ou chemin via `OTWATCH_ASSETS_FILE`). Les 5 actifs de
+  `config.json` sont des **exemples fictifs**. Le dépôt étant public, n'y committez jamais d'inventaire réel.
+- **Le site GitHub Pages est une édition publique** (`scripts/public_edition.py`) : aucune donnée d'actif, aucun lien
+  CVE → actifs, aucun score OT ni « Mes actifs », aucun état interne. Un garde-fou fait échouer la publication si un
+  identifiant d'actif apparaît dans un fichier publié. Le profil d'exposition reste réservé à la version serveur.
 
 ## 🌐 En ligne sur GitHub Pages (gratuit)
 **https://o-alil-lab.github.io/ot-watch/** — version statique du dashboard, régénérée toutes les 6 h par

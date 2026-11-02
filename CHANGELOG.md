@@ -2,6 +2,13 @@
 
 Format : Keep a Changelog. Versions sémantiques (vMAJEUR.MINEUR).
 
+## v1.20 — 2026-11-02 — audit public : sécurité, données privées, design
+- Site public = édition publique : plus d'inventaire d'actifs, de lien CVE → actifs, de score OT, de « Mes actifs », d'état interne ni de lien vers le code source / OpenAPI / TAXII ; garde-fou anti-fuite au build.
+- Éditions FR/AR/EN/PDF/STIX/MISP du site régénérées depuis des données nettoyées (mode `PUBLIC` des générateurs).
+- Sécurité : CSP, `referrer` no-referrer, `robots.txt` + `sitemap.xml` ; liens d'édition relatifs.
+- Design : libellés grand public, prochaine mise à jour affichée, mobile en cartes (plus de colonne écrasée).
+- Inventaire réel : `config.assets.local.json` (ignoré par git) ; exemples de `config.json` marqués fictifs.
+
 ## v1.19 — 2026-11-01 — fusion des deux branches v1.15+
 - Réunit l'archive v1.18 (i18n EN/AR, agents data-grounded, growth/SEO, worker Cloudflare, monétisation éthique) et la branche publiée sur GitHub (GitHub Pages, cron Cloudflare, correctifs TAXII/port/Docker, jeu de données de test figé).
 - Site statique GitHub Pages : ajoute l'édition anglaise (`issue.en.html`) et le flux RSS (`feed.xml`) ; les routes qui exigent un serveur (abonnement, stats, intégration) restent sur `server.py` / Docker / worker Cloudflare.

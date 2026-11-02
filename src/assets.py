@@ -22,10 +22,23 @@ PURDUE = {"L0": "processus (capteurs/actionneurs)", "L1": "contrôle (PLC/RTU)",
           "L3": "site (MES/historian)", "L3.5": "DMZ industrielle", "L4": "entreprise IT"}
 
 
-def load_assets(cfg, data_dir=DATA):
-    """Actifs depuis config + SBOM CycloneDX éventuel. Normalisés et dédupliqués."""
+PRIVATE_ASSETS_FILE = os.environ.get("OTWATCH_ASSETS_FILE", os.path.join(ROOT, "config.assets.local.json"))
+
+
+def config_assets(cfg, private_file=None):
+    """Inventaire réel : fichier privé (ignoré par git) s'il existe, sinon les exemples de config.json."""
+    path = private_file or PRIVATE_ASSETS_FILE
+    if path and os.path.exists(path):
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        return data.get("assets", []) if isinstance(data, dict) else data
+    return cfg.get("assets", [])
+
+
+def load_assets(cfg, data_dir=DATA, private_file=None):
+    """Actifs depuis l'inventaire (privé ou exemples) + SBOM CycloneDX éventuel. Normalisés et dédupliqués."""
     assets = []
-    for a in cfg.get("assets", []):
+    for a in config_assets(cfg, private_file):
         assets.append({
             "asset_id": a.get("asset_id") or re.sub(r"\W+", "-", (a.get("name") or "asset").lower()).strip("-"),
             "name": a.get("name", ""), "vendor": a.get("vendor", ""), "product": a.get("product", ""),

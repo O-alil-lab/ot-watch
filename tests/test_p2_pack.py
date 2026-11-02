@@ -232,5 +232,29 @@ class TestI18nEn(unittest.TestCase):
         self.assertIn("latest_issue_en", src)
 
 
+class TestInventairePrive(unittest.TestCase):
+    """Le vrai inventaire vit dans un fichier ignoré par git, jamais dans config.json (dépôt public)."""
+
+    def test_fichier_prive_prioritaire(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as td:
+            priv = os.path.join(td, "config.assets.local.json")
+            with open(priv, "w", encoding="utf-8") as fh:
+                json.dump({"assets": [{"asset_id": "prive-1", "name": "PLC réel", "vendor": "Siemens",
+                                       "product": "SIMATIC S7-1500"}]}, fh)
+            ids = [a["asset_id"] for a in assets_mod.load_assets(ASSETS_CFG, td, private_file=priv)]
+            self.assertEqual(ids, ["prive-1"])
+            ids = [a["asset_id"] for a in assets_mod.load_assets(ASSETS_CFG, td,
+                                                                 private_file=os.path.join(td, "absent.json"))]
+            self.assertIn("plc-s7", ids)  # repli sur les exemples
+
+    def test_fichier_prive_ignore_par_git_et_exemples_fictifs(self):
+        with open(os.path.join(ROOT, ".gitignore"), encoding="utf-8") as fh:
+            self.assertIn("config.assets.local.json", fh.read())
+        with open(os.path.join(ROOT, "config.json"), encoding="utf-8") as fh:
+            cfg = json.load(fh)
+        self.assertTrue(all(a["name"].startswith("Exemple fictif") for a in cfg["assets"]))
+
+
 if __name__ == "__main__":
     unittest.main()
