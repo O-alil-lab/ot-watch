@@ -14,6 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 DATA = os.path.join(ROOT, "data")
 OUT = os.path.join(ROOT, "out")
+PUBLIC = False  # True : édition publique (scripts/public_edition.py), sans profil d'actifs
 
 EN = {
     "title": "OT Watch — ICS/OT Cybersecurity Newsletter",
@@ -56,6 +57,8 @@ def render_en_html(issue_date, cves, advisories, kev, meta):
     crit = sum(1 for c in cves if c.get("severity") == "CRITICAL")
     n_kev = sum(1 for c in cves if c.get("kev"))
     rel = sum(1 for c in cves if c.get("relevant"))
+    # PUBLIC : édition grand public, sans aucune référence au profil d'actifs de l'organisation
+    exposure_card = "" if PUBLIC else ('  <div class="card" style="background:#e8641b"><div class="n">' + str(rel) + '</div><div class="l">' + EN["exposure"] + '</div></div>\n')
     rows = []
     for c in sorted(cves, key=lambda x: -(x.get("ot_score") or 0))[:30]:
         kev_badge = '<span style="color:#b91c1c;font-weight:700;">★KEV</span>' if c.get("kev") else ""
@@ -94,8 +97,7 @@ footer{{margin-top:20px;color:#94a3b8;font-size:11px;}}
   <div class="card"><div class="n">{len(cves)}</div><div class="l">{EN["cves"]}</div></div>
   <div class="card" style="background:#b91c1c"><div class="n">{crit}</div><div class="l">{EN["critical"]}</div></div>
   <div class="card" style="background:#2962ff"><div class="n">{n_kev}</div><div class="l">{EN["kev"]}</div></div>
-  <div class="card" style="background:#e8641b"><div class="n">{rel}</div><div class="l">{EN["exposure"]}</div></div>
-  <div class="card" style="background:#0f766e"><div class="n">{len(advisories)}</div><div class="l">{EN["advisories"]}</div></div>
+{exposure_card}  <div class="card" style="background:#0f766e"><div class="n">{len(advisories)}</div><div class="l">{EN["advisories"]}</div></div>
 </div>
 <h2>{EN["top"]}</h2>
 <table><tr><th>CVE</th><th>{EN["cvss"]}</th><th>{EN["risk"]}</th><th>{EN["ot"]}</th><th>Description</th></tr>
@@ -111,7 +113,7 @@ def render_en_md(issue_date, cves, advisories, kev, meta):
     lines = [f"# {EN['title']}", "",
              f"{EN['edition']} {issue_date} · {EN['window']} {meta.get('window_days', 14)} {EN['days']}", "",
              f"- {len(cves)} {EN['cves']} ({sum(1 for c in cves if c.get('severity') == 'CRITICAL')} {EN['critical']}, "
-             f"{sum(1 for c in cves if c.get('kev'))} ★KEV, {sum(1 for c in cves if c.get('relevant'))} ◆ {EN['exposure']})",
+             f"{sum(1 for c in cves if c.get('kev'))} ★KEV" + ("" if PUBLIC else f", {sum(1 for c in cves if c.get('relevant'))} ◆ {EN['exposure']}") + ")",
              f"- {len(advisories)} {EN['advisories']}", ""]
     for c in sorted(cves, key=lambda x: -(x.get("ot_score") or 0))[:30]:
         badges = ("★KEV " if c.get("kev") else "") + ("◆ " if c.get("relevant") else "") + (f"SSVC {c.get('ssvc','').upper()}" if c.get("ssvc") else "")

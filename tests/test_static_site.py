@@ -37,7 +37,8 @@ class TestBuildStatic(unittest.TestCase):
         cls.tmp.cleanup()
 
     def test_fichiers_publies(self):
-        for name in ("index.html", "api/data.json", "api/history.json", ".nojekyll", "openapi.json", "feed.xml"):
+        for name in ("index.html", "api/data.json", "api/history.json", ".nojekyll", "feed.xml",
+                     "issue.html", "issue.ar.html", "issue.en.html", "issue.pdf", "robots.txt", "sitemap.xml"):
             self.assertTrue(os.path.exists(os.path.join(self.site, name)), name)
 
     def test_chemins_relatifs_pour_sous_dossier_pages(self):
@@ -74,6 +75,51 @@ class TestBuildStatic(unittest.TestCase):
         self.assertIn('<?xml-stylesheet type="text/xsl" href="feed.xsl"?>', rss)
         self.assertTrue(os.path.exists(os.path.join(self.site, "feed.xsl")))
         self.assertIn("<item>", rss)
+
+    def _read(self, name):
+        with open(os.path.join(self.site, name), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_aucun_inventaire_ni_profil_actifs_publie(self):
+        """Grand public : ni inventaire OT, ni lien CVE -> actifs, ni score OT, ni « Mes actifs »."""
+        import public_edition
+        ids = public_edition.private_asset_ids(fixture_data_dir())
+        self.assertTrue(ids)  # le jeu figé contient bien un inventaire : le test a du sens
+        for name in self.written:
+            if name.endswith(".pdf"):
+                continue
+            txt = self._read(name)
+            for needle in [*ids, "asset_impact", "ot_score_detail", "firmware\": ", "Mes actifs OT"]:
+                self.assertNotIn(needle, txt, f"{needle} publié dans {name}")
+        d = json.loads(self._read("api/data.json"))
+        self.assertNotIn("assets", d)
+        for c in d["cves"]:
+            for k in ("relevant", "asset_impact", "ot_score", "ot_score_detail"):
+                self.assertNotIn(k, c)
+
+    def test_aucun_detail_interne_publie(self):
+        d = json.loads(self._read("api/data.json"))
+        for k in ("last_error", "last_run", "collect_runs", "agents", "netwatch", "quality", "server_time"):
+            self.assertNotIn(k, d)
+        self.assertNotIn("validation", d["meta"])
+        self.assertNotIn("quality", d["meta"])
+        html = self._read("index.html")
+        for needle in ("github.com/O-alil-lab", "openapi", "/taxii2", "SQLite", "research/findings", "anti-XSS"):
+            self.assertNotIn(needle, html)
+        self.assertFalse(os.path.exists(os.path.join(self.site, "openapi.json")))
+
+    def test_securite_et_mobile(self):
+        html = self._read("index.html")
+        self.assertIn('http-equiv="Content-Security-Policy"', html)
+        self.assertIn("object-src 'none'", html)
+        self.assertIn('name="referrer" content="no-referrer"', html)
+        self.assertIn("@media (max-width:640px)", html)
+        # styles publics après la feuille du dashboard (sinon écrasés)
+        self.assertGreater(html.index("#liveBadge{display:none!important}"), html.index(":root{"))
+
+    def test_editions_liens_relatifs(self):
+        for name in ("issue.html", "issue.ar.html", "issue.en.html"):
+            self.assertNotIn('href="/', self._read(name), name)
 
     def test_motif_disparu_detecte(self):
         with self.assertRaises(ValueError):

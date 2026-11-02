@@ -12,6 +12,7 @@ from datetime import datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
 OUT = os.path.join(ROOT, "out")
+PUBLIC = False  # True : édition publique (scripts/public_edition.py), sans profil d'actifs
 os.makedirs(OUT, exist_ok=True)
 
 AR = {
@@ -57,6 +58,8 @@ def render_ar_html(issue_date, cves, advisories, kev, meta):
     crit = sum(1 for c in cves if c.get("severity") == "CRITICAL")
     n_kev = sum(1 for c in cves if c.get("kev"))
     rel = sum(1 for c in cves if c.get("relevant"))
+    # PUBLIC : édition grand public, sans aucune référence au profil d'actifs de l'organisation
+    exposure_card = "" if PUBLIC else ('  <div class="card" style="background:#e8641b"><div class="n">' + str(rel) + '</div><div class="l">' + AR["exposure"] + '</div></div>\n')
     rows = []
     for c in cves[:30]:
         kev_badge = '<span style="color:#b91c1c;font-weight:700;">★KEV</span>' if c.get("kev") else ""
@@ -95,8 +98,7 @@ footer{{margin-top:20px;color:#94a3b8;font-size:11px;}}
   <div class="card"><div class="n">{len(cves)}</div><div class="l">{AR["cves"]}</div></div>
   <div class="card" style="background:#b91c1c"><div class="n">{crit}</div><div class="l">{AR["critical"]}</div></div>
   <div class="card" style="background:#2962ff"><div class="n">{n_kev}</div><div class="l">{AR["kev"]}</div></div>
-  <div class="card" style="background:#e8641b"><div class="n">{rel}</div><div class="l">{AR["exposure"]}</div></div>
-  <div class="card" style="background:#0f766e"><div class="n">{len(advisories)}</div><div class="l">{AR["advisories"]}</div></div>
+{exposure_card}  <div class="card" style="background:#0f766e"><div class="n">{len(advisories)}</div><div class="l">{AR["advisories"]}</div></div>
 </div>
 <h2>{AR["top"]}</h2>
 <table><tr><th>CVE</th><th>{AR["cvss"]}</th><th>{AR["risk"]}</th><th>{AR["ot"]}</th><th>الوصف</th></tr>
@@ -112,7 +114,7 @@ def render_ar_md(issue_date, cves, advisories, kev, meta):
     lines = [f"# {AR['title']}", "",
              f"{AR['edition']} {issue_date} · {AR['window']} {meta.get('window_days', 14)} {AR['days']}", "",
              f"- {len(cves)} {AR['cves']} ({sum(1 for c in cves if c.get('severity') == 'CRITICAL')} {AR['critical']}, "
-             f"{sum(1 for c in cves if c.get('kev'))} ★KEV, {sum(1 for c in cves if c.get('relevant'))} ◆ {AR['exposure']})",
+             f"{sum(1 for c in cves if c.get('kev'))} ★KEV" + ("" if PUBLIC else f", {sum(1 for c in cves if c.get('relevant'))} ◆ {AR['exposure']}") + ")",
              f"- {len(advisories)} {AR['advisories']}", ""]
     for c in cves[:30]:
         badges = ("★KEV " if c.get("kev") else "") + ("◆ " if c.get("relevant") else "") + (f"SSVC {c.get('ssvc','').upper()}" if c.get("ssvc") else "")

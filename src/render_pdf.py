@@ -16,6 +16,7 @@ from datetime import datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
 OUT = os.path.join(ROOT, "out")
+PUBLIC = False  # True : édition publique (scripts/public_edition.py), sans profil d'actifs
 os.makedirs(OUT, exist_ok=True)
 
 FONT_DIR = "/usr/share/fonts/truetype/dejavu"
@@ -126,7 +127,8 @@ def _resume(pdf, cves, advisories, kev, meta):
     y0 = pdf.get_y()
     pdf.rect(15, y0, 180, 14, style="F")
     pdf.set_xy(18, y0 + 2.5)
-    pdf.cell(0, 5, f"En bref : {len(cves)} CVE OT ({crit} CRITICAL, {n_kev} ★ KEV)  ·  ◆ {rel} de vos actifs OT  ·  "
+    exposure = "" if PUBLIC else f"◆ {rel} de vos actifs OT  ·  "
+    pdf.cell(0, 5, f"En bref : {len(cves)} CVE OT ({crit} CRITICAL, {n_kev} ★ KEV)  ·  {exposure}"
                    f"{len(advisories)} avis CISA ICS ({counts.get('advisories', len(advisories))})  ·  {len(kev)} entrées KEV OT",
              new_x="LMARGIN", new_y="NEXT")
     pdf.set_xy(18, y0 + 8)
